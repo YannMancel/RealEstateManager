@@ -1,0 +1,16 @@
+
+<resources>
+
+    <string name="app_name">Real Estate Manager</string>
+
+    <!-- MainActivity.kt -->
+    <string name="navigation_drawer_open" translatable="false">"Open navigation drawer"</string>
+    <string name="navigation_drawer_close" translatable="false">"Close navigation drawer"</string>
+    <string name="add_real_estate_toolbar">Add real estate</string>
+    <string name="edit_real_estate_toolbar">Edit real estate</string>
+    <string name="search_real_estate_toolbar">Search real estate</string>
+
+    <!-- activity_main_menu_drawer.xml -->
+    <string name="menu_drawer_settings">SETTINGS</string>
+
+</resources>

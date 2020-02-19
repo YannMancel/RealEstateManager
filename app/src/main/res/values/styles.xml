@@ -1,0 +1,50 @@
+
+<resources
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+
+        <!-- Color theme -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <!-- Drawer arrow -->
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+
+    </style>
+
+    <!-- NoActionBar with DarkActionBar theme. -->
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <!-- *********************************** Toolbar ******************************************* -->
+
+    <!-- Drawer arrow style -->
+    <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="spinBars">true</item>
+        <item name="color">@android:color/white</item>
+    </style>
+
+    <!-- Toolbar style -->
+    <style name="ToolbarStyle" parent="ThemeOverlay.AppCompat.Dark">
+        <item name="titleTextColor">@android:color/white</item>
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:elevation" tools:targetApi="21">@dimen/elevation_toolbar</item>
+    </style>
+
+    <!-- *********************************** NavigationView ************************************ -->
+
+    <!-- NavigationView style -->
+    <style name="NavigationViewStyle">
+        <item name="headerLayout">@layout/header_drawer_activity_main</item>
+        <item name="menu">@menu/activity_main_menu_drawer</item>
+        <item name="itemIconTint">@android:color/white</item>
+        <item name="itemTextColor">@android:color/white</item>
+        <item name="android:background">@color/colorPrimaryLight</item>
+    </style>
+
+</resources>

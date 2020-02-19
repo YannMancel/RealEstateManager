@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <!-- ELEVATION -->
+    <dimen name="elevation_toolbar">4dp</dimen>
+
+    <!-- NavigationView Header height -->
+    <dimen name="navigation_header_height">220dp</dimen>
+
+</resources>
