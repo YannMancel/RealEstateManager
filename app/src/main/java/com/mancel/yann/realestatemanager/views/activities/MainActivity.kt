@@ -3,11 +3,17 @@ package com.mancel.yann.realestatemanager.views.activities
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
+import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.onNavDestinationSelected
+import androidx.navigation.ui.setupWithNavController
 import com.mancel.yann.realestatemanager.R
-import com.mancel.yann.realestatemanager.utils.*
+import com.mancel.yann.realestatemanager.utils.convertDollarToEuro
+import com.mancel.yann.realestatemanager.utils.convertEuroToDollar
+import com.mancel.yann.realestatemanager.utils.getTodayDateDDMMYYYY
+import com.mancel.yann.realestatemanager.utils.getTodayDateYYYYMMDD
 import com.mancel.yann.realestatemanager.views.bases.BaseActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -31,7 +37,9 @@ class MainActivity : BaseActivity() {
     override fun configureDesign() {
         // UI
         this.configureToolbar()
-        this.configureDrawerLayout()
+
+        // Navigation
+        this.configureFragmentNavigation()
 
         Log.d(this::class.java.simpleName, "convertDollarToEuro: ${convertDollarToEuro(dollars = 100)}")
         Log.d(this::class.java.simpleName, "convertEuroToDollar: ${convertEuroToDollar(euros = 81)}")
@@ -48,30 +56,11 @@ class MainActivity : BaseActivity() {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean = when (item?.itemId) {
-        // Add
-        R.id.toolbar_menu_add -> {
-            Log.d(this::class.java.simpleName, "Add")
-            true
-        }
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        // NavController
+        val navController = this.findNavController(R.id.activity_main_NavHostFragment)
 
-        // Edit
-        R.id.toolbar_menu_edit -> {
-            Log.d(this::class.java.simpleName, "Edit")
-            true
-        }
-
-        // Search
-        R.id.toolbar_menu_search -> {
-            Log.d(this::class.java.simpleName, "Search")
-            true
-        }
-
-        else -> {
-            // If we got here, the user's action was not recognized.
-            // Invoke the superclass to handle it.
-            super.onOptionsItemSelected(item)
-        }
+        return item!!.onNavDestinationSelected(navController) || super.onOptionsItemSelected(item)
     }
 
     override fun onBackPressed() {
@@ -83,23 +72,27 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    // -- DrawerLayout --
+    // -- Navigation --
 
     /**
-     * Configures the DrawerLayout
+     * Configures the fragment navigation
      */
-    private fun configureDrawerLayout() {
-        // Creates the Hamburger button of the toolbar
-        val toggle = ActionBarDrawerToggle(this,
-                                            this.activity_main_drawer_layout,
-                                            this.activity_main_Toolbar,
-                                            R.string.navigation_drawer_open,
-                                            R.string.navigation_drawer_close)
+    private fun configureFragmentNavigation() {
+        // NavController
+        val navController = this.findNavController(R.id.activity_main_NavHostFragment)
 
-        // Adds the listener (the "Hamburger" button) to the DrawerLayout field
-        this.activity_main_drawer_layout.addDrawerListener(toggle)
+        // AppBarConfiguration
+        // Passing each menu ID as a set of Ids because each
+        // menu should be considered as top level destinations.
+        val appBarConfiguration = AppBarConfiguration(setOf(R.id.navigation_listFragment,
+                                                            R.id.navigation_settingsFragment),
+                                                      this.activity_main_drawer_layout)
 
-        // Synchronization
-        toggle.syncState()
+        // Toolbar
+        this.activity_main_Toolbar.setupWithNavController(navController,
+                                                          appBarConfiguration)
+
+        // NavigationView
+        this.activity_main_navigation_view.setupWithNavController(navController)
     }
 }

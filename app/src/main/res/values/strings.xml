@@ -1,4 +1,3 @@
-
 <resources>
 
     <string name="app_name">Real Estate Manager</string>
@@ -12,5 +11,13 @@
 
     <!-- activity_main_menu_drawer.xml -->
     <string name="menu_drawer_settings">SETTINGS</string>
+    <string name="menu_drawer_real_estates">REAL ESTATES</string>
+
+    <!-- nav_graph.xml -->
+    <string name="navigation_list_name">Real estate list</string>
+    <string name="navigation_details_name">Real estate details</string>
+    <string name="navigation_settings_name">Settings</string>
+    <string name="navigation_location_name">Location</string>
+    <string name="navigation_creator_name">Real estate creator</string>
 
 </resources>
