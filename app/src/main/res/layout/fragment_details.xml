@@ -8,18 +8,20 @@
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
     tools:context=".views.fragments.DetailsFragment">
 
-    <Button
-        android:id="@+id/details_button"
-        android:layout_width="wrap_content"
+    <!-- RecyclerView: List of photos -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/fragment_details_RecyclerView"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_margin="@dimen/margin_normal"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="DETAILS"
-        android:textSize="30sp"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:orientation="horizontal"
+        tools:listitem="@layout/item_photo_real_estate"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
