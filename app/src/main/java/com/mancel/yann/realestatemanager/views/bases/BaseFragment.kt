@@ -15,6 +15,10 @@ import androidx.fragment.app.Fragment
  */
 abstract class BaseFragment : Fragment() {
 
+    // FIELDS --------------------------------------------------------------------------------------
+
+    protected lateinit var mRootView: View
+
     // METHODS -------------------------------------------------------------------------------------
 
     /**
@@ -34,6 +38,11 @@ abstract class BaseFragment : Fragment() {
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(this.getFragmentLayout(), container, false)
+        this.mRootView = inflater.inflate(this.getFragmentLayout(), container, false)
+
+        // Configures the design
+        this.configureDesign()
+
+        return this.mRootView
     }
 }
