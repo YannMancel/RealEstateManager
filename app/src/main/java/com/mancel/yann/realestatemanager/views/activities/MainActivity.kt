@@ -1,6 +1,5 @@
 package com.mancel.yann.realestatemanager.views.activities
 
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.widget.Toolbar
@@ -10,10 +9,6 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
 import com.mancel.yann.realestatemanager.R
-import com.mancel.yann.realestatemanager.utils.convertDollarToEuro
-import com.mancel.yann.realestatemanager.utils.convertEuroToDollar
-import com.mancel.yann.realestatemanager.utils.getTodayDateDDMMYYYY
-import com.mancel.yann.realestatemanager.utils.getTodayDateYYYYMMDD
 import com.mancel.yann.realestatemanager.views.bases.BaseActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -40,11 +35,6 @@ class MainActivity : BaseActivity() {
 
         // Navigation
         this.configureFragmentNavigation()
-
-        Log.d(this::class.java.simpleName, "convertDollarToEuro: ${convertDollarToEuro(dollars = 100)}")
-        Log.d(this::class.java.simpleName, "convertEuroToDollar: ${convertEuroToDollar(euros = 81)}")
-        Log.d(this::class.java.simpleName, "getTodayDateYYYYMMDD: ${getTodayDateYYYYMMDD()}")
-        Log.d(this::class.java.simpleName, "getTodayDateDDMMYYYY: ${getTodayDateDDMMYYYY()}")
     }
 
     // -- Activity --

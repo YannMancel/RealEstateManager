@@ -2,10 +2,27 @@
 
 <resources>
 
-    <!-- ELEVATION -->
+    <!-- Elevation -->
     <dimen name="elevation_toolbar">4dp</dimen>
 
     <!-- NavigationView Header height -->
     <dimen name="navigation_header_height">220dp</dimen>
+
+    <!-- ImageView Size -->
+    <dimen name="image_view_item_global_size">80dp</dimen>
+    <dimen name="image_view_item_photo_width">150dp</dimen>
+    <dimen name="image_view_item_photo_height">180dp</dimen>
+    <dimen name="filter_photo_height">60dp</dimen>
+
+    <!-- Margin -->
+    <dimen name="margin_tiny">4dp</dimen>
+    <dimen name="margin_little">8dp</dimen>
+    <dimen name="margin_normal">16dp</dimen>
+    <dimen name="margin_big">48dp</dimen>
+    <dimen name="margin_heavy">88dp</dimen>
+
+    <!-- Padding -->
+    <dimen name="padding_normal">16dp</dimen>
+    <dimen name="padding_little">8dp</dimen>
 
 </resources>

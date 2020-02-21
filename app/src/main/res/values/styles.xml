@@ -47,4 +47,41 @@
         <item name="android:background">@color/colorPrimaryLight</item>
     </style>
 
+    <!-- *********************************** TextView ****************************************** -->
+
+    <!-- One line TextView sub-style -->
+    <style name="OneLineTextViewSubStyle" parent="AppTheme">
+        <item name="android:maxLines">@integer/one_line_text_view</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <!-- TextView style (level 1, black, normal) -->
+    <style name="TextViewStyle1" parent="OneLineTextViewSubStyle">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <!-- TextView style (level 1, darker gray, normal) -->
+    <style name="TextViewStyle2" parent="OneLineTextViewSubStyle">
+        <item name="android:textColor">@android:color/darker_gray</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <!-- TextView style (level 1, darker gray, normal) -->
+    <style name="TextViewStyle3" parent="OneLineTextViewSubStyle">
+        <item name="android:textColor">@color/colorPrice</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <!-- TextView style (level 1, white, normal) -->
+    <style name="TextViewStyle4" parent="OneLineTextViewSubStyle">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:gravity">center</item>
+    </style>
+
 </resources>
