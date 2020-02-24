@@ -11,7 +11,7 @@
 
     <!-- CardView: For the user's interactions -->
     <androidx.cardview.widget.CardView
-        android:id="@+id/item_global_real_estate_CardView"
+        android:id="@+id/item_photo_CardView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"

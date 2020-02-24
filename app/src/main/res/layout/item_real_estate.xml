@@ -11,7 +11,7 @@
 
     <!-- CardView: For the user's interactions -->
     <androidx.cardview.widget.CardView
-        android:id="@+id/item_global_real_estate_CardView"
+        android:id="@+id/item_real_estate_CardView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
@@ -67,7 +67,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintVertical_chainStyle="packed"
                 style="@style/TextViewStyle2"
-                tools:text="City"/>
+                tools:text="@tools:sample/cities"/>
 
             <!-- TextView: Price of real estate -->
             <TextView

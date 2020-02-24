@@ -1,9 +1,12 @@
 package com.mancel.yann.realestatemanager.views.fragments
 
+import android.util.Log
+import android.view.View
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mancel.yann.realestatemanager.R
+import com.mancel.yann.realestatemanager.views.adapters.AdapterListener
 import com.mancel.yann.realestatemanager.views.adapters.RealEstateAdapter
 import com.mancel.yann.realestatemanager.views.bases.BaseFragment
 import kotlinx.android.synthetic.main.fragment_list.view.*
@@ -13,9 +16,9 @@ import kotlinx.android.synthetic.main.fragment_list.view.*
  * Name of the project: RealEstateManager
  * Name of the package: com.mancel.yann.realestatemanager.views.fragments
  *
- * A [BaseFragment] subclass.
+ * A [BaseFragment] subclass which implements [AdapterListener].
  */
-class ListFragment : BaseFragment() {
+class ListFragment : BaseFragment(), AdapterListener {
 
     // FIELDS --------------------------------------------------------------------------------------
 
@@ -37,6 +40,20 @@ class ListFragment : BaseFragment() {
         }
     }
 
+    // -- AdapterListener interface --
+
+    override fun onDataChanged() {
+        this.mRootView.fragment_list_no_data.visibility = if (this.mAdapter.itemCount == 0)
+                                                              View.VISIBLE
+                                                          else
+                                                              View.GONE
+    }
+
+    override fun onClick(v: View?) {
+        Log.d(this::class.java.simpleName, "Data: ${v?.tag as? String}")
+        this.mCallback.onClickOnListFragment()
+    }
+
     // -- RecyclerView --
 
     /**
@@ -44,7 +61,7 @@ class ListFragment : BaseFragment() {
      */
     private fun configureRecyclerView() {
         // Adapter
-        this.mAdapter = RealEstateAdapter()
+        this.mAdapter = RealEstateAdapter(mCallback = this)
 
         // LayoutManager
         val viewManager = LinearLayoutManager(this.context)

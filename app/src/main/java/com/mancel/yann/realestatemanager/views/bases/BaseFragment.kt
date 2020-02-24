@@ -1,10 +1,13 @@
 package com.mancel.yann.realestatemanager.views.bases
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.mancel.yann.realestatemanager.views.fragments.FragmentListener
+import java.lang.ClassCastException
 
 /**
  * Created by Yann MANCEL on 20/02/2020.
@@ -18,6 +21,7 @@ abstract class BaseFragment : Fragment() {
     // FIELDS --------------------------------------------------------------------------------------
 
     protected lateinit var mRootView: View
+    protected lateinit var mCallback: FragmentListener
 
     // METHODS -------------------------------------------------------------------------------------
 
@@ -33,6 +37,18 @@ abstract class BaseFragment : Fragment() {
     protected abstract fun configureDesign()
 
     // -- Fragment --
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        // Configures the callback to the parent activity
+        if (context is FragmentListener) {
+            this.mCallback = context
+        }
+        else {
+            throw ClassCastException("$context must implement FragmentListener")
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,

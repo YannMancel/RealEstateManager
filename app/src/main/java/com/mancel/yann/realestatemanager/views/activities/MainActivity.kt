@@ -10,6 +10,7 @@ import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
 import com.mancel.yann.realestatemanager.R
 import com.mancel.yann.realestatemanager.views.bases.BaseActivity
+import com.mancel.yann.realestatemanager.views.fragments.FragmentListener
 import kotlinx.android.synthetic.main.activity_main.*
 
 /**
@@ -17,9 +18,9 @@ import kotlinx.android.synthetic.main.activity_main.*
  * Name of the project: RealEstateManager
  * Name of the package: com.mancel.yann.realestatemanager.views.activities
  *
- * A [BaseActivity] subclass.
+ * A [BaseActivity] subclass which implements [FragmentListener].
  */
-class MainActivity : BaseActivity() {
+class MainActivity : BaseActivity(), FragmentListener {
 
     // METHODS -------------------------------------------------------------------------------------
 
@@ -60,6 +61,15 @@ class MainActivity : BaseActivity() {
         else {
             super.onBackPressed()
         }
+    }
+
+    // -- FragmentListener --
+
+    override fun onClickOnListFragment() {
+        // NavController
+        val navController = this.findNavController(R.id.activity_main_NavHostFragment)
+
+        navController.navigate(R.id.action_listFragment_to_detailsFragment)
     }
 
     // -- Navigation --

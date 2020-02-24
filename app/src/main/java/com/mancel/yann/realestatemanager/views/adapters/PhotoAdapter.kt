@@ -8,7 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mancel.yann.realestatemanager.R
 import com.mancel.yann.realestatemanager.utils.PhotoDiffCallback
-import kotlinx.android.synthetic.main.item_photo_real_estate.view.*
+import kotlinx.android.synthetic.main.item_photo.view.*
+import java.lang.ref.WeakReference
 
 /**
  * Created by Yann MANCEL on 21/02/2020.
@@ -17,14 +18,19 @@ import kotlinx.android.synthetic.main.item_photo_real_estate.view.*
  *
  * A [RecyclerView.Adapter] subclass.
  */
-class PhotoAdapter : RecyclerView.Adapter<PhotoAdapter.PhotoViewHolder>() {
+class PhotoAdapter(private val mCallback: AdapterListener?) : RecyclerView.Adapter<PhotoAdapter.PhotoViewHolder>() {
 
     // NESTED CLASSES ------------------------------------------------------------------------------
 
     /**
      * A [RecyclerView.ViewHolder] subclass.
      */
-    class PhotoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    class PhotoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+        // FIELDS ----------------------------------------------------------------------------------
+
+        lateinit var mCallback: WeakReference<AdapterListener?>
+    }
 
     // FIELDS --------------------------------------------------------------------------------------
 
@@ -35,7 +41,7 @@ class PhotoAdapter : RecyclerView.Adapter<PhotoAdapter.PhotoViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhotoViewHolder {
         // Creates the View thanks to the inflater
         val view = LayoutInflater.from(parent.context)
-                                 .inflate(R.layout.item_photo_real_estate, parent, false)
+                                 .inflate(R.layout.item_photo, parent, false)
 
         return PhotoViewHolder(view)
     }
@@ -43,6 +49,18 @@ class PhotoAdapter : RecyclerView.Adapter<PhotoAdapter.PhotoViewHolder>() {
     override fun onBindViewHolder(holder: PhotoViewHolder, position: Int) {
         // Data
         val data = this.mPhotos[position]
+
+        // Callback
+        holder.mCallback = WeakReference(this.mCallback)
+
+        // CardView
+        holder.itemView.item_photo_CardView.setOnClickListener {
+            // Tag -> Data
+            it.tag = data
+
+            // Starts the callback
+            holder.mCallback.get()?.onClick(it)
+        }
 
         // Image
         Glide.with(holder.itemView)
@@ -74,5 +92,8 @@ class PhotoAdapter : RecyclerView.Adapter<PhotoAdapter.PhotoViewHolder>() {
 
         // Notifies adapter
         diffResult.dispatchUpdatesTo(this)
+
+        // Callback
+        this.mCallback?.onDataChanged()
     }
 }

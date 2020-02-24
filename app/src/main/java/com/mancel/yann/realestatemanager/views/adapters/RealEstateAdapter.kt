@@ -8,7 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mancel.yann.realestatemanager.R
 import com.mancel.yann.realestatemanager.utils.RealEstateDiffCallback
-import kotlinx.android.synthetic.main.item_global_real_estate.view.*
+import kotlinx.android.synthetic.main.item_real_estate.view.*
+import java.lang.ref.WeakReference
 
 /**
  * Created by Yann MANCEL on 21/02/2020.
@@ -17,14 +18,19 @@ import kotlinx.android.synthetic.main.item_global_real_estate.view.*
  *
  * A [RecyclerView.Adapter] subclass.
  */
-class RealEstateAdapter : RecyclerView.Adapter<RealEstateAdapter.RealEstateViewHolder>() {
+class RealEstateAdapter(private val mCallback: AdapterListener?) : RecyclerView.Adapter<RealEstateAdapter.RealEstateViewHolder>() {
 
     // NESTED CLASSES ------------------------------------------------------------------------------
 
     /**
      * A [RecyclerView.ViewHolder] subclass.
      */
-    class RealEstateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    class RealEstateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+        // FIELDS ----------------------------------------------------------------------------------
+
+        lateinit var mCallback: WeakReference<AdapterListener?>
+    }
 
     // FIELDS --------------------------------------------------------------------------------------
 
@@ -35,7 +41,7 @@ class RealEstateAdapter : RecyclerView.Adapter<RealEstateAdapter.RealEstateViewH
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RealEstateViewHolder {
         // Creates the View thanks to the inflater
         val view = LayoutInflater.from(parent.context)
-                                 .inflate(R.layout.item_global_real_estate, parent, false)
+                                 .inflate(R.layout.item_real_estate, parent, false)
 
         return RealEstateViewHolder(view)
     }
@@ -43,6 +49,18 @@ class RealEstateAdapter : RecyclerView.Adapter<RealEstateAdapter.RealEstateViewH
     override fun onBindViewHolder(holder: RealEstateViewHolder, position: Int) {
         // Data
         val data = this.mRealEstates[position]
+
+        // Callback
+        holder.mCallback = WeakReference(this.mCallback)
+
+        // CardView
+        holder.itemView.item_real_estate_CardView.setOnClickListener {
+            // Tag -> Data
+            it.tag = data
+
+            // Starts the callback
+            holder.mCallback.get()?.onClick(it)
+        }
 
         // Image
         Glide.with(holder.itemView)
@@ -80,5 +98,8 @@ class RealEstateAdapter : RecyclerView.Adapter<RealEstateAdapter.RealEstateViewH
 
         // Notifies adapter
         diffResult.dispatchUpdatesTo(this)
+
+        // Callback
+        this.mCallback?.onDataChanged()
     }
 }

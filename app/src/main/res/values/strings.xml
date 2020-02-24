@@ -20,4 +20,7 @@
     <string name="navigation_location_name">Location</string>
     <string name="navigation_creator_name">Real estate creator</string>
 
+    <!-- item.photo.xml & item_real_estate.xml -->
+    <string name="no_data">No data</string>
+
 </resources>

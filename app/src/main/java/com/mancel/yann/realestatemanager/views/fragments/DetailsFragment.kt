@@ -1,9 +1,12 @@
 package com.mancel.yann.realestatemanager.views.fragments
 
+import android.util.Log
+import android.view.View
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mancel.yann.realestatemanager.R
+import com.mancel.yann.realestatemanager.views.adapters.AdapterListener
 import com.mancel.yann.realestatemanager.views.adapters.PhotoAdapter
 import com.mancel.yann.realestatemanager.views.bases.BaseFragment
 import kotlinx.android.synthetic.main.fragment_details.view.*
@@ -13,9 +16,9 @@ import kotlinx.android.synthetic.main.fragment_details.view.*
  * Name of the project: RealEstateManager
  * Name of the package: com.mancel.yann.realestatemanager.views.fragments
  *
- * A [BaseFragment] subclass.
+ * A [BaseFragment] subclass which implements [AdapterListener].
  */
-class DetailsFragment : BaseFragment() {
+class DetailsFragment : BaseFragment(), AdapterListener {
 
     // FIELDS --------------------------------------------------------------------------------------
 
@@ -37,6 +40,19 @@ class DetailsFragment : BaseFragment() {
         }
     }
 
+    // -- AdapterListener interface --
+
+    override fun onDataChanged() {
+        this.mRootView.fragment_details_no_data.visibility = if (this.mAdapter.itemCount == 0)
+                                                                 View.VISIBLE
+                                                             else
+                                                                 View.GONE
+    }
+
+    override fun onClick(v: View?) {
+        Log.d(this::class.java.simpleName, "Data: ${v?.tag as? String}")
+    }
+
     // -- RecyclerView --
 
     /**
@@ -44,7 +60,7 @@ class DetailsFragment : BaseFragment() {
      */
     private fun configureRecyclerView() {
         // Adapter
-        this.mAdapter = PhotoAdapter()
+        this.mAdapter = PhotoAdapter(mCallback = this)
 
         // LayoutManager
         val viewManager = LinearLayoutManager(this.context,
