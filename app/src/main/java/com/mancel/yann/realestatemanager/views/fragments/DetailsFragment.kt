@@ -25,6 +25,10 @@ class DetailsFragment : BaseFragment(), AdapterListener {
 
     private lateinit var mAdapter: PhotoAdapter
 
+    private val mItemId: Int by lazy {
+        DetailsFragmentArgs.fromBundle(this.arguments!!).itemId
+    }
+
     // METHODS -------------------------------------------------------------------------------------
 
     // -- BaseFragment --
@@ -40,6 +44,8 @@ class DetailsFragment : BaseFragment(), AdapterListener {
         this.mAdapter.apply {
             updateData(listOf("Room", "Bedroom", "Bathroom", "Bed"))
         }
+
+        Log.d(this::class.java.simpleName, "ItemId = ${this.mItemId}")
     }
 
     // -- AdapterListener interface --

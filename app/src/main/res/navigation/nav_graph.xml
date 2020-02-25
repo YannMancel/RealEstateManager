@@ -26,7 +26,14 @@
         android:id="@+id/navigation_detailsFragment"
         android:name="com.mancel.yann.realestatemanager.views.fragments.DetailsFragment"
         android:label="@string/navigation_details_name"
-        tools:layout="@layout/fragment_details"/>
+        tools:layout="@layout/fragment_details">
+
+        <argument
+            android:name="itemId"
+            app:argType="integer"
+            android:defaultValue="0" />
+
+    </fragment>
 
     <!-- fragment: SettingsFragment -->
     <fragment

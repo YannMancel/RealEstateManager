@@ -12,7 +12,9 @@ import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
 import com.mancel.yann.realestatemanager.R
 import com.mancel.yann.realestatemanager.views.bases.BaseActivity
+import com.mancel.yann.realestatemanager.views.fragments.DetailsFragmentArgs
 import com.mancel.yann.realestatemanager.views.fragments.FragmentListener
+import com.mancel.yann.realestatemanager.views.fragments.ListFragmentDirections
 import kotlinx.android.synthetic.main.activity_main.*
 
 /**
@@ -28,6 +30,10 @@ class MainActivity : BaseActivity(), FragmentListener {
 
     private enum class Mode {PHONE_MODE, TABLET_MODE}
     private lateinit var mMode: Mode
+
+    // FIELDS --------------------------------------------------------------------------------------
+
+    private val mNavController by lazy {this.findNavController(R.id.activity_main_NavHostFragment)}
 
     // METHODS -------------------------------------------------------------------------------------
 
@@ -59,10 +65,7 @@ class MainActivity : BaseActivity(), FragmentListener {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        // NavController
-        val navController = this.findNavController(R.id.activity_main_NavHostFragment)
-
-        return item!!.onNavDestinationSelected(navController) || super.onOptionsItemSelected(item)
+        return item!!.onNavDestinationSelected(this.mNavController) || super.onOptionsItemSelected(item)
     }
 
     override fun onBackPressed() {
@@ -76,19 +79,23 @@ class MainActivity : BaseActivity(), FragmentListener {
 
     // -- FragmentListener interface --
 
-    override fun onClickOnListFragment() {
-        // NavController
-        val navController = this.findNavController(R.id.activity_main_NavHostFragment)
+    override fun navigateToDetailsFragment(v: View?) {
+        // Tag
+        // todo 25/02/2020 Retrieve data from v
+        val value = 5
 
+        // According to the device type
         when (this.mMode) {
             Mode.PHONE_MODE -> {
-                // By action
-                navController.navigate(R.id.action_listFragment_to_detailsFragment)
+                // By action (Safe Args)
+                val action = ListFragmentDirections.actionListFragmentToDetailsFragment(itemId = value)
+                this.mNavController.navigate(action)
             }
 
             Mode.TABLET_MODE -> {
-                // By destination
-                navController.navigate(R.id.navigation_detailsFragment)
+                // By destination (Safe Args)
+                val bundle = DetailsFragmentArgs(itemId = value).toBundle()
+                this.mNavController.navigate(R.id.navigation_detailsFragment, bundle)
             }
         }
     }
@@ -100,12 +107,10 @@ class MainActivity : BaseActivity(), FragmentListener {
      */
     private fun checkMode() {
         // Checks the mode
-        this.mMode = if (this.findViewById<View>(R.id.activity_main_fragment) != null) {
+        this.mMode = if (this.findViewById<View>(R.id.activity_main_fragment) != null)
                          Mode.TABLET_MODE
-                     }
-                     else {
+                     else
                          Mode.PHONE_MODE
-                     }
     }
 
     // -- Navigation --
@@ -114,9 +119,6 @@ class MainActivity : BaseActivity(), FragmentListener {
      * Configures the fragment navigation
      */
     private fun configureFragmentNavigation() {
-        // NavController
-        val navController = this.findNavController(R.id.activity_main_NavHostFragment)
-
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         val homeFragments = when (this.mMode) {
@@ -136,10 +138,10 @@ class MainActivity : BaseActivity(), FragmentListener {
                                                       this.activity_main_drawer_layout)
 
         // Toolbar
-        this.activity_main_Toolbar.setupWithNavController(navController,
+        this.activity_main_Toolbar.setupWithNavController(this.mNavController,
                                                           appBarConfiguration)
 
         // NavigationView
-        this.activity_main_navigation_view.setupWithNavController(navController)
+        this.activity_main_navigation_view.setupWithNavController(this.mNavController)
     }
 }

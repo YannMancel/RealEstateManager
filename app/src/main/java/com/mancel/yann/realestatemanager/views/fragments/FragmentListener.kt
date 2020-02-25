@@ -1,5 +1,7 @@
 package com.mancel.yann.realestatemanager.views.fragments
 
+import android.view.View
+
 /**
  * Created by Yann MANCEL on 24/02/2020.
  * Name of the project: RealEstateManager
@@ -11,6 +13,7 @@ interface FragmentListener {
 
     /**
      * Called when the user has selected an item of [ListFragment]
+     * @param v The [View] that was clicked.
      */
-    fun onClickOnListFragment()
+    fun navigateToDetailsFragment(v: View?)
 }

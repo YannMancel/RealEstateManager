@@ -52,7 +52,7 @@ class ListFragment : BaseFragment(), AdapterListener {
 
     override fun onClick(v: View?) {
         // Callback from Fragment to Activity
-        this.mCallback?.onClickOnListFragment()
+        this.mCallback?.navigateToDetailsFragment(v)
     }
 
     // -- RecyclerView --
