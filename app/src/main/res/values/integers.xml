@@ -8,4 +8,7 @@
     <!-- Gradient filter -->
     <item name="opacity_filter" type="integer" format="float">0.5</item>
 
+    <!-- Guideline -->
+    <item name="vertical_guideline_ratio" type="integer" format="float">0.3</item>
+
 </resources>

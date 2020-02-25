@@ -2,6 +2,7 @@ package com.mancel.yann.realestatemanager.views.fragments
 
 import android.util.Log
 import android.view.View
+import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -28,6 +29,7 @@ class DetailsFragment : BaseFragment(), AdapterListener {
 
     // -- BaseFragment --
 
+    @LayoutRes
     override fun getFragmentLayout(): Int = R.layout.fragment_details
 
     override fun configureDesign() {

@@ -1,6 +1,7 @@
 package com.mancel.yann.realestatemanager.views.bases
 
 import android.os.Bundle
+import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 
@@ -19,6 +20,7 @@ abstract class BaseActivity : AppCompatActivity() {
      * Gets the integer value of the activity layout
      * @return an integer that corresponds to the activity layout
      */
+    @LayoutRes
     protected abstract fun getActivityLayout(): Int
 
     /**

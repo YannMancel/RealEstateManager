@@ -1,7 +1,7 @@
 package com.mancel.yann.realestatemanager.views.fragments
 
-import android.util.Log
 import android.view.View
+import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -28,6 +28,7 @@ class ListFragment : BaseFragment(), AdapterListener {
 
     // -- BaseFragment --
 
+    @LayoutRes
     override fun getFragmentLayout(): Int = R.layout.fragment_list
 
     override fun configureDesign() {
@@ -50,8 +51,8 @@ class ListFragment : BaseFragment(), AdapterListener {
     }
 
     override fun onClick(v: View?) {
-        Log.d(this::class.java.simpleName, "Data: ${v?.tag as? String}")
-        this.mCallback.onClickOnListFragment()
+        // Callback from Fragment to Activity
+        this.mCallback?.onClickOnListFragment()
     }
 
     // -- RecyclerView --

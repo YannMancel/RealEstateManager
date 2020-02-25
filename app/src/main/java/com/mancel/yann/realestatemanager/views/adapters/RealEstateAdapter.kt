@@ -18,7 +18,7 @@ import java.lang.ref.WeakReference
  *
  * A [RecyclerView.Adapter] subclass.
  */
-class RealEstateAdapter(private val mCallback: AdapterListener?) : RecyclerView.Adapter<RealEstateAdapter.RealEstateViewHolder>() {
+class RealEstateAdapter(private val mCallback: AdapterListener? = null) : RecyclerView.Adapter<RealEstateAdapter.RealEstateViewHolder>() {
 
     // NESTED CLASSES ------------------------------------------------------------------------------
 

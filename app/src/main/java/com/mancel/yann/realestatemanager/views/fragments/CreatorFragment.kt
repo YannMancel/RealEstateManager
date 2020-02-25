@@ -1,5 +1,6 @@
 package com.mancel.yann.realestatemanager.views.fragments
 
+import androidx.annotation.LayoutRes
 import com.mancel.yann.realestatemanager.R
 import com.mancel.yann.realestatemanager.views.bases.BaseFragment
 
@@ -16,6 +17,7 @@ class CreatorFragment : BaseFragment() {
 
     // -- BaseFragment --
 
+    @LayoutRes
     override fun getFragmentLayout(): Int = R.layout.fragment_creator
 
     override fun configureDesign() {}

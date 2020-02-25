@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import com.mancel.yann.realestatemanager.views.fragments.FragmentListener
 import java.lang.ClassCastException
@@ -21,7 +22,7 @@ abstract class BaseFragment : Fragment() {
     // FIELDS --------------------------------------------------------------------------------------
 
     protected lateinit var mRootView: View
-    protected lateinit var mCallback: FragmentListener
+    protected var mCallback: FragmentListener? = null
 
     // METHODS -------------------------------------------------------------------------------------
 
@@ -29,6 +30,7 @@ abstract class BaseFragment : Fragment() {
      * Gets the integer value of the fragment layout
      * @return an integer that corresponds to the fragment layout
      */
+    @LayoutRes
     protected abstract fun getFragmentLayout(): Int
 
     /**

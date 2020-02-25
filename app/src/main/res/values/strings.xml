@@ -22,5 +22,6 @@
 
     <!-- item.photo.xml & item_real_estate.xml -->
     <string name="no_data">No data</string>
+    <string name="menu_drawer_details">DETAILS</string>
 
 </resources>

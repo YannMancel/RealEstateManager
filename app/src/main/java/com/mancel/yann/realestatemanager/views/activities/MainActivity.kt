@@ -2,6 +2,8 @@ package com.mancel.yann.realestatemanager.views.activities
 
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import androidx.annotation.LayoutRes
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.navigation.findNavController
@@ -22,10 +24,16 @@ import kotlinx.android.synthetic.main.activity_main.*
  */
 class MainActivity : BaseActivity(), FragmentListener {
 
+    // ENUMS ---------------------------------------------------------------------------------------
+
+    private enum class Mode {PHONE_MODE, TABLET_MODE}
+    private lateinit var mMode: Mode
+
     // METHODS -------------------------------------------------------------------------------------
 
     // -- BaseActivity --
 
+    @LayoutRes
     override fun getActivityLayout(): Int = R.layout.activity_main
 
     override fun getToolBar(): Toolbar? = this.activity_main_Toolbar
@@ -33,6 +41,9 @@ class MainActivity : BaseActivity(), FragmentListener {
     override fun configureDesign() {
         // UI
         this.configureToolbar()
+
+        // Mode
+        this.checkMode()
 
         // Navigation
         this.configureFragmentNavigation()
@@ -63,13 +74,38 @@ class MainActivity : BaseActivity(), FragmentListener {
         }
     }
 
-    // -- FragmentListener --
+    // -- FragmentListener interface --
 
     override fun onClickOnListFragment() {
         // NavController
         val navController = this.findNavController(R.id.activity_main_NavHostFragment)
 
-        navController.navigate(R.id.action_listFragment_to_detailsFragment)
+        when (this.mMode) {
+            Mode.PHONE_MODE -> {
+                // By action
+                navController.navigate(R.id.action_listFragment_to_detailsFragment)
+            }
+
+            Mode.TABLET_MODE -> {
+                // By destination
+                navController.navigate(R.id.navigation_detailsFragment)
+            }
+        }
+    }
+
+    // -- Mode --
+
+    /**
+     * Checks the device type: phone or tablet
+     */
+    private fun checkMode() {
+        // Checks the mode
+        this.mMode = if (this.findViewById<View>(R.id.activity_main_fragment) != null) {
+                         Mode.TABLET_MODE
+                     }
+                     else {
+                         Mode.PHONE_MODE
+                     }
     }
 
     // -- Navigation --
@@ -81,11 +117,22 @@ class MainActivity : BaseActivity(), FragmentListener {
         // NavController
         val navController = this.findNavController(R.id.activity_main_NavHostFragment)
 
-        // AppBarConfiguration
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-        val appBarConfiguration = AppBarConfiguration(setOf(R.id.navigation_listFragment,
-                                                            R.id.navigation_settingsFragment),
+        val homeFragments = when (this.mMode) {
+                                Mode.PHONE_MODE -> {
+                                    setOf(R.id.navigation_listFragment,
+                                          R.id.navigation_settingsFragment)
+                                }
+
+                                Mode.TABLET_MODE -> {
+                                    setOf(R.id.navigation_detailsFragment,
+                                          R.id.navigation_settingsFragment)
+                                }
+                            }
+
+        // AppBarConfiguration
+        val appBarConfiguration = AppBarConfiguration(homeFragments,
                                                       this.activity_main_drawer_layout)
 
         // Toolbar

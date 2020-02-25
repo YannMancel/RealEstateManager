@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/navigation_detailsFragment">
+
+    <!-- fragment: ListFragment -->
+    <fragment
+        android:id="@+id/navigation_listFragment"
+        android:name="com.mancel.yann.realestatemanager.views.fragments.ListFragment"
+        android:label="@string/navigation_list_name"
+        tools:layout="@layout/fragment_list">
+
+        <action
+            android:id="@+id/action_listFragment_to_detailsFragment"
+            app:destination="@id/navigation_detailsFragment"/>
+
+    </fragment>
+
+    <!-- fragment: DetailsFragment -->
+    <fragment
+        android:id="@+id/navigation_detailsFragment"
+        android:name="com.mancel.yann.realestatemanager.views.fragments.DetailsFragment"
+        android:label="@string/navigation_details_name"
+        tools:layout="@layout/fragment_details"/>
+
+    <!-- fragment: SettingsFragment -->
+    <fragment
+        android:id="@+id/navigation_settingsFragment"
+        android:name="com.mancel.yann.realestatemanager.views.fragments.SettingsFragment"
+        android:label="@string/navigation_settings_name"
+        tools:layout="@layout/fragment_settings" />
+
+    <!-- fragment: LocationFragment -->
+    <fragment
+        android:id="@+id/navigation_locationFragment"
+        android:name="com.mancel.yann.realestatemanager.views.fragments.LocationFragment"
+        android:label="@string/navigation_location_name"
+        tools:layout="@layout/fragment_location" />
+
+    <!-- fragment: CreatorFragment -->
+    <fragment
+        android:id="@+id/navigation_creatorFragment"
+        android:name="com.mancel.yann.realestatemanager.views.fragments.CreatorFragment"
+        android:label="@string/navigation_creator_name"
+        tools:layout="@layout/fragment_creator" />
+
+</navigation>

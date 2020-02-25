@@ -10,9 +10,9 @@
         android:checkableBehavior="single">
 
         <item
-            android:id="@id/navigation_listFragment"
-            android:icon="@drawable/ic_list"
-            android:title="@string/menu_drawer_real_estates"/>
+            android:id="@id/navigation_detailsFragment"
+            android:icon="@drawable/ic_home"
+            android:title="@string/menu_drawer_details"/>
 
         <item
             android:id="@id/navigation_settingsFragment"

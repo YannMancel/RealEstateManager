@@ -18,7 +18,7 @@ import java.lang.ref.WeakReference
  *
  * A [RecyclerView.Adapter] subclass.
  */
-class PhotoAdapter(private val mCallback: AdapterListener?) : RecyclerView.Adapter<PhotoAdapter.PhotoViewHolder>() {
+class PhotoAdapter(private val mCallback: AdapterListener? = null) : RecyclerView.Adapter<PhotoAdapter.PhotoViewHolder>() {
 
     // NESTED CLASSES ------------------------------------------------------------------------------
 
