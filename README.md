@@ -25,6 +25,7 @@
     * [LiveData](https://developer.android.com/topic/libraries/architecture/livedata)
     * [ViewModel](https://developer.android.com/topic/libraries/architecture/viewmodel)
     * [Navigation](https://developer.android.com/guide/navigation/)
+    * [Room](https://developer.android.com/topic/libraries/architecture/room)
     
 * [Library Glide](https://github.com/bumptech/glide)
 

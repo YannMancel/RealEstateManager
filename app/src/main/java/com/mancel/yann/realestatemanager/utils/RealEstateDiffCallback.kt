@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.DiffUtil
  * Created by Yann MANCEL on 21/02/2020.
  * Name of the project: RealEstateManager
  * Name of the package: com.mancel.yann.realestatemanager.utils
+ *
+ * A [DiffUtil.Callback] subclass.
  */
 class RealEstateDiffCallback(private val mOldList: List<String>,
                              private val mNewList: List<String>) : DiffUtil.Callback() {

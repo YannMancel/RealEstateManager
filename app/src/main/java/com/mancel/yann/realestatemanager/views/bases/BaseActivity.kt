@@ -10,7 +10,7 @@ import androidx.appcompat.widget.Toolbar
  * Name of the project: RealEstateManager
  * Name of the package: com.mancel.yann.realestatemanager.views.bases
  *
- * A [AppCompatActivity] subclass.
+ * An [AppCompatActivity] subclass.
  */
 abstract class BaseActivity : AppCompatActivity() {
 
