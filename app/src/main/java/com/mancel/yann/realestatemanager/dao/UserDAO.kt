@@ -23,15 +23,14 @@ interface UserDAO {
     @Insert
     fun insertUser(user: User): Long
 
-    // -- Read --
-
     /**
      * Usage:
-     * dao.getAllUsers()
-     *    .observe(this, Observer { users -> ... })
+     * val ids = dao.insertUsers(user1, user2)
      */
-    @Query("SELECT * FROM user")
-    fun getAllUsers(): LiveData<List<User>>
+    @Insert
+    fun insertUsers(vararg users: User): List<Long>
+
+    // -- Read --
 
     /**
      * Usage:
@@ -40,6 +39,14 @@ interface UserDAO {
      */
     @Query("SELECT * FROM user WHERE id = :userId")
     fun getUserById(userId: Long): LiveData<User>
+
+    /**
+     * Usage:
+     * dao.getAllUsers()
+     *    .observe(this, Observer { users -> ... })
+     */
+    @Query("SELECT * FROM user")
+    fun getAllUsers(): LiveData<List<User>>
 
     // -- Update --
 

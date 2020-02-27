@@ -34,7 +34,7 @@ class RealEstateAdapter(private val mCallback: AdapterListener? = null) : Recycl
 
     // FIELDS --------------------------------------------------------------------------------------
 
-    private var mRealEstates: List<String> = mutableListOf()
+    private var mRealEstates = emptyList<String>()
 
     // METHODS -------------------------------------------------------------------------------------
 

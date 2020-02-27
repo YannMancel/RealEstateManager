@@ -34,7 +34,7 @@ class PhotoAdapter(private val mCallback: AdapterListener? = null) : RecyclerVie
 
     // FIELDS --------------------------------------------------------------------------------------
 
-    private var mPhotos: List<String> = mutableListOf()
+    private var mPhotos = emptyList<String>()
 
     // METHODS -------------------------------------------------------------------------------------
 
