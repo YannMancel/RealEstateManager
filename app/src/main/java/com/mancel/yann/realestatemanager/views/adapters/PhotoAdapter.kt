@@ -91,7 +91,7 @@ class PhotoAdapter(private val mCallback: AdapterListener? = null) : RecyclerVie
         this.mPhotos = newPhotos
 
         // Notifies adapter
-        diffResult.dispatchUpdatesTo(this)
+        diffResult.dispatchUpdatesTo(this@PhotoAdapter)
 
         // Callback
         this.mCallback?.onDataChanged()

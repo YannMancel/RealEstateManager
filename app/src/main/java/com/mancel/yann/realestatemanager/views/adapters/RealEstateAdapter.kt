@@ -97,7 +97,7 @@ class RealEstateAdapter(private val mCallback: AdapterListener? = null) : Recycl
         this.mRealEstates = newRealEstates
 
         // Notifies adapter
-        diffResult.dispatchUpdatesTo(this)
+        diffResult.dispatchUpdatesTo(this@RealEstateAdapter)
 
         // Callback
         this.mCallback?.onDataChanged()

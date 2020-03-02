@@ -37,7 +37,7 @@ interface UserDAO {
      * dao.getUserById(userId)
      *    .observe(this, Observer { user -> ... })
      */
-    @Query("SELECT * FROM user WHERE id = :userId")
+    @Query("SELECT * FROM user WHERE user_id = :userId")
     fun getUserById(userId: Long): LiveData<User>
 
     /**
@@ -70,6 +70,6 @@ interface UserDAO {
      * Usage:
      * val numberOfDeletedRow = dao.deleteUserById(userId)
      */
-    @Query("DELETE FROM user WHERE id = :userId")
+    @Query("DELETE FROM user WHERE user_id = :userId")
     fun deleteUserById(userId: Long): Int
 }

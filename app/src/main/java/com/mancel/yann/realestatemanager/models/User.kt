@@ -8,19 +8,24 @@ import androidx.room.PrimaryKey
  * Created by Yann MANCEL on 26/02/2020.
  * Name of the project: RealEstateManager
  * Name of the package: com.mancel.yann.realestatemanager.models
+ *
+ * It is the estate agent.
+ *
+ * One-to-many relationships: one [User] and many [RealEstate]
  */
 @Entity(tableName = "user")
 data class User(
+
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id")
-    val mId: Long,
+    @ColumnInfo(name = "user_id")
+    var mId: Long = 0L,
 
     @ColumnInfo(name = "username")
-    val mUsername: String?,
+    var mUsername: String? = null,
 
     @ColumnInfo(name = "email")
-    val mEmail: String?,
+    var mEmail: String? = null,
 
     @ColumnInfo(name = "url_picture")
-    val mUrlPicture: String?
+    var mUrlPicture: String? = null
 )

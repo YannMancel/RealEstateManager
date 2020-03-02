@@ -68,7 +68,7 @@ class DetailsFragment : BaseFragment(), AdapterListener {
      */
     private fun configureRecyclerView() {
         // Adapter
-        this.mAdapter = PhotoAdapter(mCallback = this)
+        this.mAdapter = PhotoAdapter(mCallback = this@DetailsFragment)
 
         // LayoutManager
         val viewManager = LinearLayoutManager(this.context,

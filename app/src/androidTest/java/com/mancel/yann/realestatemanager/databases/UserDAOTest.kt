@@ -15,6 +15,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.io.IOException
 
 /**
  * Created by Yann MANCEL on 27/02/2020.
@@ -30,6 +31,9 @@ class UserDAOTest {
 
     private lateinit var mDatabase: AppDatabase
     private lateinit var mUserDAO: UserDAO
+
+    private val mUser1 = User(mUsername = "Yann")
+    private val mUser2 = User(mUsername = "Melina")
 
     // RULES (Synchronized Tests) ------------------------------------------------------------------
 
@@ -52,7 +56,7 @@ class UserDAOTest {
     }
 
     @After
-    @Throws(Exception::class)
+    @Throws(IOException::class)
     fun tearDown() {
         this.mDatabase.close()
     }
@@ -61,8 +65,7 @@ class UserDAOTest {
 
     @Test
     fun insertUser_shouldBeSuccess() {
-        val user = User(0, "Yann", null, null)
-        val id = this.mUserDAO.insertUser(user)
+        val id = this.mUserDAO.insertUser(this.mUser1)
 
         // TEST: Good Id
         assertEquals(1, id)
@@ -70,9 +73,7 @@ class UserDAOTest {
 
     @Test
     fun insertUsers_shouldBeSuccess() {
-        val user1 = User(0, "Yann", null, null)
-        val user2 = User(0, "Melina", null, null)
-        val ids = this.mUserDAO.insertUsers(user1, user2)
+        val ids = this.mUserDAO.insertUsers(this.mUser1, this.mUser2)
 
         // TEST: Good Ids
         assertEquals(1, ids[0])
@@ -94,14 +95,13 @@ class UserDAOTest {
     @Throws(InterruptedException::class)
     fun getUserById_shouldBeSuccess() {
         // BEFORE: Add user
-        val user1 = User(0, "Yann", null, null)
-        this.mUserDAO.insertUser(user1)
+        this.mUserDAO.insertUser(this.mUser1)
 
         // THEN: Retrieve user by its Id
         val user = LiveDataTestUtil.getValue(this.mUserDAO.getUserById(1))
 
         // TEST: Same user except the id because it is 0 for user1 and 1 for user2
-        assertEquals(user1.mUsername, user.mUsername)
+        assertEquals(this.mUser1.mUsername, user.mUsername)
     }
 
     @Test
@@ -117,16 +117,14 @@ class UserDAOTest {
     @Throws(InterruptedException::class)
     fun getAllUsers_shouldBeSuccess() {
         // BEFORE: Add users
-        val user1 = User(0, "Yann", null, null)
-        val user2 = User(0, "Melina", null, null)
-        this.mUserDAO.insertUsers(user1, user2)
+        this.mUserDAO.insertUsers(this.mUser1, this.mUser2)
 
         // THEN: Retrieve users
         val users = LiveDataTestUtil.getValue(this.mUserDAO.getAllUsers())
 
         // TEST: Same users
-        assertEquals(user1.mUsername, users[0].mUsername)
-        assertEquals(user2.mUsername, users[1].mUsername)
+        assertEquals(this.mUser1.mUsername, users[0].mUsername)
+        assertEquals(this.mUser2.mUsername, users[1].mUsername)
     }
 
     // -- Update --
@@ -135,8 +133,7 @@ class UserDAOTest {
     @Throws(InterruptedException::class)
     fun updateUser_shouldBeSuccess() {
         // BEFORE: Add user
-        val user1 = User(0, "Yann", null, null)
-        this.mUserDAO.insertUser(user1)
+        this.mUserDAO.insertUser(this.mUser1)
 
         // THEN: Retrieve the user
         val userBeforeUpdate = LiveDataTestUtil.getValue(this.mUserDAO.getUserById(1))
@@ -161,8 +158,7 @@ class UserDAOTest {
     @Throws(InterruptedException::class)
     fun deleteUser_shouldBeSuccess() {
         // BEFORE: Add user
-        val user1 = User(0, "Yann", null, null)
-        this.mUserDAO.insertUser(user1)
+        this.mUserDAO.insertUser(this.mUser1)
 
         // THEN: Retrieve the user
         val user = LiveDataTestUtil.getValue(this.mUserDAO.getUserById(1))
@@ -178,11 +174,10 @@ class UserDAOTest {
     @Throws(InterruptedException::class)
     fun deleteUser_shouldBeFail() {
         // BEFORE: Add user
-        val user1 = User(0, "Yann", null, null)
-        this.mUserDAO.insertUser(user1)
+        this.mUserDAO.insertUser(this.mUser1)
 
         // THEN: Delete user thanks to its Id  (Error)
-        val numberOfDeletedRow = this.mUserDAO.deleteUser(user1)
+        val numberOfDeletedRow = this.mUserDAO.deleteUser(this.mUser1)
 
         // TEST: No delete
         assertEquals(0, numberOfDeletedRow)
@@ -192,8 +187,7 @@ class UserDAOTest {
     @Throws(InterruptedException::class)
     fun deleteUserById_shouldBeSuccess() {
         // BEFORE: Add user
-        val user1 = User(0, "Yann", null, null)
-        this.mUserDAO.insertUser(user1)
+        this.mUserDAO.insertUser(this.mUser1)
 
         // THEN: Retrieve user by its Id
         val user = LiveDataTestUtil.getValue(this.mUserDAO.getUserById(1))
@@ -209,8 +203,7 @@ class UserDAOTest {
     @Throws(InterruptedException::class)
     fun deleteUserById_shouldBeFail() {
         // BEFORE: Add user
-        val user1 = User(0, "Yann", null, null)
-        this.mUserDAO.insertUser(user1)
+        this.mUserDAO.insertUser(this.mUser1)
 
         // THEN: Delete user thanks to its Id (Error)
         val numberOfDeletedRow = this.mUserDAO.deleteUserById(0)

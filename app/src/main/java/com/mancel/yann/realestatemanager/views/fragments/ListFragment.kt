@@ -62,7 +62,7 @@ class ListFragment : BaseFragment(), AdapterListener {
      */
     private fun configureRecyclerView() {
         // Adapter
-        this.mAdapter = RealEstateAdapter(mCallback = this)
+        this.mAdapter = RealEstateAdapter(mCallback = this@ListFragment)
 
         // LayoutManager
         val viewManager = LinearLayoutManager(this.context)
