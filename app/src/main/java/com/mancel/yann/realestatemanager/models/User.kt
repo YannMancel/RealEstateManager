@@ -2,6 +2,7 @@ package com.mancel.yann.realestatemanager.models
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
 /**
@@ -13,11 +14,13 @@ import androidx.room.PrimaryKey
  *
  * One-to-many relationships: one [User] and many [RealEstate]
  */
-@Entity(tableName = "user")
+@Entity(tableName = "user",
+        indices = [Index(value = ["username", "email"],
+                         unique = true)])
 data class User(
 
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "user_id")
+    @ColumnInfo(name = "id")
     var mId: Long = 0L,
 
     @ColumnInfo(name = "username")

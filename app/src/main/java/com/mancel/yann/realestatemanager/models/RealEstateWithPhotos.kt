@@ -12,9 +12,9 @@ import androidx.room.Relation
  */
 data class RealEstateWithPhotos(
 
-    @Embedded val mRealEstate: RealEstate,
+    @Embedded val mRealEstate: RealEstate? = null,
 
-    @Relation(parentColumn = "real_estate_id",
-              entityColumn = "estate_id")
-    val mPhotos: List<Photo>
+    @Relation(parentColumn = "id",
+              entityColumn = "real_estate_id")
+    val mPhotos: List<Photo>? = null
 )

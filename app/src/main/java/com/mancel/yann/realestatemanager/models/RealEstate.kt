@@ -16,14 +16,17 @@ import java.util.*
  */
 @Entity(tableName = "real_estate",
         foreignKeys = [ForeignKey(entity = User::class,
-                                  parentColumns = ["user_id"],
+                                  parentColumns = ["id"],
                                   childColumns = ["estate_agent_id"],
                                   onDelete = ForeignKey.NO_ACTION,
-                                  onUpdate = ForeignKey.CASCADE)])
+                                  onUpdate = ForeignKey.CASCADE)],
+        indices = [Index(value = ["type", "surface_m2", "number_of_room",
+                                  "loc_street", "loc_state", "loc_city", "loc_post_code"],
+                         unique = true)])
 data class RealEstate(
 
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "real_estate_id")
+    @ColumnInfo(name = "id")
     var mId: Long = 0L,
 
     @ColumnInfo(name = "type")

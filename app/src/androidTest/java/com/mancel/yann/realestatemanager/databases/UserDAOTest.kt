@@ -22,7 +22,7 @@ import java.io.IOException
  * Name of the project: RealEstateManager
  * Name of the package: com.mancel.yann.realestatemanager.databases
  *
- * An android test on [UserDAO]
+ * An android test on [UserDAO].
  */
 @RunWith(AndroidJUnit4::class)
 class UserDAOTest {
@@ -68,7 +68,7 @@ class UserDAOTest {
         val id = this.mUserDAO.insertUser(this.mUser1)
 
         // TEST: Good Id
-        assertEquals(1, id)
+        assertEquals(1L, id)
     }
 
     @Test
@@ -76,8 +76,8 @@ class UserDAOTest {
         val ids = this.mUserDAO.insertUsers(this.mUser1, this.mUser2)
 
         // TEST: Good Ids
-        assertEquals(1, ids[0])
-        assertEquals(2, ids[1])
+        assertEquals(1L, ids[0])
+        assertEquals(2L, ids[1])
     }
 
     // -- Read --
@@ -85,7 +85,7 @@ class UserDAOTest {
     @Test
     @Throws(InterruptedException::class)
     fun getUserById_shouldBeNull() {
-        val user = LiveDataTestUtil.getValue(this.mUserDAO.getUserById(1))
+        val user = LiveDataTestUtil.getValue(this.mUserDAO.getUserById(1L))
 
         // TEST: No user
         assertNull(user)
@@ -98,7 +98,7 @@ class UserDAOTest {
         this.mUserDAO.insertUser(this.mUser1)
 
         // THEN: Retrieve user by its Id
-        val user = LiveDataTestUtil.getValue(this.mUserDAO.getUserById(1))
+        val user = LiveDataTestUtil.getValue(this.mUserDAO.getUserById(1L))
 
         // TEST: Same user except the id because it is 0 for user1 and 1 for user2
         assertEquals(this.mUser1.mUsername, user.mUsername)
@@ -136,7 +136,7 @@ class UserDAOTest {
         this.mUserDAO.insertUser(this.mUser1)
 
         // THEN: Retrieve the user
-        val userBeforeUpdate = LiveDataTestUtil.getValue(this.mUserDAO.getUserById(1))
+        val userBeforeUpdate = LiveDataTestUtil.getValue(this.mUserDAO.getUserById(1L))
 
         // THEN: Update the user
         val userUpdated = userBeforeUpdate.copy(mUsername = "Melina")
@@ -161,7 +161,7 @@ class UserDAOTest {
         this.mUserDAO.insertUser(this.mUser1)
 
         // THEN: Retrieve the user
-        val user = LiveDataTestUtil.getValue(this.mUserDAO.getUserById(1))
+        val user = LiveDataTestUtil.getValue(this.mUserDAO.getUserById(1L))
 
         // THEN: Delete user thanks to its Id
         val numberOfDeletedRow = this.mUserDAO.deleteUser(user)
@@ -190,7 +190,7 @@ class UserDAOTest {
         this.mUserDAO.insertUser(this.mUser1)
 
         // THEN: Retrieve user by its Id
-        val user = LiveDataTestUtil.getValue(this.mUserDAO.getUserById(1))
+        val user = LiveDataTestUtil.getValue(this.mUserDAO.getUserById(1L))
 
         // THEN: Delete user thanks to its Id
         val numberOfDeletedRow = this.mUserDAO.deleteUserById(user.mId)
@@ -206,7 +206,7 @@ class UserDAOTest {
         this.mUserDAO.insertUser(this.mUser1)
 
         // THEN: Delete user thanks to its Id (Error)
-        val numberOfDeletedRow = this.mUserDAO.deleteUserById(0)
+        val numberOfDeletedRow = this.mUserDAO.deleteUserById(0L)
 
         // TEST: No delete
         assertEquals(0, numberOfDeletedRow)

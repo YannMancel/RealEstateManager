@@ -5,7 +5,9 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.mancel.yann.realestatemanager.dao.PointOfInterestDAO
 import com.mancel.yann.realestatemanager.dao.UserDAO
+import com.mancel.yann.realestatemanager.models.PointOfInterest
 import com.mancel.yann.realestatemanager.models.User
 import com.mancel.yann.realestatemanager.utils.Converters
 
@@ -16,7 +18,8 @@ import com.mancel.yann.realestatemanager.utils.Converters
  *
  * A [RoomDatabase] subclass.
  */
-@Database(entities = arrayOf(User::class),
+@Database(entities = arrayOf(User::class,
+                             PointOfInterest::class),
           version = 1,
           exportSchema = false)
 @TypeConverters(Converters::class)
@@ -27,6 +30,7 @@ abstract class AppDatabase : RoomDatabase() {
     // DAOs ----------------------------------------------------------------------------------------
 
     abstract fun userDAO(): UserDAO
+    abstract fun pointOfInterestDAO(): PointOfInterestDAO
 
     // METHODS -------------------------------------------------------------------------------------
 

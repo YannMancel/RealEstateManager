@@ -1,9 +1,6 @@
 package com.mancel.yann.realestatemanager.models
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
+import androidx.room.*
 
 /**
  * Created by Yann MANCEL on 01/03/2020.
@@ -16,14 +13,16 @@ import androidx.room.PrimaryKey
  */
 @Entity(tableName = "photo",
         foreignKeys = [ForeignKey(entity = RealEstate::class,
-                                  parentColumns = ["real_estate_id"],
-                                  childColumns = ["estate_id"],
+                                  parentColumns = ["id"],
+                                  childColumns = ["real_estate_id"],
                                   onDelete = ForeignKey.CASCADE,
-                                  onUpdate = ForeignKey.CASCADE)])
+                                  onUpdate = ForeignKey.CASCADE)],
+        indices = [Index(value = ["url_picture"],
+                         unique = true)])
 data class Photo(
 
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "photo_id")
+    @ColumnInfo(name = "id")
     var mId: Long = 0L,
 
     @ColumnInfo(name = "url_picture")
@@ -32,6 +31,6 @@ data class Photo(
     @ColumnInfo(name = "description")
     var mDescription: String? = null,
 
-    @ColumnInfo(name = "estate_id")
+    @ColumnInfo(name = "real_estate_id")
     var mRealEstateId: Long? = null
 )

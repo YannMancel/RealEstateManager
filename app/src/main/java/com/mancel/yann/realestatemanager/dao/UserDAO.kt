@@ -8,6 +8,8 @@ import com.mancel.yann.realestatemanager.models.User
  * Created by Yann MANCEL on 26/02/2020.
  * Name of the project: RealEstateManager
  * Name of the package: com.mancel.yann.realestatemanager.dao
+ *
+ * DAO of [User].
  */
 @Dao
 interface UserDAO {
@@ -37,7 +39,7 @@ interface UserDAO {
      * dao.getUserById(userId)
      *    .observe(this, Observer { user -> ... })
      */
-    @Query("SELECT * FROM user WHERE user_id = :userId")
+    @Query("SELECT * FROM user WHERE id = :userId")
     fun getUserById(userId: Long): LiveData<User>
 
     /**
@@ -70,6 +72,6 @@ interface UserDAO {
      * Usage:
      * val numberOfDeletedRow = dao.deleteUserById(userId)
      */
-    @Query("DELETE FROM user WHERE user_id = :userId")
+    @Query("DELETE FROM user WHERE id = :userId")
     fun deleteUserById(userId: Long): Int
 }
