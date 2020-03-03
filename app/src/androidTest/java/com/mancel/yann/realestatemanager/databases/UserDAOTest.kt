@@ -71,6 +71,8 @@ class UserDAOTest {
         assertEquals(1L, id)
     }
 
+    // todo 03/03/2020 insertUser_shouldBeFail with error indices
+
     @Test
     fun insertUsers_shouldBeSuccess() {
         val ids = this.mUserDAO.insertUsers(this.mUser1, this.mUser2)
@@ -79,6 +81,8 @@ class UserDAOTest {
         assertEquals(1L, ids[0])
         assertEquals(2L, ids[1])
     }
+
+    // todo 03/03/2020 updateUsers_shouldBeFail with error indices
 
     // -- Read --
 
@@ -127,6 +131,8 @@ class UserDAOTest {
         assertEquals(this.mUser2.mUsername, users[1].mUsername)
     }
 
+    // todo 03/03/2020 updateUser_shouldBeFail with error indices
+
     // -- Update --
 
     @Test
@@ -163,7 +169,7 @@ class UserDAOTest {
         // THEN: Retrieve the user
         val user = LiveDataTestUtil.getValue(this.mUserDAO.getUserById(1L))
 
-        // THEN: Delete user thanks to its Id
+        // THEN: Delete user
         val numberOfDeletedRow = this.mUserDAO.deleteUser(user)
 
         // TEST: Number of deleted row
@@ -176,7 +182,7 @@ class UserDAOTest {
         // BEFORE: Add user
         this.mUserDAO.insertUser(this.mUser1)
 
-        // THEN: Delete user thanks to its Id  (Error)
+        // THEN: Delete user (Error)
         val numberOfDeletedRow = this.mUserDAO.deleteUser(this.mUser1)
 
         // TEST: No delete

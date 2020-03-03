@@ -18,7 +18,8 @@ import androidx.room.*
                                   onDelete = ForeignKey.CASCADE,
                                   onUpdate = ForeignKey.CASCADE)],
         indices = [Index(value = ["url_picture"],
-                         unique = true)])
+                         unique = true),
+                   Index(value = ["real_estate_id"])])
 data class Photo(
 
     @PrimaryKey(autoGenerate = true)

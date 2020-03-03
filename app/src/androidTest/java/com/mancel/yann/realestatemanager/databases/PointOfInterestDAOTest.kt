@@ -138,7 +138,7 @@ class PointOfInterestDAOTest {
         // THEN: Retrieve points of interest
         val pointOfInterests = LiveDataTestUtil.getValue(this.mPointOfInterestDAO.getAllPointsOfInterest())
 
-        // TEST: Same users
+        // TEST: Same points of interest
         assertEquals(this.mPointOfInterest1.mName, pointOfInterests[0].mName)
         assertEquals(this.mPointOfInterest2.mName, pointOfInterests[1].mName)
     }
