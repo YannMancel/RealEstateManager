@@ -20,7 +20,7 @@ import androidx.room.PrimaryKey
 data class User(
 
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id")
+    @ColumnInfo(name = "id_user")
     var mId: Long = 0L,
 
     @ColumnInfo(name = "username")

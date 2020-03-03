@@ -18,7 +18,7 @@ import androidx.room.*
 data class PointOfInterest(
 
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id")
+    @ColumnInfo(name = "id_point_of_interest")
     var mId: Long = 0L,
 
     @ColumnInfo(name = "name")

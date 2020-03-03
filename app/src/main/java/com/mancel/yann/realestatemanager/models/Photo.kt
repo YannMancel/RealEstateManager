@@ -13,7 +13,7 @@ import androidx.room.*
  */
 @Entity(tableName = "photo",
         foreignKeys = [ForeignKey(entity = RealEstate::class,
-                                  parentColumns = ["id"],
+                                  parentColumns = ["id_real_estate"],
                                   childColumns = ["real_estate_id"],
                                   onDelete = ForeignKey.CASCADE,
                                   onUpdate = ForeignKey.CASCADE)],
@@ -23,7 +23,7 @@ import androidx.room.*
 data class Photo(
 
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id")
+    @ColumnInfo(name = "id_photo")
     var mId: Long = 0L,
 
     @ColumnInfo(name = "url_picture")

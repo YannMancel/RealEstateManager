@@ -14,22 +14,22 @@ import androidx.room.ForeignKey
  * Many-to-many relationships: many [RealEstate] and many [PointOfInterest]
  */
 @Entity(tableName = "real_estate_point_of_interest_join",
-        primaryKeys = ["real_estate_id", "point_of_interest_id"],
+        primaryKeys = ["id_real_estate", "id_point_of_interest"],
         foreignKeys = [ForeignKey(entity = RealEstate::class,
-                                  parentColumns = ["id"],
-                                  childColumns = ["real_estate_id"],
+                                  parentColumns = ["id_real_estate"],
+                                  childColumns = ["id_real_estate"],
                                   onDelete = ForeignKey.CASCADE,
                                   onUpdate = ForeignKey.CASCADE),
                        ForeignKey(entity = PointOfInterest::class,
-                                  parentColumns = ["id"],
-                                  childColumns = ["point_of_interest_id"],
+                                  parentColumns = ["id_point_of_interest"],
+                                  childColumns = ["id_point_of_interest"],
                                   onDelete = ForeignKey.CASCADE,
                                   onUpdate = ForeignKey.CASCADE)])
 data class RealEstatePointOfInterestCrossRef(
 
-    @ColumnInfo(name = "real_estate_id")
-    val mRealEstateId: Long,
+    @ColumnInfo(name = "id_real_estate")
+    var mRealEstateId: Long = 0L,
 
-    @ColumnInfo(name = "point_of_interest_id")
-    val mPointOfInterestId: Long
+    @ColumnInfo(name = "id_point_of_interest")
+    var mPointOfInterestId: Long = 0L
 )

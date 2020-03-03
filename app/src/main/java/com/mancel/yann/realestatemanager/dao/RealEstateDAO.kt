@@ -5,6 +5,7 @@ import androidx.room.*
 import com.mancel.yann.realestatemanager.models.IdTypeAddressPriceTupleOfRealEstate
 import com.mancel.yann.realestatemanager.models.RealEstate
 import com.mancel.yann.realestatemanager.models.RealEstateWithPhotos
+import com.mancel.yann.realestatemanager.models.RealEstateWithPointsOfInterest
 
 /**
  * Created by Yann MANCEL on 03/03/2020.
@@ -41,7 +42,7 @@ interface RealEstateDAO {
      * dao.getRealEstateById(realEstateId)
      *    .observe(this, Observer { realEstate -> ... })
      */
-    @Query("SELECT * FROM real_estate WHERE id = :realEstateId")
+    @Query("SELECT * FROM real_estate WHERE id_real_estate = :realEstateId")
     fun getRealEstateById(realEstateId: Long): LiveData<RealEstate>
 
     /**
@@ -57,7 +58,7 @@ interface RealEstateDAO {
      * dao.getIdTypeAddressPriceTupleOfRealEstate()
      *    .observe(this, Observer { tuples -> ... })
      */
-    @Query("""SELECT id, 
+    @Query("""SELECT id_real_estate, 
                            type, 
                            price_dollar, 
                            loc_street, loc_state, loc_city, loc_post_code
@@ -72,6 +73,15 @@ interface RealEstateDAO {
     @Transaction
     @Query("SELECT * FROM real_estate")
     fun getRealEstatesWithPhotos(): LiveData<List<RealEstateWithPhotos>>
+
+    /**
+     * Usage:
+     * dao.getRealEstatesWithPointsOfInterest()
+     *    .observe(this, Observer { realEstatesWithPointsOfInterest -> ... })
+     */
+    @Transaction
+    @Query("SELECT * FROM real_estate")
+    fun getRealEstatesWithPointsOfInterest(): LiveData<List<RealEstateWithPointsOfInterest>>
 
     // -- Update --
 

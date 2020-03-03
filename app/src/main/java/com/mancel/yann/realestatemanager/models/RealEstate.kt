@@ -16,7 +16,7 @@ import java.util.*
  */
 @Entity(tableName = "real_estate",
         foreignKeys = [ForeignKey(entity = User::class,
-                                  parentColumns = ["id"],
+                                  parentColumns = ["id_user"],
                                   childColumns = ["estate_agent_id"],
                                   onDelete = ForeignKey.NO_ACTION,
                                   onUpdate = ForeignKey.CASCADE)],
@@ -26,7 +26,7 @@ import java.util.*
 data class RealEstate(
 
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id")
+    @ColumnInfo(name = "id_real_estate")
     var mId: Long = 0L,
 
     @ColumnInfo(name = "type")

@@ -5,10 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.mancel.yann.realestatemanager.dao.PhotoDAO
-import com.mancel.yann.realestatemanager.dao.PointOfInterestDAO
-import com.mancel.yann.realestatemanager.dao.RealEstateDAO
-import com.mancel.yann.realestatemanager.dao.UserDAO
+import com.mancel.yann.realestatemanager.dao.*
 import com.mancel.yann.realestatemanager.models.*
 import com.mancel.yann.realestatemanager.utils.Converters
 
@@ -37,6 +34,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun realEstateDAO(): RealEstateDAO
     abstract fun photoDAO(): PhotoDAO
     abstract fun pointOfInterestDAO(): PointOfInterestDAO
+    abstract fun realEstatePointOfInterestCrossRefDAO(): RealEstatePointOfInterestCrossRefDAO
 
     // METHODS -------------------------------------------------------------------------------------
 

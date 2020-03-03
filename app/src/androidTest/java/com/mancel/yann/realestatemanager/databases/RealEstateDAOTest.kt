@@ -7,10 +7,7 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.mancel.yann.realestatemanager.dao.RealEstateDAO
-import com.mancel.yann.realestatemanager.models.Address
-import com.mancel.yann.realestatemanager.models.Photo
-import com.mancel.yann.realestatemanager.models.RealEstate
-import com.mancel.yann.realestatemanager.models.User
+import com.mancel.yann.realestatemanager.models.*
 import com.mancel.yann.realestatemanager.utils.LiveDataTestUtil
 import org.junit.*
 import org.junit.Assert.assertEquals
@@ -212,6 +209,37 @@ class RealEstateDAOTest {
         assertEquals("URL1", realEstatesWithPhotos[0].mPhotos?.get(0)?.mUrlPicture)
         assertEquals("URL2", realEstatesWithPhotos[1].mPhotos?.get(0)?.mUrlPicture)
         assertEquals("URL3", realEstatesWithPhotos[1].mPhotos?.get(1)?.mUrlPicture)
+    }
+
+    @Test
+    fun getRealEstatesWithPointsOfInterest_shouldBeSuccess() {
+        // BEFORE: Add real estates
+        this.mRealEstateDAO.insertRealEstates(this.mRealEstate1,
+                                              this.mRealEstate2)
+
+        // THEN: Add points of interest to avoid the SQLiteConstraintException (FOREIGN KEY constraint)
+        this.mDatabase.pointOfInterestDAO().insertPointsOfInterest(PointOfInterest(mName = "school"),
+                                                                   PointOfInterest(mName = "business"))
+
+        // THEN: Add cross-reference between real estates and points of interest
+        this.mDatabase.realEstatePointOfInterestCrossRefDAO().insertSeveralCrossRef(
+            RealEstatePointOfInterestCrossRef(mRealEstateId = 1L, mPointOfInterestId = 1L),
+            RealEstatePointOfInterestCrossRef(mRealEstateId = 1L, mPointOfInterestId = 2L),
+            RealEstatePointOfInterestCrossRef(mRealEstateId = 2L, mPointOfInterestId = 1L)
+        )
+
+        // THEN: Retrieve real estates with their points of interest
+        val realEstatesWithPointsOfInterest = LiveDataTestUtil.getValue(this.mRealEstateDAO.getRealEstatesWithPointsOfInterest())
+
+        // TEST: All real estates with their points of interest
+        assertEquals(2, realEstatesWithPointsOfInterest.size)
+        assertEquals(this.mRealEstate1.mType, realEstatesWithPointsOfInterest[0].mRealEstate?.mType)
+        assertEquals(this.mRealEstate2.mType, realEstatesWithPointsOfInterest[1].mRealEstate?.mType)
+        assertEquals(2, realEstatesWithPointsOfInterest[0].mPointsOfInterest?.size)
+        assertEquals(1, realEstatesWithPointsOfInterest[1].mPointsOfInterest?.size)
+        assertEquals("school", realEstatesWithPointsOfInterest[0].mPointsOfInterest?.get(0)?.mName)
+        assertEquals("business", realEstatesWithPointsOfInterest[0].mPointsOfInterest?.get(1)?.mName)
+        assertEquals("school", realEstatesWithPointsOfInterest[1].mPointsOfInterest?.get(0)?.mName)
     }
 
     // -- Update --

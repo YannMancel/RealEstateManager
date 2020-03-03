@@ -12,7 +12,7 @@ import androidx.room.Embedded
  */
 data class IdTypeAddressPriceTupleOfRealEstate(
 
-    @ColumnInfo(name = "id")
+    @ColumnInfo(name = "id_real_estate")
     var mId: Long = 0L,
 
     @ColumnInfo(name = "type")
