@@ -34,6 +34,7 @@ class PhotoDAOTest {
     private lateinit var mDatabase: AppDatabase
     private lateinit var mPhotoDAO: PhotoDAO
 
+    // The fields that correspond to an unique index or an unique indices couple must not be null.
     private val mPhoto1 = Photo(mUrlPicture = "URL1", mRealEstateId = 1L)
     private val mPhoto2 = Photo(mUrlPicture = "URL2", mRealEstateId = 1L)
     private val mPhoto3 = Photo(mUrlPicture = "URL3", mRealEstateId = 2L)
@@ -88,7 +89,7 @@ class PhotoDAOTest {
 
         // THEN: Add a new photo with the same indices (Error)
         try {
-            id = this.mPhotoDAO.insertPhoto(this.mPhoto1.copy(mId = 1L))
+            id = this.mPhotoDAO.insertPhoto(this.mPhoto1)
         }
         catch (e: SQLiteConstraintException) {
             // Do nothing
@@ -111,13 +112,13 @@ class PhotoDAOTest {
     }
 
     @Test
-    fun insertPointsOfInterest_shouldBeFail() {
+    fun insertPhotos_shouldBeFail() {
         var ids = emptyList<Long>()
 
         // THEN: Add 2 photos with the same indices (Error)
         try {
             ids = this.mPhotoDAO.insertPhotos(this.mPhoto1,
-                                              this.mPhoto1.copy(mId = 1L))
+                                              this.mPhoto1)
         }
         catch (e: SQLiteConstraintException) {
             // Do nothing
@@ -237,7 +238,7 @@ class PhotoDAOTest {
 
     @Test
     @Throws(InterruptedException::class)
-    fun deleteUser_shouldBeSuccess() {
+    fun deletePhoto_shouldBeSuccess() {
         // BEFORE: Add photo
         this.mPhotoDAO.insertPhoto(this.mPhoto1)
 
@@ -253,10 +254,7 @@ class PhotoDAOTest {
 
     @Test
     @Throws(InterruptedException::class)
-    fun deleteUser_shouldBeFail() {
-        // BEFORE: Add photo
-        this.mPhotoDAO.insertPhoto(this.mPhoto1)
-
+    fun deletePhoto_shouldBeFail() {
         // THEN: Delete photo (Error)
         val numberOfDeletedRow = this.mPhotoDAO.deletePhoto(this.mPhoto1)
 

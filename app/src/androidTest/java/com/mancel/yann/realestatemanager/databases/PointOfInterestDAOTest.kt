@@ -7,6 +7,7 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.mancel.yann.realestatemanager.dao.PointOfInterestDAO
+import com.mancel.yann.realestatemanager.models.Address
 import com.mancel.yann.realestatemanager.models.PointOfInterest
 import com.mancel.yann.realestatemanager.utils.LiveDataTestUtil
 import org.junit.After
@@ -32,8 +33,10 @@ class PointOfInterestDAOTest {
     private lateinit var mDatabase: AppDatabase
     private lateinit var mPointOfInterestDAO: PointOfInterestDAO
 
-    private val mPointOfInterest1 = PointOfInterest(mName = "school")
-    private val mPointOfInterest2 = PointOfInterest(mName = "business")
+    // The fields that correspond to an unique index or an unique indices couple must not be null.
+    private val mAddress = Address("1", "", "", 0)
+    private val mPointOfInterest1 = PointOfInterest(mName = "school", mAddress = this.mAddress)
+    private val mPointOfInterest2 = PointOfInterest(mName = "business", mAddress = this.mAddress)
 
     // RULES (Synchronized Tests) ------------------------------------------------------------------
 
@@ -80,7 +83,7 @@ class PointOfInterestDAOTest {
 
         // THEN: Add a new point of interest with the same indices (Error)
         try {
-            id = this.mPointOfInterestDAO.insertPointOfInterest(this.mPointOfInterest1.copy(mId = 1L))
+            id = this.mPointOfInterestDAO.insertPointOfInterest(this.mPointOfInterest1)
         }
         catch (e: SQLiteConstraintException) {
             // Do nothing
@@ -107,7 +110,7 @@ class PointOfInterestDAOTest {
         // THEN: Add 2 points of interest with the same indices (Error)
         try {
             ids = this.mPointOfInterestDAO.insertPointsOfInterest(this.mPointOfInterest1,
-                                                                  this.mPointOfInterest1.copy(mId = 1L))
+                                                                  this.mPointOfInterest1)
         }
         catch (e: SQLiteConstraintException) {
             // Do nothing

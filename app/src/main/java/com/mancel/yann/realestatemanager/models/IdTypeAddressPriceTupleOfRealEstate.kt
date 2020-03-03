@@ -18,9 +18,9 @@ data class IdTypeAddressPriceTupleOfRealEstate(
     @ColumnInfo(name = "type")
     var mType: String? = null,
 
-    @Embedded(prefix = "loc_")
-    var mAddress: Address? = null,
-
     @ColumnInfo(name = "price_dollar")
-    var mPrice: Double? = null
+    var mPrice: Double? = null,
+
+    @Embedded(prefix = "loc_")
+    var mAddress: Address? = null
 )

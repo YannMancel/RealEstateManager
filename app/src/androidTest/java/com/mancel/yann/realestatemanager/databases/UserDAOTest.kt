@@ -1,6 +1,7 @@
 package com.mancel.yann.realestatemanager.databases
 
 import android.content.Context
+import android.database.sqlite.SQLiteConstraintException
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
@@ -32,8 +33,9 @@ class UserDAOTest {
     private lateinit var mDatabase: AppDatabase
     private lateinit var mUserDAO: UserDAO
 
-    private val mUser1 = User(mUsername = "Yann")
-    private val mUser2 = User(mUsername = "Melina")
+    // The fields that correspond to an unique index or an unique indices couple must not be null.
+    private val mUser1 = User(mUsername = "Yann", mEmail = "yann@com")
+    private val mUser2 = User(mUsername = "Melina", mEmail = "melina@com")
 
     // RULES (Synchronized Tests) ------------------------------------------------------------------
 
@@ -71,18 +73,51 @@ class UserDAOTest {
         assertEquals(1L, id)
     }
 
-    // todo 03/03/2020 insertUser_shouldBeFail with error indices
+    @Test
+    fun insertUser_shouldBeFail() {
+        // BEFORE: Add user
+        this.mUserDAO.insertUser(this.mUser1)
+
+        var id = 0L
+
+        // THEN: Add a new user with the same indices (Error)
+        try {
+            id = this.mUserDAO.insertUser(this.mUser1)
+        }
+        catch (e: SQLiteConstraintException) {
+            // Do nothing
+        }
+
+        // TEST: No insert because the indices must be unique
+        assertEquals(0L, id)
+    }
 
     @Test
     fun insertUsers_shouldBeSuccess() {
-        val ids = this.mUserDAO.insertUsers(this.mUser1, this.mUser2)
+        val ids = this.mUserDAO.insertUsers(this.mUser1,
+                                            this.mUser2)
 
         // TEST: Good Ids
         assertEquals(1L, ids[0])
         assertEquals(2L, ids[1])
     }
 
-    // todo 03/03/2020 updateUsers_shouldBeFail with error indices
+    @Test
+    fun insertUsers_shouldBeFail() {
+        var ids = emptyList<Long>()
+
+        // THEN: Add 2 users with the same indices (Error)
+        try {
+            ids = this.mUserDAO.insertUsers(this.mUser1,
+                                            this.mUser1)
+        }
+        catch (e: SQLiteConstraintException) {
+            // Do nothing
+        }
+
+        // TEST: No insert because the indices must be unique
+        assertEquals(0, ids.size)
+    }
 
     // -- Read --
 
@@ -121,7 +156,8 @@ class UserDAOTest {
     @Throws(InterruptedException::class)
     fun getAllUsers_shouldBeSuccess() {
         // BEFORE: Add users
-        this.mUserDAO.insertUsers(this.mUser1, this.mUser2)
+        this.mUserDAO.insertUsers(this.mUser1,
+                                  this.mUser2)
 
         // THEN: Retrieve users
         val users = LiveDataTestUtil.getValue(this.mUserDAO.getAllUsers())
@@ -130,8 +166,6 @@ class UserDAOTest {
         assertEquals(this.mUser1.mUsername, users[0].mUsername)
         assertEquals(this.mUser2.mUsername, users[1].mUsername)
     }
-
-    // todo 03/03/2020 updateUser_shouldBeFail with error indices
 
     // -- Update --
 
@@ -158,6 +192,33 @@ class UserDAOTest {
         assertEquals(userUpdated.mUsername, userAfterUpdate.mUsername)
     }
 
+    @Test
+    @Throws(InterruptedException::class)
+    fun updateUser_shouldBeFail() {
+        // BEFORE: Add users
+        this.mUserDAO.insertUsers(this.mUser1,
+                                  this.mUser2)
+
+        // THEN: Retrieve the user
+        val userBeforeUpdate = LiveDataTestUtil.getValue(this.mUserDAO.getUserById(1L))
+
+        // THEN: Update the user 1 with the username and the email of the user 2 (Error)
+        val userUpdated = userBeforeUpdate.copy(mUsername = this.mUser2.mUsername,
+                                                mEmail = this.mUser2.mEmail)
+
+        var numberOfUpdatedRow = 0
+
+        try {
+            numberOfUpdatedRow = this.mUserDAO.updateUser(userUpdated)
+        }
+        catch (e: SQLiteConstraintException) {
+            // Do nothing
+        }
+
+        // TEST: No update because the indices must be unique
+        assertEquals(0, numberOfUpdatedRow)
+    }
+
     // -- Delete --
 
     @Test
@@ -179,9 +240,6 @@ class UserDAOTest {
     @Test
     @Throws(InterruptedException::class)
     fun deleteUser_shouldBeFail() {
-        // BEFORE: Add user
-        this.mUserDAO.insertUser(this.mUser1)
-
         // THEN: Delete user (Error)
         val numberOfDeletedRow = this.mUserDAO.deleteUser(this.mUser1)
 
@@ -208,9 +266,6 @@ class UserDAOTest {
     @Test
     @Throws(InterruptedException::class)
     fun deleteUserById_shouldBeFail() {
-        // BEFORE: Add user
-        this.mUserDAO.insertUser(this.mUser1)
-
         // THEN: Delete user thanks to its Id (Error)
         val numberOfDeletedRow = this.mUserDAO.deleteUserById(0L)
 
