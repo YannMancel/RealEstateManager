@@ -29,6 +29,9 @@
     
 * [Library Glide](https://github.com/bumptech/glide)
 
+* [Library Mockito](https://github.com/mockito/mockito)
+* [Library Mockito-kotlin](https://github.com/nhaarman/mockito-kotlin)
+
 ## Troubleshooting
 
 ### No device available during the compilation and execution steps 

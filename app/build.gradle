@@ -66,6 +66,14 @@ dependencies {
 
     testImplementation 'junit:junit:4.12'
 
+    // MOCKITO
+    def mockito_version = "3.3.1"
+    testImplementation "org.mockito:mockito-core:$mockito_version"
+
+    // MOCKITO-KOTLIN
+    def mockito_kotlin_version = "2.2.0"
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockito_kotlin_version"
+
     // Rules
     androidTestImplementation 'androidx.arch.core:core-testing:2.1.0'
 

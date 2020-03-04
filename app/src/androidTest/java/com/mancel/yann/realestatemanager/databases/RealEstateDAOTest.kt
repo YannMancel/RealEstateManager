@@ -13,6 +13,7 @@ import org.junit.*
 import org.junit.Assert.assertEquals
 import org.junit.runner.RunWith
 import java.io.IOException
+import java.util.*
 
 /**
  * Created by Yann MANCEL on 27/02/2020.
@@ -61,6 +62,21 @@ class RealEstateDAOTest {
     @Throws(IOException::class)
     fun tearDown() {
         this.mDatabase.close()
+    }
+
+    // -- TypeConverters (Date) --
+
+    @Test
+    fun typeConverters_date_shouldBeSuccess() {
+        // BEFORE: Add real estate with current date
+        val realEstate = RealEstate(mEffectiveDate = Date(), mEstateAgentId = 1L)
+        this.mRealEstateDAO.insertRealEstate(realEstate)
+
+        // THEN: Retrieve the real estate
+        val realEstateFromRoom = LiveDataTestUtil.getValue(this.mRealEstateDAO.getRealEstateById(1L))
+
+        // TEST: Same date
+        assertEquals(realEstate.mEffectiveDate, realEstateFromRoom.mEffectiveDate)
     }
 
     // -- Create --
