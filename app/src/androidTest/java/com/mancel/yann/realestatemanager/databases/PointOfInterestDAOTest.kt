@@ -10,6 +10,7 @@ import com.mancel.yann.realestatemanager.dao.PointOfInterestDAO
 import com.mancel.yann.realestatemanager.models.Address
 import com.mancel.yann.realestatemanager.models.PointOfInterest
 import com.mancel.yann.realestatemanager.utils.LiveDataTestUtil
+import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -67,54 +68,38 @@ class PointOfInterestDAOTest {
     // -- Create --
 
     @Test
-    fun insertPointOfInterest_shouldBeSuccess() {
-        val id = this.mPointOfInterestDAO.insertPointOfInterest(this.mPointOfInterest1)
+    fun insertPointOfInterest_shouldBeSuccess() = runBlocking {
+        val id = mPointOfInterestDAO.insertPointOfInterest(mPointOfInterest1)
 
         // TEST: Good Id
         assertEquals(1L, id)
     }
 
-    @Test
-    fun insertPointOfInterest_shouldBeFail() {
+    @Test(expected = SQLiteConstraintException::class)
+    fun insertPointOfInterest_shouldBeFail() = runBlocking {
         // BEFORE: Add point of interest
-        this.mPointOfInterestDAO.insertPointOfInterest(this.mPointOfInterest1)
-
-        var id = 0L
+        mPointOfInterestDAO.insertPointOfInterest(mPointOfInterest1)
 
         // THEN: Add a new point of interest with the same indices (Error)
-        try {
-            id = this.mPointOfInterestDAO.insertPointOfInterest(this.mPointOfInterest1)
-        }
-        catch (e: SQLiteConstraintException) {
-            // Do nothing
-        }
+        val id = mPointOfInterestDAO.insertPointOfInterest(mPointOfInterest1)
 
         // TEST: No insert because the indices must be unique
         assertEquals(0L, id)
     }
 
     @Test
-    fun insertPointsOfInterest_shouldBeSuccess() {
-        val ids = this.mPointOfInterestDAO.insertPointsOfInterest(this.mPointOfInterest1,
-                                                                  this.mPointOfInterest2)
+    fun insertPointsOfInterest_shouldBeSuccess() = runBlocking {
+        val ids = mPointOfInterestDAO.insertPointsOfInterest(mPointOfInterest1, mPointOfInterest2)
 
         // TEST: Good Ids
         assertEquals(1L, ids[0])
         assertEquals(2L, ids[1])
     }
 
-    @Test
-    fun insertPointsOfInterest_shouldBeFail() {
-        var ids = emptyList<Long>()
-
+    @Test(expected = SQLiteConstraintException::class)
+    fun insertPointsOfInterest_shouldBeFail() = runBlocking {
         // THEN: Add 2 points of interest with the same indices (Error)
-        try {
-            ids = this.mPointOfInterestDAO.insertPointsOfInterest(this.mPointOfInterest1,
-                                                                  this.mPointOfInterest1)
-        }
-        catch (e: SQLiteConstraintException) {
-            // Do nothing
-        }
+        val ids = mPointOfInterestDAO.insertPointsOfInterest(mPointOfInterest1, mPointOfInterest1)
 
         // TEST: No insert because the indices must be unique
         assertEquals(0, ids.size)
@@ -133,16 +118,15 @@ class PointOfInterestDAOTest {
 
     @Test
     @Throws(InterruptedException::class)
-    fun getAllPointsOfInterest_shouldBeSuccess() {
+    fun getAllPointsOfInterest_shouldBeSuccess() = runBlocking {
         // BEFORE: Add points of interest
-        this.mPointOfInterestDAO.insertPointsOfInterest(this.mPointOfInterest1,
-                                                        this.mPointOfInterest2)
+        mPointOfInterestDAO.insertPointsOfInterest(mPointOfInterest1, mPointOfInterest2)
 
         // THEN: Retrieve points of interest
-        val pointOfInterests = LiveDataTestUtil.getValue(this.mPointOfInterestDAO.getAllPointsOfInterest())
+        val pointOfInterests = LiveDataTestUtil.getValue(mPointOfInterestDAO.getAllPointsOfInterest())
 
         // TEST: Same points of interest
-        assertEquals(this.mPointOfInterest1.mName, pointOfInterests[0].mName)
-        assertEquals(this.mPointOfInterest2.mName, pointOfInterests[1].mName)
+        assertEquals(mPointOfInterest1.mName, pointOfInterests[0].mName)
+        assertEquals(mPointOfInterest2.mName, pointOfInterests[1].mName)
     }
 }

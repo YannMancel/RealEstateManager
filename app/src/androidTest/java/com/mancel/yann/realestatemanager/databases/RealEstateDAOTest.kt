@@ -9,6 +9,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.mancel.yann.realestatemanager.dao.RealEstateDAO
 import com.mancel.yann.realestatemanager.models.*
 import com.mancel.yann.realestatemanager.utils.LiveDataTestUtil
+import kotlinx.coroutines.runBlocking
 import org.junit.*
 import org.junit.Assert.assertEquals
 import org.junit.runner.RunWith
@@ -44,18 +45,18 @@ class RealEstateDAOTest {
 
     @Before
     @Throws(Exception::class)
-    fun setUp() {
+    fun setUp() = runBlocking {
         val context = ApplicationProvider.getApplicationContext<Context>()
 
-        this.mDatabase = Room.inMemoryDatabaseBuilder(context,
-                                                      AppDatabase::class.java)
-                             .allowMainThreadQueries()
-                             .build()
+        mDatabase = Room.inMemoryDatabaseBuilder(context,
+                                                 AppDatabase::class.java)
+                        .allowMainThreadQueries()
+                        .build()
 
         // Add user to avoid the SQLiteConstraintException (FOREIGN KEY constraint)
-        this.mDatabase.userDAO().insertUser(User(mUsername = "Yann"))
+        mDatabase.userDAO().insertUser(User(mUsername = "Yann"))
 
-        this.mRealEstateDAO = this.mDatabase.realEstateDAO()
+        mRealEstateDAO = mDatabase.realEstateDAO()
     }
 
     @After
@@ -67,13 +68,13 @@ class RealEstateDAOTest {
     // -- TypeConverters (Date) --
 
     @Test
-    fun typeConverters_date_shouldBeSuccess() {
+    fun typeConverters_date_shouldBeSuccess() = runBlocking {
         // BEFORE: Add real estate with current date
         val realEstate = RealEstate(mEffectiveDate = Date(), mEstateAgentId = 1L)
-        this.mRealEstateDAO.insertRealEstate(realEstate)
+        mRealEstateDAO.insertRealEstate(realEstate)
 
         // THEN: Retrieve the real estate
-        val realEstateFromRoom = LiveDataTestUtil.getValue(this.mRealEstateDAO.getRealEstateById(1L))
+        val realEstateFromRoom = LiveDataTestUtil.getValue(mRealEstateDAO.getRealEstateById(1L))
 
         // TEST: Same date
         assertEquals(realEstate.mEffectiveDate, realEstateFromRoom.mEffectiveDate)
@@ -82,54 +83,38 @@ class RealEstateDAOTest {
     // -- Create --
 
     @Test
-    fun insertRealEstate_shouldBeSuccess() {
-        val id = this.mRealEstateDAO.insertRealEstate(this.mRealEstate1)
+    fun insertRealEstate_shouldBeSuccess() = runBlocking {
+        val id = mRealEstateDAO.insertRealEstate(mRealEstate1)
 
         // TEST: Good Id
         assertEquals(1L, id)
     }
 
-    @Test
-    fun insertRealEstate_shouldBeFail() {
+    @Test(expected = SQLiteConstraintException::class)
+    fun insertRealEstate_shouldBeFail() = runBlocking {
         // BEFORE: Add real estate
-        this.mRealEstateDAO.insertRealEstate(this.mRealEstate1)
-
-        var id = 0L
+        mRealEstateDAO.insertRealEstate(mRealEstate1)
 
         // THEN: Add a new real estate with the same indices (Error)
-        try {
-            id = this.mRealEstateDAO.insertRealEstate(this.mRealEstate1)
-        }
-        catch (e: SQLiteConstraintException) {
-            // Do nothing
-        }
+        val id = mRealEstateDAO.insertRealEstate(mRealEstate1)
 
         // TEST: No insert because the indices must be unique
         assertEquals(0L, id)
     }
 
     @Test
-    fun insertRealEstates_shouldBeSuccess() {
-        val ids = this.mRealEstateDAO.insertRealEstates(this.mRealEstate1,
-                                                        this.mRealEstate2)
+    fun insertRealEstates_shouldBeSuccess() = runBlocking {
+        val ids = mRealEstateDAO.insertRealEstates(mRealEstate1, mRealEstate2)
 
         // TEST: Good Ids
         assertEquals(1L, ids[0])
         assertEquals(2L, ids[1])
     }
 
-    @Test
-    fun insertRealEstates_shouldBeFail() {
-        var ids = emptyList<Long>()
-
+    @Test(expected = SQLiteConstraintException::class)
+    fun insertRealEstates_shouldBeFail() = runBlocking {
         // THEN: Add 2 real estates with the same indices (Error)
-        try {
-            ids = this.mRealEstateDAO.insertRealEstates(this.mRealEstate1,
-                                                        this.mRealEstate1)
-        }
-        catch (e: SQLiteConstraintException) {
-            // Do nothing
-        }
+        val ids = mRealEstateDAO.insertRealEstates(mRealEstate1, mRealEstate1)
 
         // TEST: No insert because the indices must be unique
         assertEquals(0, ids.size)
@@ -148,16 +133,15 @@ class RealEstateDAOTest {
 
     @Test
     @Throws(InterruptedException::class)
-    fun getRealEstateById_shouldBeSuccess() {
+    fun getRealEstateById_shouldBeSuccess() = runBlocking {
         // BEFORE: Add real estates
-        this.mRealEstateDAO.insertRealEstates(this.mRealEstate1,
-                                              this.mRealEstate2)
+        mRealEstateDAO.insertRealEstates(mRealEstate1, mRealEstate2)
 
         // THEN: Retrieve real estate by Id
-        val realEstate = LiveDataTestUtil.getValue(this.mRealEstateDAO.getRealEstateById(1L))
+        val realEstate = LiveDataTestUtil.getValue(mRealEstateDAO.getRealEstateById(1L))
 
         // TEST: Same real estate
-        assertEquals(this.mRealEstate1.mType, realEstate.mType)
+        assertEquals(mRealEstate1.mType, realEstate.mType)
     }
 
     @Test
@@ -171,55 +155,52 @@ class RealEstateDAOTest {
 
     @Test
     @Throws(InterruptedException::class)
-    fun getAllRealEstates_shouldBeSuccess() {
+    fun getAllRealEstates_shouldBeSuccess() = runBlocking {
         // BEFORE: Add real estates
-        this.mRealEstateDAO.insertRealEstates(this.mRealEstate1,
-                                              this.mRealEstate2)
+        mRealEstateDAO.insertRealEstates(mRealEstate1, mRealEstate2)
 
         // THEN: Retrieve real estates
-        val realEstates = LiveDataTestUtil.getValue(this.mRealEstateDAO.getAllRealEstates())
+        val realEstates = LiveDataTestUtil.getValue(mRealEstateDAO.getAllRealEstates())
 
         // TEST: All real estates
         assertEquals(2, realEstates.size)
-        assertEquals(this.mRealEstate1.mType, realEstates[0].mType)
-        assertEquals(this.mRealEstate2.mType, realEstates[1].mType)
+        assertEquals(mRealEstate1.mType, realEstates[0].mType)
+        assertEquals(mRealEstate2.mType, realEstates[1].mType)
     }
 
     @Test
     @Throws(InterruptedException::class)
-    fun getIdTypeAddressPriceTupleOfRealEstate_shouldBeSuccess() {
+    fun getIdTypeAddressPriceTupleOfRealEstate_shouldBeSuccess() = runBlocking {
         // BEFORE: Add real estates
-        this.mRealEstateDAO.insertRealEstates(this.mRealEstate1,
-                                              this.mRealEstate2)
+        mRealEstateDAO.insertRealEstates(mRealEstate1, mRealEstate2)
 
         // THEN: Retrieve tuples of real estates
-        val realEstatesTuples = LiveDataTestUtil.getValue(this.mRealEstateDAO.getIdTypeAddressPriceTupleOfRealEstate())
+        val realEstatesTuples = LiveDataTestUtil.getValue(mRealEstateDAO.getIdTypeAddressPriceTupleOfRealEstate())
 
         // TEST: All real estates
         assertEquals(2, realEstatesTuples.size)
-        assertEquals(this.mRealEstate1.mType, realEstatesTuples[0].mType)
-        assertEquals(this.mRealEstate2.mType, realEstatesTuples[1].mType)
+        assertEquals(mRealEstate1.mType, realEstatesTuples[0].mType)
+        assertEquals(mRealEstate2.mType, realEstatesTuples[1].mType)
     }
 
     @Test
     @Throws(InterruptedException::class)
-    fun getRealEstatesWithPhotos_shouldBeSuccess() {
+    fun getRealEstatesWithPhotos_shouldBeSuccess() = runBlocking {
         // BEFORE: Add real estates
-        this.mRealEstateDAO.insertRealEstates(this.mRealEstate1,
-                                              this.mRealEstate2)
+        mRealEstateDAO.insertRealEstates(mRealEstate1, mRealEstate2)
 
         // THEN: Add photos
-        this.mDatabase.photoDAO().insertPhoto(Photo(mUrlPicture = "URL1", mRealEstateId = 1L))
-        this.mDatabase.photoDAO().insertPhoto(Photo(mUrlPicture = "URL2", mRealEstateId = 2L))
-        this.mDatabase.photoDAO().insertPhoto(Photo(mUrlPicture = "URL3", mRealEstateId = 2L))
+        mDatabase.photoDAO().insertPhoto(Photo(mUrlPicture = "URL1", mRealEstateId = 1L))
+        mDatabase.photoDAO().insertPhoto(Photo(mUrlPicture = "URL2", mRealEstateId = 2L))
+        mDatabase.photoDAO().insertPhoto(Photo(mUrlPicture = "URL3", mRealEstateId = 2L))
 
         // THEN: Retrieve real estates with their photos
-        val realEstatesWithPhotos = LiveDataTestUtil.getValue(this.mRealEstateDAO.getRealEstatesWithPhotos())
+        val realEstatesWithPhotos = LiveDataTestUtil.getValue(mRealEstateDAO.getRealEstatesWithPhotos())
 
         // TEST: All real estates with their photos
         assertEquals(2, realEstatesWithPhotos.size)
-        assertEquals(this.mRealEstate1.mType, realEstatesWithPhotos[0].mRealEstate?.mType)
-        assertEquals(this.mRealEstate2.mType, realEstatesWithPhotos[1].mRealEstate?.mType)
+        assertEquals(mRealEstate1.mType, realEstatesWithPhotos[0].mRealEstate?.mType)
+        assertEquals(mRealEstate2.mType, realEstatesWithPhotos[1].mRealEstate?.mType)
         assertEquals(1, realEstatesWithPhotos[0].mPhotos?.size)
         assertEquals(2, realEstatesWithPhotos[1].mPhotos?.size)
         assertEquals("URL1", realEstatesWithPhotos[0].mPhotos?.get(0)?.mUrlPicture)
@@ -228,29 +209,28 @@ class RealEstateDAOTest {
     }
 
     @Test
-    fun getRealEstatesWithPointsOfInterest_shouldBeSuccess() {
+    fun getRealEstatesWithPointsOfInterest_shouldBeSuccess() = runBlocking {
         // BEFORE: Add real estates
-        this.mRealEstateDAO.insertRealEstates(this.mRealEstate1,
-                                              this.mRealEstate2)
+        mRealEstateDAO.insertRealEstates(mRealEstate1, mRealEstate2)
 
         // THEN: Add points of interest to avoid the SQLiteConstraintException (FOREIGN KEY constraint)
-        this.mDatabase.pointOfInterestDAO().insertPointsOfInterest(PointOfInterest(mName = "school"),
-                                                                   PointOfInterest(mName = "business"))
+        mDatabase.pointOfInterestDAO().insertPointsOfInterest(PointOfInterest(mName = "school"),
+                                                              PointOfInterest(mName = "business"))
 
         // THEN: Add cross-reference between real estates and points of interest
-        this.mDatabase.realEstatePointOfInterestCrossRefDAO().insertSeveralCrossRef(
+        mDatabase.realEstatePointOfInterestCrossRefDAO().insertSeveralCrossRef(
             RealEstatePointOfInterestCrossRef(mRealEstateId = 1L, mPointOfInterestId = 1L),
             RealEstatePointOfInterestCrossRef(mRealEstateId = 1L, mPointOfInterestId = 2L),
             RealEstatePointOfInterestCrossRef(mRealEstateId = 2L, mPointOfInterestId = 1L)
         )
 
         // THEN: Retrieve real estates with their points of interest
-        val realEstatesWithPointsOfInterest = LiveDataTestUtil.getValue(this.mRealEstateDAO.getRealEstatesWithPointsOfInterest())
+        val realEstatesWithPointsOfInterest = LiveDataTestUtil.getValue(mRealEstateDAO.getRealEstatesWithPointsOfInterest())
 
         // TEST: All real estates with their points of interest
         assertEquals(2, realEstatesWithPointsOfInterest.size)
-        assertEquals(this.mRealEstate1.mType, realEstatesWithPointsOfInterest[0].mRealEstate?.mType)
-        assertEquals(this.mRealEstate2.mType, realEstatesWithPointsOfInterest[1].mRealEstate?.mType)
+        assertEquals(mRealEstate1.mType, realEstatesWithPointsOfInterest[0].mRealEstate?.mType)
+        assertEquals(mRealEstate2.mType, realEstatesWithPointsOfInterest[1].mRealEstate?.mType)
         assertEquals(2, realEstatesWithPointsOfInterest[0].mPointsOfInterest?.size)
         assertEquals(1, realEstatesWithPointsOfInterest[1].mPointsOfInterest?.size)
         assertEquals("school", realEstatesWithPointsOfInterest[0].mPointsOfInterest?.get(0)?.mName)
@@ -262,19 +242,19 @@ class RealEstateDAOTest {
 
     @Test
     @Throws(InterruptedException::class)
-    fun updateRealEstate_shouldBeSuccess() {
+    fun updateRealEstate_shouldBeSuccess() = runBlocking {
         // BEFORE: Add real estates
-        this.mRealEstateDAO.insertRealEstate(this.mRealEstate1)
+        mRealEstateDAO.insertRealEstate(mRealEstate1)
 
         // THEN: Retrieve the real estate
-        val realEstateBeforeUpdate = LiveDataTestUtil.getValue(this.mRealEstateDAO.getRealEstateById(1L))
+        val realEstateBeforeUpdate = LiveDataTestUtil.getValue(mRealEstateDAO.getRealEstateById(1L))
 
         // THEN: Update the real estate
         val realEstateUpdated = realEstateBeforeUpdate.copy(mType = "Random")
-        val numberOfUpdatedRow = this.mRealEstateDAO.updateRealEstate(realEstateUpdated)
+        val numberOfUpdatedRow = mRealEstateDAO.updateRealEstate(realEstateUpdated)
 
         // AFTER: Retrieve the real estate
-        val realEstateAfterUpdate = LiveDataTestUtil.getValue(this.mRealEstateDAO.getRealEstateById(1L))
+        val realEstateAfterUpdate = LiveDataTestUtil.getValue(mRealEstateDAO.getRealEstateById(1L))
 
         // TEST: Number of updated row
         assertEquals(1, numberOfUpdatedRow)
@@ -283,29 +263,21 @@ class RealEstateDAOTest {
         assertEquals(realEstateUpdated.mType, realEstateAfterUpdate.mType)
     }
 
-    @Test
-    fun updateRealEstate_shouldBeFail() {
+    @Test(expected = SQLiteConstraintException::class)
+    fun updateRealEstate_shouldBeFail() = runBlocking {
         // BEFORE: Add real estates
-        this.mRealEstateDAO.insertRealEstates(this.mRealEstate1,
-                                              this.mRealEstate2)
+        mRealEstateDAO.insertRealEstates(mRealEstate1, mRealEstate2)
 
         // THEN: Retrieve the real estate
-        val realEstateBeforeUpdate = LiveDataTestUtil.getValue(this.mRealEstateDAO.getRealEstateById(1L))
+        val realEstateBeforeUpdate = LiveDataTestUtil.getValue(mRealEstateDAO.getRealEstateById(1L))
 
         // THEN: Update the real estate 1 with the several fields of the real estate 2 (Error)
-        val realEstateUpdated = realEstateBeforeUpdate.copy(mType = this.mRealEstate2.mType,
-                                                            mSurface = this.mRealEstate2.mSurface,
-                                                            mNumberOfRoom = this.mRealEstate2.mNumberOfRoom,
-                                                            mAddress = this.mRealEstate2.mAddress)
+        val realEstateUpdated = realEstateBeforeUpdate.copy(mType = mRealEstate2.mType,
+                                                            mSurface = mRealEstate2.mSurface,
+                                                            mNumberOfRoom = mRealEstate2.mNumberOfRoom,
+                                                            mAddress = mRealEstate2.mAddress)
 
-        var numberOfUpdatedRow = 0
-
-        try {
-            numberOfUpdatedRow = this.mRealEstateDAO.updateRealEstate(realEstateUpdated)
-        }
-        catch (e: SQLiteConstraintException) {
-            // Do nothing
-        }
+        val numberOfUpdatedRow = mRealEstateDAO.updateRealEstate(realEstateUpdated)
 
         // TEST: No update because the indices must be unique
         assertEquals(0, numberOfUpdatedRow)
@@ -315,15 +287,15 @@ class RealEstateDAOTest {
 
     @Test
     @Throws(InterruptedException::class)
-    fun deleteRealEstate_shouldBeSuccess() {
+    fun deleteRealEstate_shouldBeSuccess() = runBlocking {
         // BEFORE: Add real estate
-        this.mRealEstateDAO.insertRealEstate(this.mRealEstate1)
+        mRealEstateDAO.insertRealEstate(mRealEstate1)
 
         // THEN: Retrieve the real estate
-        val realEstate = LiveDataTestUtil.getValue(this.mRealEstateDAO.getRealEstateById(1L))
+        val realEstate = LiveDataTestUtil.getValue(mRealEstateDAO.getRealEstateById(1L))
 
         // THEN: Delete real estate
-        val numberOfDeletedRow = this.mRealEstateDAO.deleteRealEstate(realEstate)
+        val numberOfDeletedRow = mRealEstateDAO.deleteRealEstate(realEstate)
 
         // TEST: Number of deleted row
         assertEquals(1, numberOfDeletedRow)
@@ -331,9 +303,9 @@ class RealEstateDAOTest {
 
     @Test
     @Throws(InterruptedException::class)
-    fun deleteRealEstate_shouldBeFail() {
+    fun deleteRealEstate_shouldBeFail() = runBlocking {
         // THEN: Delete real estate (Error)
-        val numberOfDeletedRow = this.mRealEstateDAO.deleteRealEstate(this.mRealEstate1)
+        val numberOfDeletedRow = mRealEstateDAO.deleteRealEstate(mRealEstate1)
 
         // TEST: No delete
         assertEquals(0, numberOfDeletedRow)

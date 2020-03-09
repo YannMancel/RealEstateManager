@@ -23,12 +23,12 @@ interface RealEstatePointOfInterestCrossRefDAO {
      * val id = dao.insertCrossRef(crossRef)
      */
     @Insert
-    fun insertCrossRef(crossRef: RealEstatePointOfInterestCrossRef): Long
+    suspend fun insertCrossRef(crossRef: RealEstatePointOfInterestCrossRef): Long
 
     /**
      * Usage:
      * val id = dao.insertSeveralCrossRef(crossRef1, crossRef2)
      */
     @Insert
-    fun insertSeveralCrossRef(vararg severalCrossRef: RealEstatePointOfInterestCrossRef): List<Long>
+    suspend fun insertSeveralCrossRef(vararg severalCrossRef: RealEstatePointOfInterestCrossRef): List<Long>
 }

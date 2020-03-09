@@ -9,6 +9,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.mancel.yann.realestatemanager.dao.UserDAO
 import com.mancel.yann.realestatemanager.models.User
 import com.mancel.yann.realestatemanager.utils.LiveDataTestUtil
+import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
@@ -37,8 +38,9 @@ class UserDAOTest {
     private val mUser1 = User(mUsername = "Yann", mEmail = "yann@com")
     private val mUser2 = User(mUsername = "Melina", mEmail = "melina@com")
 
-    // RULES (Synchronized Tests) ------------------------------------------------------------------
+    // RULES ---------------------------------------------------------------------------------------
 
+    // A JUnit rule that configures LiveData to execute each task synchronously
     @get:Rule
     val rule = InstantTaskExecutorRule()
 
@@ -66,54 +68,40 @@ class UserDAOTest {
     // -- Create --
 
     @Test
-    fun insertUser_shouldBeSuccess() {
-        val id = this.mUserDAO.insertUser(this.mUser1)
+    fun insertUser_shouldBeSuccess() = runBlocking {
+        // BEFORE: Add user
+        val id = mUserDAO.insertUser(mUser1)
 
         // TEST: Good Id
         assertEquals(1L, id)
     }
 
-    @Test
-    fun insertUser_shouldBeFail() {
+    @Test(expected = SQLiteConstraintException::class)
+    fun insertUser_shouldBeFail() = runBlocking {
         // BEFORE: Add user
-        this.mUserDAO.insertUser(this.mUser1)
-
-        var id = 0L
+        mUserDAO.insertUser(mUser1)
 
         // THEN: Add a new user with the same indices (Error)
-        try {
-            id = this.mUserDAO.insertUser(this.mUser1)
-        }
-        catch (e: SQLiteConstraintException) {
-            // Do nothing
-        }
+        val id = mUserDAO.insertUser(mUser1)
 
         // TEST: No insert because the indices must be unique
         assertEquals(0L, id)
     }
 
     @Test
-    fun insertUsers_shouldBeSuccess() {
-        val ids = this.mUserDAO.insertUsers(this.mUser1,
-                                            this.mUser2)
+    fun insertUsers_shouldBeSuccess() = runBlocking {
+        // Add 2 users
+        val ids = mUserDAO.insertUsers(mUser1, mUser2)
 
         // TEST: Good Ids
         assertEquals(1L, ids[0])
         assertEquals(2L, ids[1])
     }
 
-    @Test
-    fun insertUsers_shouldBeFail() {
-        var ids = emptyList<Long>()
-
-        // THEN: Add 2 users with the same indices (Error)
-        try {
-            ids = this.mUserDAO.insertUsers(this.mUser1,
-                                            this.mUser1)
-        }
-        catch (e: SQLiteConstraintException) {
-            // Do nothing
-        }
+    @Test(expected = SQLiteConstraintException::class)
+    fun insertUsers_shouldBeFail() = runBlocking {
+        // Add 2 users with the same indices (Error)
+        val ids = mUserDAO.insertUsers(mUser1, mUser1)
 
         // TEST: No insert because the indices must be unique
         assertEquals(0, ids.size)
@@ -132,15 +120,15 @@ class UserDAOTest {
 
     @Test
     @Throws(InterruptedException::class)
-    fun getUserById_shouldBeSuccess() {
+    fun getUserById_shouldBeSuccess() = runBlocking {
         // BEFORE: Add user
-        this.mUserDAO.insertUser(this.mUser1)
+        mUserDAO.insertUser(mUser1)
 
         // THEN: Retrieve user by its Id
-        val user = LiveDataTestUtil.getValue(this.mUserDAO.getUserById(1L))
+        val user = LiveDataTestUtil.getValue(mUserDAO.getUserById(1L))
 
         // TEST: Same user except the id because it is 0 for user1 and 1 for user2
-        assertEquals(this.mUser1.mUsername, user.mUsername)
+        assertEquals(mUser1.mUsername, user.mUsername)
     }
 
     @Test
@@ -154,36 +142,35 @@ class UserDAOTest {
 
     @Test
     @Throws(InterruptedException::class)
-    fun getAllUsers_shouldBeSuccess() {
+    fun getAllUsers_shouldBeSuccess() = runBlocking {
         // BEFORE: Add users
-        this.mUserDAO.insertUsers(this.mUser1,
-                                  this.mUser2)
+        mUserDAO.insertUsers(mUser1, mUser2)
 
         // THEN: Retrieve users
-        val users = LiveDataTestUtil.getValue(this.mUserDAO.getAllUsers())
+        val users = LiveDataTestUtil.getValue(mUserDAO.getAllUsers())
 
         // TEST: Same users
-        assertEquals(this.mUser1.mUsername, users[0].mUsername)
-        assertEquals(this.mUser2.mUsername, users[1].mUsername)
+        assertEquals(mUser1.mUsername, users[0].mUsername)
+        assertEquals(mUser2.mUsername, users[1].mUsername)
     }
 
     // -- Update --
 
     @Test
     @Throws(InterruptedException::class)
-    fun updateUser_shouldBeSuccess() {
+    fun updateUser_shouldBeSuccess() = runBlocking {
         // BEFORE: Add user
-        this.mUserDAO.insertUser(this.mUser1)
+        mUserDAO.insertUser(mUser1)
 
         // THEN: Retrieve the user
-        val userBeforeUpdate = LiveDataTestUtil.getValue(this.mUserDAO.getUserById(1L))
+        val userBeforeUpdate = LiveDataTestUtil.getValue(mUserDAO.getUserById(1L))
 
         // THEN: Update the user
         val userUpdated = userBeforeUpdate.copy(mUsername = "Melina")
-        val numberOfUpdatedRow = this.mUserDAO.updateUser(userUpdated)
+        val numberOfUpdatedRow = mUserDAO.updateUser(userUpdated)
 
         // AFTER: Retrieve the user
-        val userAfterUpdate = LiveDataTestUtil.getValue(this.mUserDAO.getUserById(userBeforeUpdate.mId))
+        val userAfterUpdate = LiveDataTestUtil.getValue(mUserDAO.getUserById(userBeforeUpdate.mId))
 
         // TEST: Number of updated row
         assertEquals(1, numberOfUpdatedRow)
@@ -192,28 +179,20 @@ class UserDAOTest {
         assertEquals(userUpdated.mUsername, userAfterUpdate.mUsername)
     }
 
-    @Test
+    @Test(expected = SQLiteConstraintException::class)
     @Throws(InterruptedException::class)
-    fun updateUser_shouldBeFail() {
+    fun updateUser_shouldBeFail() = runBlocking {
         // BEFORE: Add users
-        this.mUserDAO.insertUsers(this.mUser1,
-                                  this.mUser2)
+        mUserDAO.insertUsers(mUser1, mUser2)
 
         // THEN: Retrieve the user
-        val userBeforeUpdate = LiveDataTestUtil.getValue(this.mUserDAO.getUserById(1L))
+        val userBeforeUpdate = LiveDataTestUtil.getValue(mUserDAO.getUserById(1L))
 
         // THEN: Update the user 1 with the username and the email of the user 2 (Error)
-        val userUpdated = userBeforeUpdate.copy(mUsername = this.mUser2.mUsername,
-                                                mEmail = this.mUser2.mEmail)
+        val userUpdated = userBeforeUpdate.copy(mUsername = mUser2.mUsername,
+                                                mEmail = mUser2.mEmail)
 
-        var numberOfUpdatedRow = 0
-
-        try {
-            numberOfUpdatedRow = this.mUserDAO.updateUser(userUpdated)
-        }
-        catch (e: SQLiteConstraintException) {
-            // Do nothing
-        }
+        val numberOfUpdatedRow = mUserDAO.updateUser(userUpdated)
 
         // TEST: No update because the indices must be unique
         assertEquals(0, numberOfUpdatedRow)
@@ -223,15 +202,15 @@ class UserDAOTest {
 
     @Test
     @Throws(InterruptedException::class)
-    fun deleteUser_shouldBeSuccess() {
+    fun deleteUser_shouldBeSuccess() = runBlocking {
         // BEFORE: Add user
-        this.mUserDAO.insertUser(this.mUser1)
+        mUserDAO.insertUser(mUser1)
 
         // THEN: Retrieve the user
-        val user = LiveDataTestUtil.getValue(this.mUserDAO.getUserById(1L))
+        val user = LiveDataTestUtil.getValue(mUserDAO.getUserById(1L))
 
         // THEN: Delete user
-        val numberOfDeletedRow = this.mUserDAO.deleteUser(user)
+        val numberOfDeletedRow = mUserDAO.deleteUser(user)
 
         // TEST: Number of deleted row
         assertEquals(1, numberOfDeletedRow)
@@ -239,9 +218,9 @@ class UserDAOTest {
 
     @Test
     @Throws(InterruptedException::class)
-    fun deleteUser_shouldBeFail() {
+    fun deleteUser_shouldBeFail() = runBlocking {
         // THEN: Delete user (Error)
-        val numberOfDeletedRow = this.mUserDAO.deleteUser(this.mUser1)
+        val numberOfDeletedRow = mUserDAO.deleteUser(mUser1)
 
         // TEST: No delete
         assertEquals(0, numberOfDeletedRow)
@@ -249,15 +228,15 @@ class UserDAOTest {
 
     @Test
     @Throws(InterruptedException::class)
-    fun deleteUserById_shouldBeSuccess() {
+    fun deleteUserById_shouldBeSuccess() = runBlocking {
         // BEFORE: Add user
-        this.mUserDAO.insertUser(this.mUser1)
+        mUserDAO.insertUser(mUser1)
 
         // THEN: Retrieve user by its Id
-        val user = LiveDataTestUtil.getValue(this.mUserDAO.getUserById(1L))
+        val user = LiveDataTestUtil.getValue(mUserDAO.getUserById(1L))
 
         // THEN: Delete user thanks to its Id
-        val numberOfDeletedRow = this.mUserDAO.deleteUserById(user.mId)
+        val numberOfDeletedRow = mUserDAO.deleteUserById(user.mId)
 
         // TEST: Number of deleted row
         assertEquals(1, numberOfDeletedRow)
@@ -265,9 +244,9 @@ class UserDAOTest {
 
     @Test
     @Throws(InterruptedException::class)
-    fun deleteUserById_shouldBeFail() {
+    fun deleteUserById_shouldBeFail() = runBlocking {
         // THEN: Delete user thanks to its Id (Error)
-        val numberOfDeletedRow = this.mUserDAO.deleteUserById(0L)
+        val numberOfDeletedRow = mUserDAO.deleteUserById(0L)
 
         // TEST: No delete
         assertEquals(0, numberOfDeletedRow)

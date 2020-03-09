@@ -26,14 +26,14 @@ interface RealEstateDAO {
      * val id = dao.insertRealEstate(realEstate)
      */
     @Insert
-    fun insertRealEstate(realEstate: RealEstate): Long
+    suspend fun insertRealEstate(realEstate: RealEstate): Long
 
     /**
      * Usage:
      * val ids = dao.insertRealEstates(realEstate1, realEstate2)
      */
     @Insert
-    fun insertRealEstates(vararg realEstates: RealEstate): List<Long>
+    suspend fun insertRealEstates(vararg realEstates: RealEstate): List<Long>
 
     // -- Read --
 
@@ -90,7 +90,7 @@ interface RealEstateDAO {
      * val numberOfUpdatedRow = dao.updateRealEstate(realEstate)
      */
     @Update
-    fun updateRealEstate(realEstate: RealEstate): Int
+    suspend fun updateRealEstate(realEstate: RealEstate): Int
 
     // -- Delete --
 
@@ -99,5 +99,5 @@ interface RealEstateDAO {
      * val numberOfDeletedRow = dao.deleteRealEstate(realEstate)
      */
     @Delete
-    fun deleteRealEstate(realEstate: RealEstate): Int
+    suspend fun deleteRealEstate(realEstate: RealEstate): Int
 }

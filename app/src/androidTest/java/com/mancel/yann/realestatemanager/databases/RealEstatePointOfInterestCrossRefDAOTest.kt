@@ -9,6 +9,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.mancel.yann.realestatemanager.dao.RealEstatePointOfInterestCrossRefDAO
 import com.mancel.yann.realestatemanager.dao.UserDAO
 import com.mancel.yann.realestatemanager.models.*
+import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -44,23 +45,23 @@ class RealEstatePointOfInterestCrossRefDAOTest {
 
     @Before
     @Throws(Exception::class)
-    fun setUp() {
+    fun setUp() = runBlocking {
         val context = ApplicationProvider.getApplicationContext<Context>()
 
-        this.mDatabase = Room.inMemoryDatabaseBuilder(context,
-                                                      AppDatabase::class.java)
-                             .allowMainThreadQueries()
-                             .build()
+        mDatabase = Room.inMemoryDatabaseBuilder(context,
+                                                 AppDatabase::class.java)
+                        .allowMainThreadQueries()
+                        .build()
 
         // Add user, real estates and points of interest
         // to avoid the SQLiteConstraintException (FOREIGN KEY constraint)
-        this.mDatabase.userDAO().insertUser(User(mUsername = "Yann"))
-        this.mDatabase.realEstateDAO().insertRealEstates(RealEstate(mType = "Flat", mEstateAgentId = 1L),
-                                                         RealEstate(mType = "House", mEstateAgentId = 1L))
-        this.mDatabase.pointOfInterestDAO().insertPointsOfInterest(PointOfInterest(mName = "school"),
-                                                                   PointOfInterest(mName = "business"))
+        mDatabase.userDAO().insertUser(User(mUsername = "Yann"))
+        mDatabase.realEstateDAO().insertRealEstates(RealEstate(mType = "Flat", mEstateAgentId = 1L),
+                                                    RealEstate(mType = "House", mEstateAgentId = 1L))
+        mDatabase.pointOfInterestDAO().insertPointsOfInterest(PointOfInterest(mName = "school"),
+                                                              PointOfInterest(mName = "business"))
 
-        this.mRealEstatePointOfInterestCrossRefDAO = this.mDatabase.realEstatePointOfInterestCrossRefDAO()
+        mRealEstatePointOfInterestCrossRefDAO = mDatabase.realEstatePointOfInterestCrossRefDAO()
     }
 
     @After
@@ -72,54 +73,40 @@ class RealEstatePointOfInterestCrossRefDAOTest {
     // -- Create --
 
     @Test
-    fun insertCrossRef_shouldBeSuccess() {
-        val id = this.mRealEstatePointOfInterestCrossRefDAO.insertCrossRef(this.mCrossRef1)
+    fun insertCrossRef_shouldBeSuccess() = runBlocking {
+        val id = mRealEstatePointOfInterestCrossRefDAO.insertCrossRef(mCrossRef1)
 
         // TEST: Good Id
         assertEquals(1L, id)
     }
 
-    @Test
-    fun insertCrossRef_shouldBeFail() {
+    @Test(expected = SQLiteConstraintException::class)
+    fun insertCrossRef_shouldBeFail() = runBlocking {
         // BEFORE: Add cross-ref
-        this.mRealEstatePointOfInterestCrossRefDAO.insertCrossRef(this.mCrossRef1)
-
-        var id = 0L
+        mRealEstatePointOfInterestCrossRefDAO.insertCrossRef(mCrossRef1)
 
         // THEN: Add a new cross-ref with the same primary keys (Error)
-        try {
-            id = this.mRealEstatePointOfInterestCrossRefDAO.insertCrossRef(this.mCrossRef1)
-        }
-        catch (e: SQLiteConstraintException) {
-            // Do nothing
-        }
+        val id = mRealEstatePointOfInterestCrossRefDAO.insertCrossRef(mCrossRef1)
 
         // TEST: No insert because the primary keys must be unique
         assertEquals(0L, id)
     }
 
     @Test
-    fun insertSeveralCrossRef_shouldBeSuccess() {
-        val ids = this.mRealEstatePointOfInterestCrossRefDAO.insertSeveralCrossRef(this.mCrossRef1,
-                                                                                   this.mCrossRef2)
+    fun insertSeveralCrossRef_shouldBeSuccess() = runBlocking {
+        val ids = mRealEstatePointOfInterestCrossRefDAO.insertSeveralCrossRef(mCrossRef1,
+                                                                              mCrossRef2)
 
         // TEST: Good Ids
         assertEquals(1L, ids[0])
         assertEquals(2L, ids[1])
     }
 
-    @Test
-    fun insertSeveralCrossRef_shouldBeFail() {
-        var ids = emptyList<Long>()
-
+    @Test(expected = SQLiteConstraintException::class)
+    fun insertSeveralCrossRef_shouldBeFail() = runBlocking {
         // THEN: Add 2 cross-ref with the same primary keys (Error)
-        try {
-            ids = this.mRealEstatePointOfInterestCrossRefDAO.insertSeveralCrossRef(this.mCrossRef1,
-                                                                                   this.mCrossRef1)
-        }
-        catch (e: SQLiteConstraintException) {
-            // Do nothing
-        }
+        val ids = mRealEstatePointOfInterestCrossRefDAO.insertSeveralCrossRef(mCrossRef1,
+                                                                              mCrossRef1)
 
         // TEST: No insert because the primary keys must be unique
         assertEquals(0, ids.size)

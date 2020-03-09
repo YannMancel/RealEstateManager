@@ -23,14 +23,14 @@ interface PhotoDAO {
      * val id = dao.insertPhoto(photo)
      */
     @Insert
-    fun insertPhoto(photo: Photo): Long
+    suspend fun insertPhoto(photo: Photo): Long
 
     /**
      * Usage:
      * val ids = dao.insertPhotos(photo1, photo2)
      */
     @Insert
-    fun insertPhotos(vararg photos: Photo): List<Long>
+    suspend fun insertPhotos(vararg photos: Photo): List<Long>
 
     // -- Read --
 
@@ -57,7 +57,7 @@ interface PhotoDAO {
      * val numberOfUpdatedRow = dao.updatePhoto(photo)
      */
     @Update
-    fun updatePhoto(photo: Photo): Int
+    suspend fun updatePhoto(photo: Photo): Int
 
     // -- Delete --
 
@@ -66,5 +66,5 @@ interface PhotoDAO {
      * val numberOfDeletedRow = dao.deletePhoto(photo)
      */
     @Delete
-    fun deletePhoto(photo: Photo): Int
+    suspend fun deletePhoto(photo: Photo): Int
 }

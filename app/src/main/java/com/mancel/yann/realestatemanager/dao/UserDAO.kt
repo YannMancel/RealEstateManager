@@ -23,14 +23,14 @@ interface UserDAO {
      * val id = dao.insertUser(user)
      */
     @Insert
-    fun insertUser(user: User): Long
+    suspend fun insertUser(user: User): Long
 
     /**
      * Usage:
      * val ids = dao.insertUsers(user1, user2)
      */
     @Insert
-    fun insertUsers(vararg users: User): List<Long>
+    suspend fun insertUsers(vararg users: User): List<Long>
 
     // -- Read --
 
@@ -57,7 +57,7 @@ interface UserDAO {
      * val numberOfUpdatedRow = dao.updateUser(user)
      */
     @Update
-    fun updateUser(user: User): Int
+    suspend fun updateUser(user: User): Int
 
     // -- Delete --
 
@@ -66,12 +66,12 @@ interface UserDAO {
      * val numberOfDeletedRow = dao.deleteUser(user)
      */
     @Delete
-    fun deleteUser(user: User): Int
+    suspend fun deleteUser(user: User): Int
 
     /**
      * Usage:
      * val numberOfDeletedRow = dao.deleteUserById(userId)
      */
     @Query("DELETE FROM user WHERE id_user = :userId")
-    fun deleteUserById(userId: Long): Int
+    suspend fun deleteUserById(userId: Long): Int
 }

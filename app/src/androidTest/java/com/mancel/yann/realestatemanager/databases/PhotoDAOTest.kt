@@ -11,6 +11,7 @@ import com.mancel.yann.realestatemanager.models.Photo
 import com.mancel.yann.realestatemanager.models.RealEstate
 import com.mancel.yann.realestatemanager.models.User
 import com.mancel.yann.realestatemanager.utils.LiveDataTestUtil
+import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -48,20 +49,20 @@ class PhotoDAOTest {
 
     @Before
     @Throws(Exception::class)
-    fun setUp() {
+    fun setUp() = runBlocking {
         val context = ApplicationProvider.getApplicationContext<Context>()
 
-        this.mDatabase = Room.inMemoryDatabaseBuilder(context,
-                                                      AppDatabase::class.java)
-                             .allowMainThreadQueries()
-                             .build()
+        mDatabase = Room.inMemoryDatabaseBuilder(context,
+                                                 AppDatabase::class.java)
+                        .allowMainThreadQueries()
+                        .build()
 
         // Add user and real estates to avoid the SQLiteConstraintException (FOREIGN KEY constraint)
-        this.mDatabase.userDAO().insertUser(User(mUsername = "Yann"))
-        this.mDatabase.realEstateDAO().insertRealEstates(RealEstate(mType = "Flat", mEstateAgentId = 1L),
-                                                         RealEstate(mType = "House", mEstateAgentId = 1L))
+        mDatabase.userDAO().insertUser(User(mUsername = "Yann"))
+        mDatabase.realEstateDAO().insertRealEstates(RealEstate(mType = "Flat", mEstateAgentId = 1L),
+                                                    RealEstate(mType = "House", mEstateAgentId = 1L))
 
-        this.mPhotoDAO = this.mDatabase.photoDAO()
+        mPhotoDAO = mDatabase.photoDAO()
     }
 
     @After
@@ -73,37 +74,28 @@ class PhotoDAOTest {
     // -- Create --
 
     @Test
-    fun insertPhoto_shouldBeSuccess() {
-        val id = this.mPhotoDAO.insertPhoto(this.mPhoto1)
+    fun insertPhoto_shouldBeSuccess() = runBlocking {
+        val id = mPhotoDAO.insertPhoto(mPhoto1)
 
         // TEST: Good Id
         assertEquals(1L, id)
     }
 
-    @Test
-    fun insertPhoto_shouldBeFail() {
+    @Test(expected = SQLiteConstraintException::class)
+    fun insertPhoto_shouldBeFail() = runBlocking {
         // BEFORE: Add photo
-        this.mPhotoDAO.insertPhoto(this.mPhoto1)
-
-        var id = 0L
+        mPhotoDAO.insertPhoto(mPhoto1)
 
         // THEN: Add a new photo with the same indices (Error)
-        try {
-            id = this.mPhotoDAO.insertPhoto(this.mPhoto1)
-        }
-        catch (e: SQLiteConstraintException) {
-            // Do nothing
-        }
+        val id = mPhotoDAO.insertPhoto(mPhoto1)
 
         // TEST: No insert because the indices must be unique
         assertEquals(0L, id)
     }
 
     @Test
-    fun insertPhotos_shouldBeSuccess() {
-        val ids = this.mPhotoDAO.insertPhotos(this.mPhoto1,
-                                              this.mPhoto2,
-                                              this.mPhoto3)
+    fun insertPhotos_shouldBeSuccess() = runBlocking {
+        val ids = mPhotoDAO.insertPhotos(mPhoto1, mPhoto2, mPhoto3)
 
         // TEST: Good Ids
         assertEquals(1L, ids[0])
@@ -111,18 +103,10 @@ class PhotoDAOTest {
         assertEquals(3L, ids[2])
     }
 
-    @Test
-    fun insertPhotos_shouldBeFail() {
-        var ids = emptyList<Long>()
-
+    @Test(expected = SQLiteConstraintException::class)
+    fun insertPhotos_shouldBeFail() = runBlocking {
         // THEN: Add 2 photos with the same indices (Error)
-        try {
-            ids = this.mPhotoDAO.insertPhotos(this.mPhoto1,
-                                              this.mPhoto1)
-        }
-        catch (e: SQLiteConstraintException) {
-            // Do nothing
-        }
+        val ids = mPhotoDAO.insertPhotos(mPhoto1, mPhoto1)
 
         // TEST: No insert because the indices must be unique
         assertEquals(0, ids.size)
@@ -141,19 +125,17 @@ class PhotoDAOTest {
 
     @Test
     @Throws(InterruptedException::class)
-    fun getPhotoByRealEstateId_shouldBeSuccess() {
+    fun getPhotoByRealEstateId_shouldBeSuccess() = runBlocking {
         // BEFORE: Add photos
-        this.mPhotoDAO.insertPhotos(this.mPhoto1,
-                                    this.mPhoto2,
-                                    this.mPhoto3)
+        mPhotoDAO.insertPhotos(mPhoto1, mPhoto2, mPhoto3)
 
         // THEN: Retrieve photos by real estate Id
-        val photos = LiveDataTestUtil.getValue(this.mPhotoDAO.getPhotoByRealEstateId(1L))
+        val photos = LiveDataTestUtil.getValue(mPhotoDAO.getPhotoByRealEstateId(1L))
 
         // TEST: Just 2 photos
         assertEquals(2, photos.size)
-        assertEquals(this.mPhoto1.mUrlPicture, photos[0].mUrlPicture)
-        assertEquals(this.mPhoto2.mUrlPicture, photos[1].mUrlPicture)
+        assertEquals(mPhoto1.mUrlPicture, photos[0].mUrlPicture)
+        assertEquals(mPhoto2.mUrlPicture, photos[1].mUrlPicture)
     }
 
     @Test
@@ -167,39 +149,37 @@ class PhotoDAOTest {
 
     @Test
     @Throws(InterruptedException::class)
-    fun getAllPhotos_shouldBeSuccess() {
+    fun getAllPhotos_shouldBeSuccess() = runBlocking {
         // BEFORE: Add photos
-        this.mPhotoDAO.insertPhotos(this.mPhoto1,
-                                    this.mPhoto2,
-                                    this.mPhoto3)
+        mPhotoDAO.insertPhotos(mPhoto1, mPhoto2, mPhoto3)
 
         // THEN: Retrieve photos
-        val photos = LiveDataTestUtil.getValue(this.mPhotoDAO.getAllPhotos())
+        val photos = LiveDataTestUtil.getValue(mPhotoDAO.getAllPhotos())
 
         // TEST: All photos
         assertEquals(3, photos.size)
-        assertEquals(this.mPhoto1.mUrlPicture, photos[0].mUrlPicture)
-        assertEquals(this.mPhoto2.mUrlPicture, photos[1].mUrlPicture)
-        assertEquals(this.mPhoto3.mUrlPicture, photos[2].mUrlPicture)
+        assertEquals(mPhoto1.mUrlPicture, photos[0].mUrlPicture)
+        assertEquals(mPhoto2.mUrlPicture, photos[1].mUrlPicture)
+        assertEquals(mPhoto3.mUrlPicture, photos[2].mUrlPicture)
     }
 
     // -- Update --
 
     @Test
     @Throws(InterruptedException::class)
-    fun updatePhoto_shouldBeSuccess() {
+    fun updatePhoto_shouldBeSuccess() = runBlocking {
         // BEFORE: Add photo
-        this.mPhotoDAO.insertPhoto(this.mPhoto1)
+        mPhotoDAO.insertPhoto(mPhoto1)
 
         // THEN: Retrieve the photo -> photos[0]
-        val photosBeforeUpdate = LiveDataTestUtil.getValue(this.mPhotoDAO.getAllPhotos())
+        val photosBeforeUpdate = LiveDataTestUtil.getValue(mPhotoDAO.getAllPhotos())
 
         // THEN: Update the photo
         val photoUpdated = photosBeforeUpdate[0].copy(mUrlPicture = "Random")
-        val numberOfUpdatedRow = this.mPhotoDAO.updatePhoto(photoUpdated)
+        val numberOfUpdatedRow = mPhotoDAO.updatePhoto(photoUpdated)
 
         // AFTER: Retrieve the photo -> photos[0]
-        val photosAfterUpdate = LiveDataTestUtil.getValue(this.mPhotoDAO.getAllPhotos())
+        val photosAfterUpdate = LiveDataTestUtil.getValue(mPhotoDAO.getAllPhotos())
 
         // TEST: Number of updated row
         assertEquals(1, numberOfUpdatedRow)
@@ -208,27 +188,18 @@ class PhotoDAOTest {
         assertEquals(photoUpdated.mUrlPicture, photosAfterUpdate[0].mUrlPicture)
     }
 
-    @Test
-    fun updatePhoto_shouldBeFail() {
+    @Test(expected = SQLiteConstraintException::class)
+    fun updatePhoto_shouldBeFail() = runBlocking {
         // BEFORE: Add photos
-        this.mPhotoDAO.insertPhotos(this.mPhoto1,
-                                    this.mPhoto2,
-                                    this.mPhoto3)
+        mPhotoDAO.insertPhotos(mPhoto1, mPhoto2, mPhoto3)
 
         // THEN: Retrieve the photo -> photos[0]
-        val photosBeforeUpdate = LiveDataTestUtil.getValue(this.mPhotoDAO.getAllPhotos())
+        val photosBeforeUpdate = LiveDataTestUtil.getValue(mPhotoDAO.getAllPhotos())
 
         // THEN: Update the photo 1 with the url picture of the photo 2 (Error)
-        val photoUpdated = photosBeforeUpdate[0].copy(mUrlPicture = this.mPhoto2.mUrlPicture)
+        val photoUpdated = photosBeforeUpdate[0].copy(mUrlPicture = mPhoto2.mUrlPicture)
 
-        var numberOfUpdatedRow = 0
-
-        try {
-            numberOfUpdatedRow = this.mPhotoDAO.updatePhoto(photoUpdated)
-        }
-        catch (e: SQLiteConstraintException) {
-            // Do nothing
-        }
+        val numberOfUpdatedRow = mPhotoDAO.updatePhoto(photoUpdated)
 
         // TEST: No update because the indices must be unique
         assertEquals(0, numberOfUpdatedRow)
@@ -238,15 +209,15 @@ class PhotoDAOTest {
 
     @Test
     @Throws(InterruptedException::class)
-    fun deletePhoto_shouldBeSuccess() {
+    fun deletePhoto_shouldBeSuccess() = runBlocking {
         // BEFORE: Add photo
-        this.mPhotoDAO.insertPhoto(this.mPhoto1)
+        mPhotoDAO.insertPhoto(mPhoto1)
 
         // THEN: Retrieve the photo -> photos[0]
-        val photos = LiveDataTestUtil.getValue(this.mPhotoDAO.getAllPhotos())
+        val photos = LiveDataTestUtil.getValue(mPhotoDAO.getAllPhotos())
 
         // THEN: Delete photo
-        val numberOfDeletedRow = this.mPhotoDAO.deletePhoto(photos[0])
+        val numberOfDeletedRow = mPhotoDAO.deletePhoto(photos[0])
 
         // TEST: Number of deleted row
         assertEquals(1, numberOfDeletedRow)
@@ -254,9 +225,9 @@ class PhotoDAOTest {
 
     @Test
     @Throws(InterruptedException::class)
-    fun deletePhoto_shouldBeFail() {
+    fun deletePhoto_shouldBeFail() = runBlocking {
         // THEN: Delete photo (Error)
-        val numberOfDeletedRow = this.mPhotoDAO.deletePhoto(this.mPhoto1)
+        val numberOfDeletedRow = mPhotoDAO.deletePhoto(mPhoto1)
 
         // TEST: No delete
         assertEquals(0, numberOfDeletedRow)

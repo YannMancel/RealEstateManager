@@ -25,14 +25,14 @@ interface PointOfInterestDAO {
      * val id = dao.insertPointOfInterest(pointOfInterest)
      */
     @Insert
-    fun insertPointOfInterest(pointOfInterest: PointOfInterest): Long
+    suspend fun insertPointOfInterest(pointOfInterest: PointOfInterest): Long
 
     /**
      * Usage:
      * val ids = dao.insertPointsOfInterest(pointOfInterest1, pointOfInterest2)
      */
     @Insert
-    fun insertPointsOfInterest(vararg pointOfInterests: PointOfInterest): List<Long>
+    suspend fun insertPointsOfInterest(vararg pointsOfInterest: PointOfInterest): List<Long>
 
     // -- Read --
 
