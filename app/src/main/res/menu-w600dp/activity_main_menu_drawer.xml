@@ -15,7 +15,7 @@
             android:title="@string/menu_drawer_details"/>
 
         <item
-            android:id="@id/navigation_settingsFragment"
+            android:id="@id/navigation_settingsDialogFragment"
             android:icon="@drawable/ic_settings"
             android:title="@string/menu_drawer_settings"/>
 

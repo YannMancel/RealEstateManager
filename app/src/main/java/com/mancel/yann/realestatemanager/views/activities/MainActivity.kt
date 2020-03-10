@@ -123,13 +123,11 @@ class MainActivity : BaseActivity(), FragmentListener {
         // menu should be considered as top level destinations.
         val homeFragments = when (this.mMode) {
                                 Mode.PHONE_MODE -> {
-                                    setOf(R.id.navigation_listFragment,
-                                          R.id.navigation_settingsFragment)
+                                    setOf(R.id.navigation_listFragment)
                                 }
 
                                 Mode.TABLET_MODE -> {
-                                    setOf(R.id.navigation_detailsFragment,
-                                          R.id.navigation_settingsFragment)
+                                    setOf(R.id.navigation_detailsFragment)
                                 }
                             }
 

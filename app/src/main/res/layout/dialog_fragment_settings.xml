@@ -9,7 +9,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/design_default_color_error"
-    tools:context=".views.fragments.SettingsFragment">
+    tools:context=".views.dialogs.SettingsDialogFragment">
 
     <Button
         android:id="@+id/details_button"
@@ -19,7 +19,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="SETTINGS"
+        android:text="SETTINGS DIALOG"
         android:textSize="30sp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

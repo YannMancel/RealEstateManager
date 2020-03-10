@@ -35,13 +35,6 @@
 
     </fragment>
 
-    <!-- fragment: SettingsFragment -->
-    <fragment
-        android:id="@+id/navigation_settingsFragment"
-        android:name="com.mancel.yann.realestatemanager.views.fragments.SettingsFragment"
-        android:label="@string/navigation_settings_name"
-        tools:layout="@layout/fragment_settings" />
-
     <!-- fragment: LocationFragment -->
     <fragment
         android:id="@+id/navigation_locationFragment"
@@ -55,5 +48,12 @@
         android:name="com.mancel.yann.realestatemanager.views.fragments.CreatorFragment"
         android:label="@string/navigation_creator_name"
         tools:layout="@layout/fragment_creator" />
+
+    <!-- dialog: settingsDialogFragment -->
+    <dialog
+        android:id="@+id/navigation_settingsDialogFragment"
+        android:name="com.mancel.yann.realestatemanager.views.dialogs.SettingsDialogFragment"
+        android:label="@string/title_settings_dialog_fragment"
+        tools:layout="@layout/dialog_fragment_settings" />
 
 </navigation>

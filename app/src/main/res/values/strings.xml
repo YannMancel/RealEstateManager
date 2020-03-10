@@ -9,6 +9,9 @@
     <string name="edit_real_estate_toolbar">Edit real estate</string>
     <string name="search_real_estate_toolbar">Search real estate</string>
 
+    <!-- SettingsDialogFragment.kt -->
+    <string name="title_settings_dialog_fragment">Settings</string>
+
     <!-- activity_main_menu_drawer.xml -->
     <string name="menu_drawer_settings">SETTINGS</string>
     <string name="menu_drawer_real_estates">REAL ESTATES</string>
