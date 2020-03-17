@@ -1,5 +1,6 @@
 package com.mancel.yann.realestatemanager.viewModels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mancel.yann.realestatemanager.models.User
@@ -19,12 +20,19 @@ class RealEstateViewModel(private val mUserRepository: UserRepository) : ViewMod
 
         // LiveData
 
+    // CONSTRUCTORS --------------------------------------------------------------------------------
+
+    init {
+        Log.d(this::class.java.simpleName, "RealEstateViewModel: INIT")
+    }
+
     // METHODS -------------------------------------------------------------------------------------
 
     // -- ViewModel --
 
     override fun onCleared() {
         super.onCleared()
+        Log.d(this::class.java.simpleName, "RealEstateViewModel: onCleared")
     }
 
     // -- User --

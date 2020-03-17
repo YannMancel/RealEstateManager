@@ -7,7 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
+import com.mancel.yann.realestatemanager.viewModels.RealEstateViewModel
 import com.mancel.yann.realestatemanager.views.fragments.FragmentListener
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.lang.ClassCastException
 
 /**
@@ -23,6 +25,8 @@ abstract class BaseFragment : Fragment() {
 
     protected lateinit var mRootView: View
     protected var mCallback: FragmentListener? = null
+
+    protected val mViewModel: RealEstateViewModel by viewModel()
 
     // METHODS -------------------------------------------------------------------------------------
 
