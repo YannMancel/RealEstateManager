@@ -5,9 +5,13 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.mancel.yann.realestatemanager.dao.*
 import com.mancel.yann.realestatemanager.models.*
 import com.mancel.yann.realestatemanager.utils.Converters
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 /**
  * Created by Yann MANCEL on 26/02/2020.
@@ -26,7 +30,7 @@ import com.mancel.yann.realestatemanager.utils.Converters
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
 
-    // See: https://codelabs.developers.google.com/codelabs/android-room-with-a-view-kotlin/#6
+    // See: https://codelabs.developers.google.com/codelabs/android-room-with-a-view-kotlin
 
     // DAOs ----------------------------------------------------------------------------------------
 
@@ -57,12 +61,51 @@ abstract class AppDatabase : RoomDatabase() {
                 val instance = Room.databaseBuilder(context.applicationContext,
                                                     AppDatabase::class.java,
                                                     DATABASE_NAME)
+                                   .addCallback(UserDatabaseCallback())
                                    .build()
 
                 INSTANCE = instance
 
                 return instance
             }
+        }
+    }
+
+    // PRIVATE CLASSES -----------------------------------------------------------------------------
+
+    /**
+     * A [RoomDatabase.Callback] subclass.
+     */
+    private class UserDatabaseCallback() : RoomDatabase.Callback() {
+
+        // METHODS ---------------------------------------------------------------------------------
+
+        // -- RoomDatabase.Callback --
+
+        // If you only want to populate the database the first time the app is launched.
+        override fun onCreate(db: SupportSQLiteDatabase) {
+            super.onCreate(db)
+
+            INSTANCE?.let { database ->
+                GlobalScope.launch {
+                    populateDatabase(database.userDAO())
+                }
+            }
+        }
+
+        // -- User --
+
+        /**
+         * Populates the [AppDatabase] with an [User]
+         * @param userDAO a DAO for the [User] table
+         */
+        private suspend fun populateDatabase(userDAO: UserDAO) {
+            // Add a User to the database
+            val user = User(mUsername = "User",
+                            mEmail = "user@gmail.com",
+                            mUrlPicture = "")
+
+            userDAO.insertUser(user)
         }
     }
 }

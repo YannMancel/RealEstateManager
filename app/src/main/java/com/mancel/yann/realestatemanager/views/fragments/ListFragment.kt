@@ -2,6 +2,7 @@ package com.mancel.yann.realestatemanager.views.fragments
 
 import android.view.View
 import androidx.annotation.LayoutRes
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -35,10 +36,8 @@ class ListFragment : BaseFragment(), AdapterListener {
         // UI
         this.configureRecyclerView()
 
-        // Test
-        this.mAdapter.apply {
-            updateData(listOf("Yann", "Mel", "Logan", "Nata"))
-        }
+        // LiveData
+        this.configureRealEstateLiveData()
     }
 
     // -- AdapterListener interface --
@@ -78,5 +77,16 @@ class ListFragment : BaseFragment(), AdapterListener {
             addItemDecoration(divider)
             adapter = mAdapter
         }
+    }
+
+    // -- LiveData --
+
+    /**
+     * Configures the [LiveData] thanks to a simple format
+     */
+    private fun configureRealEstateLiveData() {
+        this.mViewModel.getRealEstatesSimpleFormat()
+            .observe(this.viewLifecycleOwner,
+                     Observer { this.mAdapter.updateData(it) })
     }
 }

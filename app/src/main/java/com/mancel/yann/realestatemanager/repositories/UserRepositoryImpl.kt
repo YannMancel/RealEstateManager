@@ -11,7 +11,7 @@ import com.mancel.yann.realestatemanager.models.User
  *
  * A class which implements [UserRepository].
  */
-class UserRepositoryImpl(private val mUserDAO: UserDAO): UserRepository {
+class UserRepositoryImpl(private val mUserDAO: UserDAO) : UserRepository {
 
     // METHODS -------------------------------------------------------------------------------------
 

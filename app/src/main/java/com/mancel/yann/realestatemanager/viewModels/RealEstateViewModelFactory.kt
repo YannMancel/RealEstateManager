@@ -2,6 +2,7 @@ package com.mancel.yann.realestatemanager.viewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.mancel.yann.realestatemanager.repositories.RealEstateRepository
 import com.mancel.yann.realestatemanager.repositories.UserRepository
 
 /**
@@ -11,14 +12,19 @@ import com.mancel.yann.realestatemanager.repositories.UserRepository
  *
  * A class which implements [ViewModelProvider.Factory].
  */
-class RealEstateViewModelFactory(private val mUserRepository: UserRepository) : ViewModelProvider.Factory {
+class RealEstateViewModelFactory(
+    private val mUserRepository: UserRepository,
+    private val mRealEstateRepository: RealEstateRepository
+    ) : ViewModelProvider.Factory {
 
     // METHODS -------------------------------------------------------------------------------------
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(RealEstateViewModel::class.java)) {
-            return RealEstateViewModel(this.mUserRepository) as T
+            return RealEstateViewModel(
+                this.mUserRepository,
+                this.mRealEstateRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: $modelClass")
     }

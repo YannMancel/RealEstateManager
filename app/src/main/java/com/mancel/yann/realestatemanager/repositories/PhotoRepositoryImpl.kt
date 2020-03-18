@@ -11,7 +11,7 @@ import com.mancel.yann.realestatemanager.models.Photo
  *
  * A class which implements [PhotoRepository].
  */
-class PhotoRepositoryImpl(private val mPhotoDAO: PhotoDAO): PhotoRepository {
+class PhotoRepositoryImpl(private val mPhotoDAO: PhotoDAO) : PhotoRepository {
 
     // METHODS -------------------------------------------------------------------------------------
 

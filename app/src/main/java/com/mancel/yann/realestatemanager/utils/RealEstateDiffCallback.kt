@@ -1,6 +1,7 @@
 package com.mancel.yann.realestatemanager.utils
 
 import androidx.recyclerview.widget.DiffUtil
+import com.mancel.yann.realestatemanager.models.IdTypeAddressPriceTupleOfRealEstate
 
 /**
  * Created by Yann MANCEL on 21/02/2020.
@@ -9,8 +10,10 @@ import androidx.recyclerview.widget.DiffUtil
  *
  * A [DiffUtil.Callback] subclass.
  */
-class RealEstateDiffCallback(private val mOldList: List<String>,
-                             private val mNewList: List<String>) : DiffUtil.Callback() {
+class RealEstateDiffCallback(
+    private val mOldList: List<IdTypeAddressPriceTupleOfRealEstate>,
+    private val mNewList: List<IdTypeAddressPriceTupleOfRealEstate>
+    ) : DiffUtil.Callback() {
 
     // METHODS -------------------------------------------------------------------------------------
 
@@ -19,14 +22,20 @@ class RealEstateDiffCallback(private val mOldList: List<String>,
     override fun getNewListSize(): Int = this.mNewList.size
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        // Comparison based on:
+        // Comparison based on Id:
+        val oldId = this.mOldList[oldItemPosition].mId
+        val newId = this.mNewList[newItemPosition].mId
 
-        return false
+        return oldId == newId
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         // Comparison based on:
+        //  - the Id
+        //  - the type
+        //  - the price
+        //  - the address
 
-        return false
+        return this.mOldList[oldItemPosition] == this.mNewList[newItemPosition]
     }
 }

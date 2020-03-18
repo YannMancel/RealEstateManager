@@ -14,51 +14,51 @@ import com.mancel.yann.realestatemanager.models.RealEstateWithPointsOfInterest
  *
  * A class which implements [RealEstateRepository].
  */
-class RealEstateRepositoryImpl(private val mRealEstateDAO: RealEstateDAO): RealEstateRepository {
+class RealEstateRepositoryImpl(private val mRealEstateDAO: RealEstateDAO) : RealEstateRepository {
 
     // METHODS -------------------------------------------------------------------------------------
 
     // -- Create --
 
-    override fun insertRealEstate(realEstate: RealEstate): Long {
-        TODO("Not yet implemented")
+    override suspend fun insertRealEstate(realEstate: RealEstate): Long {
+        return this.mRealEstateDAO.insertRealEstate(realEstate)
     }
 
-    override fun insertRealEstates(vararg realEstates: RealEstate): List<Long> {
-        TODO("Not yet implemented")
+    override suspend fun insertRealEstates(vararg realEstates: RealEstate): List<Long> {
+        return this.mRealEstateDAO.insertRealEstates(*realEstates)
     }
 
     // -- Read --
 
     override fun getRealEstateById(realEstateId: Long): LiveData<RealEstate> {
-        TODO("Not yet implemented")
+        return this.mRealEstateDAO.getRealEstateById(realEstateId)
     }
 
     override fun getAllRealEstates(): LiveData<List<RealEstate>> {
-        TODO("Not yet implemented")
+        return this.mRealEstateDAO.getAllRealEstates()
     }
 
     override fun getIdTypeAddressPriceTupleOfRealEstate(): LiveData<List<IdTypeAddressPriceTupleOfRealEstate>> {
-        TODO("Not yet implemented")
+        return this.mRealEstateDAO.getIdTypeAddressPriceTupleOfRealEstate()
     }
 
     override fun getRealEstatesWithPhotos(): LiveData<List<RealEstateWithPhotos>> {
-        TODO("Not yet implemented")
+        return this.mRealEstateDAO.getRealEstatesWithPhotos()
     }
 
     override fun getRealEstatesWithPointsOfInterest(): LiveData<List<RealEstateWithPointsOfInterest>> {
-        TODO("Not yet implemented")
+        return this.mRealEstateDAO.getRealEstatesWithPointsOfInterest()
     }
 
     // -- Update --
 
-    override fun updateRealEstate(realEstate: RealEstate): Int {
-        TODO("Not yet implemented")
+    override suspend fun updateRealEstate(realEstate: RealEstate): Int {
+        return this.mRealEstateDAO.updateRealEstate(realEstate)
     }
 
     // -- Delete --
 
-    override fun deleteRealEstate(realEstate: RealEstate): Int {
-        TODO("Not yet implemented")
+    override suspend fun deleteRealEstate(realEstate: RealEstate): Int {
+        return this.mRealEstateDAO.deleteRealEstate(realEstate)
     }
 }

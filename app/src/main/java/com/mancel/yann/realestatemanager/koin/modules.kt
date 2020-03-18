@@ -32,5 +32,5 @@ val appModule = module {
     single<RealEstatePointOfInterestCrossRefRepository> { RealEstatePointOfInterestCrossRefRepositoryImpl(get()) }
 
     // ViewModel
-    viewModel { RealEstateViewModel(get()) }
+    viewModel { RealEstateViewModel(get(), get()) }
 }

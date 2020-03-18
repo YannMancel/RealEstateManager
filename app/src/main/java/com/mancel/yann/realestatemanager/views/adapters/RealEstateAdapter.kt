@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mancel.yann.realestatemanager.R
+import com.mancel.yann.realestatemanager.models.IdTypeAddressPriceTupleOfRealEstate
 import com.mancel.yann.realestatemanager.utils.RealEstateDiffCallback
 import kotlinx.android.synthetic.main.item_real_estate.view.*
 import java.lang.ref.WeakReference
@@ -18,7 +19,9 @@ import java.lang.ref.WeakReference
  *
  * A [RecyclerView.Adapter] subclass.
  */
-class RealEstateAdapter(private val mCallback: AdapterListener? = null) : RecyclerView.Adapter<RealEstateAdapter.RealEstateViewHolder>() {
+class RealEstateAdapter(
+    private val mCallback: AdapterListener? = null
+    ) : RecyclerView.Adapter<RealEstateAdapter.RealEstateViewHolder>() {
 
     // NESTED CLASSES ------------------------------------------------------------------------------
 
@@ -34,7 +37,7 @@ class RealEstateAdapter(private val mCallback: AdapterListener? = null) : Recycl
 
     // FIELDS --------------------------------------------------------------------------------------
 
-    private var mRealEstates = emptyList<String>()
+    private var mRealEstates = emptyList<IdTypeAddressPriceTupleOfRealEstate>()
 
     // METHODS -------------------------------------------------------------------------------------
 
@@ -71,13 +74,13 @@ class RealEstateAdapter(private val mCallback: AdapterListener? = null) : Recycl
              .into(holder.itemView.item_real_estate_image)
 
         // Type
-        holder.itemView.item_real_estate_type.text = data
+        holder.itemView.item_real_estate_type.text = data.mType
 
         // City
-        holder.itemView.item_real_estate_city.text = data
+        holder.itemView.item_real_estate_city.text = data.mAddress?.mCity
 
         // Price
-        holder.itemView.item_real_estate_price.text = data
+        holder.itemView.item_real_estate_price.text = data.mPrice.toString()
     }
 
     override fun getItemCount(): Int = this.mRealEstates.size
@@ -86,9 +89,9 @@ class RealEstateAdapter(private val mCallback: AdapterListener? = null) : Recycl
 
     /**
      * Updates data of [RealEstateAdapter]
-     * @param newRealEstates a [List] of [String]
+     * @param newRealEstates a [List] of [IdTypeAddressPriceTupleOfRealEstate]
      */
-    fun updateData(newRealEstates: List<String>) {
+    fun updateData(newRealEstates: List<IdTypeAddressPriceTupleOfRealEstate>) {
         // Optimizes the performances of RecyclerView
         val diffCallback  = RealEstateDiffCallback(this.mRealEstates, newRealEstates)
         val diffResult  = DiffUtil.calculateDiff(diffCallback )

@@ -11,7 +11,9 @@ import com.mancel.yann.realestatemanager.models.PointOfInterest
  *
  * A class which implements [PointOfInterestRepository].
  */
-class PointOfInterestRepositoryImpl(private val mPointOfInterestDAO: PointOfInterestDAO): PointOfInterestRepository {
+class PointOfInterestRepositoryImpl(
+    private val mPointOfInterestDAO: PointOfInterestDAO
+    ) : PointOfInterestRepository {
 
     // METHODS -------------------------------------------------------------------------------------
 

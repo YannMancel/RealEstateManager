@@ -11,8 +11,8 @@ import com.mancel.yann.realestatemanager.models.RealEstatePointOfInterestCrossRe
  * A class which implements [RealEstatePointOfInterestCrossRefRepository].
  */
 class RealEstatePointOfInterestCrossRefRepositoryImpl(
-    private val mRealEstatePointOfInterestCrossRefDAO: RealEstatePointOfInterestCrossRefDAO):
-    RealEstatePointOfInterestCrossRefRepository {
+    private val mRealEstatePointOfInterestCrossRefDAO: RealEstatePointOfInterestCrossRefDAO
+    ) : RealEstatePointOfInterestCrossRefRepository {
 
     // METHODS -------------------------------------------------------------------------------------
 

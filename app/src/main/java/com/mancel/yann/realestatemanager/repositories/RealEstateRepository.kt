@@ -17,9 +17,9 @@ interface RealEstateRepository {
 
     // -- Create --
 
-    fun insertRealEstate(realEstate: RealEstate): Long
+    suspend fun insertRealEstate(realEstate: RealEstate): Long
 
-    fun insertRealEstates(vararg realEstates: RealEstate): List<Long>
+    suspend fun insertRealEstates(vararg realEstates: RealEstate): List<Long>
 
     // -- Read --
 
@@ -35,9 +35,9 @@ interface RealEstateRepository {
 
     // -- Update --
 
-    fun updateRealEstate(realEstate: RealEstate): Int
+    suspend fun updateRealEstate(realEstate: RealEstate): Int
 
     // -- Delete --
 
-    fun deleteRealEstate(realEstate: RealEstate): Int
+    suspend fun deleteRealEstate(realEstate: RealEstate): Int
 }
