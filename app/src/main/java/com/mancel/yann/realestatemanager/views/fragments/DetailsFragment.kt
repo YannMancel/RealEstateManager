@@ -25,7 +25,7 @@ class DetailsFragment : BaseFragment(), AdapterListener {
 
     private lateinit var mAdapter: PhotoAdapter
 
-    private val mItemId: Int by lazy {
+    private val mItemId: Long by lazy {
         DetailsFragmentArgs.fromBundle(this.arguments!!).itemId
     }
 

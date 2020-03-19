@@ -170,12 +170,35 @@ class RealEstateDAOTest {
 
     @Test
     @Throws(InterruptedException::class)
+    fun getCountOfRealEstatesByUserId_shouldBeZero() {
+        // Retrieve the count of row with the same user Id
+        val count = LiveDataTestUtil.getValue(mRealEstateDAO.getCountOfRealEstatesByUserId(1L))
+
+        // TEST: Must be zero
+        assertEquals(0, count)
+    }
+
+    @Test
+    @Throws(InterruptedException::class)
+    fun getCountOfRealEstatesByUserId_shouldBeSuccess() = runBlocking {
+        // BEFORE: Add real estates
+        mRealEstateDAO.insertRealEstates(mRealEstate1, mRealEstate2)
+
+        // THEN: Retrieve the count of row with the same user Id
+        val count = LiveDataTestUtil.getValue(mRealEstateDAO.getCountOfRealEstatesByUserId(1L))
+
+        // TEST: Must not be zero
+        assertEquals(2, count)
+    }
+
+    @Test
+    @Throws(InterruptedException::class)
     fun getIdTypeAddressPriceTupleOfRealEstate_shouldBeSuccess() = runBlocking {
         // BEFORE: Add real estates
         mRealEstateDAO.insertRealEstates(mRealEstate1, mRealEstate2)
 
         // THEN: Retrieve tuples of real estates
-        val realEstatesTuples = LiveDataTestUtil.getValue(mRealEstateDAO.getIdTypeAddressPriceTupleOfRealEstate())
+        val realEstatesTuples = LiveDataTestUtil.getValue(mRealEstateDAO.getIdTypeAddressPriceTupleOfRealEstateByUserId(1L))
 
         // TEST: All real estates
         assertEquals(2, realEstatesTuples.size)
@@ -195,7 +218,7 @@ class RealEstateDAOTest {
         mDatabase.photoDAO().insertPhoto(Photo(mUrlPicture = "URL3", mRealEstateId = 2L))
 
         // THEN: Retrieve real estates with their photos
-        val realEstatesWithPhotos = LiveDataTestUtil.getValue(mRealEstateDAO.getRealEstatesWithPhotos())
+        val realEstatesWithPhotos = LiveDataTestUtil.getValue(mRealEstateDAO.getRealEstatesWithPhotosByUserId(1L))
 
         // TEST: All real estates with their photos
         assertEquals(2, realEstatesWithPhotos.size)
@@ -225,7 +248,7 @@ class RealEstateDAOTest {
         )
 
         // THEN: Retrieve real estates with their points of interest
-        val realEstatesWithPointsOfInterest = LiveDataTestUtil.getValue(mRealEstateDAO.getRealEstatesWithPointsOfInterest())
+        val realEstatesWithPointsOfInterest = LiveDataTestUtil.getValue(mRealEstateDAO.getRealEstatesWithPointsOfInterestByUserId(1L))
 
         // TEST: All real estates with their points of interest
         assertEquals(2, realEstatesWithPointsOfInterest.size)

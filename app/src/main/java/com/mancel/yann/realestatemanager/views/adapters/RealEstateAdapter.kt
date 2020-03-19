@@ -58,8 +58,8 @@ class RealEstateAdapter(
 
         // CardView
         holder.itemView.item_real_estate_CardView.setOnClickListener {
-            // Tag -> Data
-            it.tag = data
+            // Tag -> Data's Id
+            it.tag = data.mId
 
             // Starts the callback
             holder.mCallback.get()?.onClick(it)

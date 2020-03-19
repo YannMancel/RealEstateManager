@@ -27,11 +27,13 @@ interface RealEstateRepository {
 
     fun getAllRealEstates(): LiveData<List<RealEstate>>
 
-    fun getIdTypeAddressPriceTupleOfRealEstate(): LiveData<List<IdTypeAddressPriceTupleOfRealEstate>>
+    fun getCountOfRealEstatesByUserId(userId: Long): LiveData<Int>
 
-    fun getRealEstatesWithPhotos(): LiveData<List<RealEstateWithPhotos>>
+    fun getIdTypeAddressPriceTupleOfRealEstateByUserId(userId: Long): LiveData<List<IdTypeAddressPriceTupleOfRealEstate>>
 
-    fun getRealEstatesWithPointsOfInterest(): LiveData<List<RealEstateWithPointsOfInterest>>
+    fun getRealEstatesWithPhotosByUserId(userId: Long): LiveData<List<RealEstateWithPhotos>>
+
+    fun getRealEstatesWithPointsOfInterestByUserId(userId: Long): LiveData<List<RealEstateWithPointsOfInterest>>
 
     // -- Update --
 

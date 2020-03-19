@@ -22,14 +22,11 @@ class RealEstateViewModel(
     private val mRealEstateRepository: RealEstateRepository
     ) : ViewModel() {
 
-
     // FIELDS --------------------------------------------------------------------------------------
 
     private var mUsers: LiveData<List<User>>? = null
-
+    private var mCountOfRealEstateByUserId: LiveData<Int>? = null
     private var mRealEstatesSimpleFormat: LiveData<List<IdTypeAddressPriceTupleOfRealEstate>>? = null
-
-        // LiveData
 
     // CONSTRUCTORS --------------------------------------------------------------------------------
 
@@ -53,24 +50,26 @@ class RealEstateViewModel(
      */
     fun insertUser(user: User) = viewModelScope.launch { mUserRepository.insertUser(user) }
 
-    /**
-     * Gets all [User] thanks to [LiveData]
-     */
-    fun getAllUsers(): LiveData<List<User>> {
-        if (this.mUsers == null) {
-            this.mUsers = this.mUserRepository.getAllUsers()
-        }
-        return this.mUsers!!
-    }
-
     // -- Real Estate --
 
     /**
-     * Gets all [IdTypeAddressPriceTupleOfRealEstate] thanks to [LiveData]
+     * Gets the count of row where user Id is validated
+     * @param userId a [Long] that contains the user Id
      */
-    fun getRealEstatesSimpleFormat(): LiveData<List<IdTypeAddressPriceTupleOfRealEstate>> {
+    fun getCountOfRealEstatesByUserId(userId: Long): LiveData<Int> {
+        if (this.mCountOfRealEstateByUserId == null) {
+            this.mCountOfRealEstateByUserId = this.mRealEstateRepository.getCountOfRealEstatesByUserId(userId)
+        }
+        return this.mCountOfRealEstateByUserId!!
+    }
+
+    /**
+     * Gets all [IdTypeAddressPriceTupleOfRealEstate] thanks to [LiveData]
+     * @param userId a [Long] that contains the user Id
+     */
+    fun getRealEstatesSimpleFormatByUserId(userId: Long): LiveData<List<IdTypeAddressPriceTupleOfRealEstate>> {
         if (this.mRealEstatesSimpleFormat == null) {
-            this.mRealEstatesSimpleFormat = this.mRealEstateRepository.getIdTypeAddressPriceTupleOfRealEstate()
+            this.mRealEstatesSimpleFormat = this.mRealEstateRepository.getIdTypeAddressPriceTupleOfRealEstateByUserId(userId)
         }
         return this.mRealEstatesSimpleFormat!!
     }

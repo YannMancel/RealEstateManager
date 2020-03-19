@@ -55,33 +55,42 @@ interface RealEstateDAO {
 
     /**
      * Usage:
-     * dao.getIdTypeAddressPriceTupleOfRealEstate()
+     * dao.getCountOfRealEstatesByUserId(userId)
+     *    .observe(this, Observer { count -> ... })
+     */
+    @Query("SELECT count(*) FROM real_estate WHERE estate_agent_id = :userId")
+    fun getCountOfRealEstatesByUserId(userId: Long): LiveData<Int>
+
+    /**
+     * Usage:
+     * dao.getIdTypeAddressPriceTupleOfRealEstateByUserId(userId)
      *    .observe(this, Observer { tuples -> ... })
      */
     @Query("""SELECT id_real_estate, 
                            type, 
                            price_dollar, 
                            loc_street, loc_state, loc_city, loc_post_code
-                    FROM real_estate""")
-    fun getIdTypeAddressPriceTupleOfRealEstate(): LiveData<List<IdTypeAddressPriceTupleOfRealEstate>>
+                    FROM real_estate
+                    WHERE estate_agent_id = :userId""")
+    fun getIdTypeAddressPriceTupleOfRealEstateByUserId(userId: Long): LiveData<List<IdTypeAddressPriceTupleOfRealEstate>>
 
     /**
      * Usage:
-     * dao.getRealEstatesWithPhotos()
+     * dao.getRealEstatesWithPhotosByUserId(userId)
      *    .observe(this, Observer { realEstatesWithPhotos -> ... })
      */
     @Transaction
-    @Query("SELECT * FROM real_estate")
-    fun getRealEstatesWithPhotos(): LiveData<List<RealEstateWithPhotos>>
+    @Query("SELECT * FROM real_estate WHERE estate_agent_id = :userId")
+    fun getRealEstatesWithPhotosByUserId(userId: Long): LiveData<List<RealEstateWithPhotos>>
 
     /**
      * Usage:
-     * dao.getRealEstatesWithPointsOfInterest()
+     * dao.getRealEstatesWithPointsOfInterestByUserId(userId)
      *    .observe(this, Observer { realEstatesWithPointsOfInterest -> ... })
      */
     @Transaction
-    @Query("SELECT * FROM real_estate")
-    fun getRealEstatesWithPointsOfInterest(): LiveData<List<RealEstateWithPointsOfInterest>>
+    @Query("SELECT * FROM real_estate WHERE estate_agent_id = :userId")
+    fun getRealEstatesWithPointsOfInterestByUserId(userId: Long): LiveData<List<RealEstateWithPointsOfInterest>>
 
     // -- Update --
 

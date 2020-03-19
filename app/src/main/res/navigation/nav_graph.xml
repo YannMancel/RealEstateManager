@@ -30,8 +30,8 @@
 
         <argument
             android:name="itemId"
-            app:argType="integer"
-            android:defaultValue="0" />
+            app:argType="long"
+            android:defaultValue="0L" />
 
     </fragment>
 

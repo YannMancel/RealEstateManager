@@ -38,16 +38,20 @@ class RealEstateRepositoryImpl(private val mRealEstateDAO: RealEstateDAO) : Real
         return this.mRealEstateDAO.getAllRealEstates()
     }
 
-    override fun getIdTypeAddressPriceTupleOfRealEstate(): LiveData<List<IdTypeAddressPriceTupleOfRealEstate>> {
-        return this.mRealEstateDAO.getIdTypeAddressPriceTupleOfRealEstate()
+    override fun getCountOfRealEstatesByUserId(userId: Long): LiveData<Int> {
+        return this.mRealEstateDAO.getCountOfRealEstatesByUserId(userId)
     }
 
-    override fun getRealEstatesWithPhotos(): LiveData<List<RealEstateWithPhotos>> {
-        return this.mRealEstateDAO.getRealEstatesWithPhotos()
+    override fun getIdTypeAddressPriceTupleOfRealEstateByUserId(userId: Long): LiveData<List<IdTypeAddressPriceTupleOfRealEstate>> {
+        return this.mRealEstateDAO.getIdTypeAddressPriceTupleOfRealEstateByUserId(userId)
     }
 
-    override fun getRealEstatesWithPointsOfInterest(): LiveData<List<RealEstateWithPointsOfInterest>> {
-        return this.mRealEstateDAO.getRealEstatesWithPointsOfInterest()
+    override fun getRealEstatesWithPhotosByUserId(userId: Long): LiveData<List<RealEstateWithPhotos>> {
+        return this.mRealEstateDAO.getRealEstatesWithPhotosByUserId(userId)
+    }
+
+    override fun getRealEstatesWithPointsOfInterestByUserId(userId: Long): LiveData<List<RealEstateWithPointsOfInterest>> {
+        return this.mRealEstateDAO.getRealEstatesWithPointsOfInterestByUserId(userId)
     }
 
     // -- Update --

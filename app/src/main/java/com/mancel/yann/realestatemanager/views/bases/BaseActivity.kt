@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import com.mancel.yann.realestatemanager.viewModels.RealEstateViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
  * Created by Yann MANCEL on 19/02/2020.
@@ -13,6 +15,10 @@ import androidx.appcompat.widget.Toolbar
  * An [AppCompatActivity] subclass.
  */
 abstract class BaseActivity : AppCompatActivity() {
+
+    // FIELDS --------------------------------------------------------------------------------------
+
+    protected val mViewModel: RealEstateViewModel by viewModel()
 
     // METHODS -------------------------------------------------------------------------------------
 

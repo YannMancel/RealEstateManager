@@ -1,11 +1,13 @@
 package com.mancel.yann.realestatemanager.views.activities
 
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
+import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.onNavDestinationSelected
@@ -51,6 +53,15 @@ class MainActivity : BaseActivity(), FragmentListener {
         // Mode
         this.checkMode()
 
+        // Test
+        this.mViewModel.getCountOfRealEstatesByUserId(1L).observe(this@MainActivity, Observer {
+            count -> Log.w(this@MainActivity::class.simpleName, "COUNT = $count")
+
+            //this.mViewModel.getCountOfRealEstatesByUserId(1L).removeObserver(this)
+        })
+
+        Log.w(this@MainActivity::class.simpleName, "NAVIGATION")
+
         // Navigation
         this.configureFragmentNavigation()
     }
@@ -81,20 +92,19 @@ class MainActivity : BaseActivity(), FragmentListener {
 
     override fun navigateToDetailsFragment(v: View?) {
         // Tag
-        // todo 25/02/2020 Retrieve data from v
-        val value = 5
+        val itemId = v?.tag as Long
 
         // According to the device type
         when (this.mMode) {
             Mode.PHONE_MODE -> {
                 // By action (Safe Args)
-                val action = ListFragmentDirections.actionListFragmentToDetailsFragment(itemId = value)
+                val action = ListFragmentDirections.actionListFragmentToDetailsFragment(itemId = itemId)
                 this.mNavController.navigate(action)
             }
 
             Mode.TABLET_MODE -> {
                 // By destination (Safe Args)
-                val bundle = DetailsFragmentArgs(itemId = value).toBundle()
+                val bundle = DetailsFragmentArgs(itemId = itemId).toBundle()
                 this.mNavController.navigate(R.id.navigation_detailsFragment, bundle)
             }
         }
