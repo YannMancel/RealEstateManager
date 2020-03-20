@@ -1,25 +1,314 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!-- ConstraintLayout -->
-<androidx.constraintlayout.widget.ConstraintLayout
+<!-- CoordinatorLayout -->
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FF5722"
     tools:context=".views.fragments.CreatorFragment">
 
-    <Button
-        android:id="@+id/location_button"
+    <!-- NestedScrollView -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- ConstraintLayout -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <!-- CardView: Type -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardview_type"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/cardview_address"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <!-- ConstraintLayout -->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <!-- ImageView: Home icon -->
+                    <ImageView
+                        android:id="@+id/icon_home"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/margin_normal"
+                        app:layout_constraintTop_toTopOf="@id/fragment_creator_type"
+                        app:layout_constraintBottom_toBottomOf="@id/fragment_creator_type"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/fragment_creator_type"
+                        android:baselineAlignBottom="true"
+                        android:src="@drawable/ic_home"
+                        android:tint="@android:color/black"
+                        android:contentDescription="@null"/>
+
+                    <!-- TextInputLayout: Type -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/fragment_creator_type"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_little"
+                        android:layout_marginBottom="@dimen/margin_little"
+                        android:layout_marginEnd="@dimen/margin_normal"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toTopOf="@id/fragment_creator_price"
+                        app:layout_constraintStart_toEndOf="@id/icon_home"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:hintEnabled="true"
+                        app:errorEnabled="true"
+                        app:endIconMode="clear_text">
+
+                        <!-- TextInputEditText: Type -->
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:hint="@string/hint_type"
+                            android:inputType="text"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- TextInputLayout: Price -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/fragment_creator_price"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_little"
+                        android:layout_marginBottom="@dimen/margin_little"
+                        android:layout_marginEnd="@dimen/margin_normal"
+                        app:layout_constraintTop_toBottomOf="@id/fragment_creator_type"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="@id/fragment_creator_type"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:hintEnabled="true"
+                        app:errorEnabled="true">
+
+                        <!-- TextInputEditText: Type -->
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:hint="@string/hint_price"
+                            android:inputType="number"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- CardView: Address -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardview_address"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_normal"
+                app:layout_constraintTop_toBottomOf="@id/cardview_type"
+                app:layout_constraintBottom_toTopOf="@id/cardview_photo"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <!-- ConstraintLayout -->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <!-- ImageView: Place icon -->
+                    <ImageView
+                        android:id="@+id/icon_place"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/margin_normal"
+                        app:layout_constraintTop_toTopOf="@id/fragment_creator_address"
+                        app:layout_constraintBottom_toBottomOf="@id/fragment_creator_address"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/fragment_creator_address"
+                        android:src="@drawable/ic_place"
+                        android:contentDescription="@null"/>
+
+                    <!-- TextInputLayout: Address -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/fragment_creator_address"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_little"
+                        android:layout_marginBottom="@dimen/margin_little"
+                        android:layout_marginEnd="@dimen/margin_normal"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toTopOf="@id/fragment_creator_city"
+                        app:layout_constraintStart_toEndOf="@id/icon_place"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:hintEnabled="true"
+                        app:errorEnabled="true">
+
+                        <!-- TextInputEditText: Type -->
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:hint="@string/hint_address"
+                            android:inputType="text"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- TextInputLayout: City -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/fragment_creator_city"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_little"
+                        android:layout_marginBottom="@dimen/margin_little"
+                        android:layout_marginEnd="@dimen/margin_normal"
+                        app:layout_constraintTop_toBottomOf="@id/fragment_creator_address"
+                        app:layout_constraintBottom_toTopOf="@id/fragment_creator_post_code"
+                        app:layout_constraintStart_toStartOf="@id/fragment_creator_address"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:hintEnabled="true"
+                        app:errorEnabled="true">
+
+                        <!-- TextInputEditText: Type -->
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:hint="@string/hint_city"
+                            android:inputType="text"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- TextInputLayout: Post code -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/fragment_creator_post_code"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_little"
+                        android:layout_marginBottom="@dimen/margin_little"
+                        android:layout_marginEnd="@dimen/margin_little"
+                        app:layout_constraintTop_toBottomOf="@id/fragment_creator_city"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="@id/fragment_creator_address"
+                        app:layout_constraintEnd_toStartOf="@id/fragment_creator_country"
+                        app:layout_constraintHorizontal_weight="@integer/horizontal_weight_address_left"
+                        app:hintEnabled="true"
+                        app:errorEnabled="true">
+
+                        <!-- TextInputEditText: Type -->
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:hint="@string/hint_post_code"
+                            android:inputType="textPostalAddress"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- TextInputLayout: Country -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/fragment_creator_country"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_little"
+                        android:layout_marginBottom="@dimen/margin_little"
+                        android:layout_marginStart="@dimen/margin_little"
+                        android:layout_marginEnd="@dimen/margin_normal"
+                        app:layout_constraintTop_toTopOf="@id/fragment_creator_post_code"
+                        app:layout_constraintBottom_toBottomOf="@id/fragment_creator_post_code"
+                        app:layout_constraintStart_toEndOf="@id/fragment_creator_post_code"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_weight="@integer/horizontal_weight_address_right"
+                        app:hintEnabled="true"
+                        app:errorEnabled="true">
+
+                        <!-- TextInputEditText: Type -->
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:hint="@string/hint_country"
+                            android:inputType="text"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- CardView: Photo -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardview_photo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_normal"
+                android:layout_marginBottom="@dimen/margin_heavy"
+                app:layout_constraintTop_toBottomOf="@id/cardview_address"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <!-- ConstraintLayout -->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <!-- ImageView: Photo icon -->
+                    <ImageView
+                        android:id="@+id/icon_photo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/margin_normal"
+                        app:layout_constraintTop_toTopOf="@id/fragment_creator_add_photo"
+                        app:layout_constraintBottom_toBottomOf="@id/fragment_creator_add_photo"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:src="@drawable/ic_photo"
+                        android:contentDescription="@null"/>
+
+                    <!-- ImageButton: Add photo -->
+                    <ImageButton
+                        android:id="@+id/fragment_creator_add_photo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/margin_normal"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintVertical_bias="0"
+                        android:src="@drawable/ic_add"
+                        android:tint="@android:color/black"
+                        android:contentDescription="@null"
+                        android:background="@color/colorAccent"/>
+
+                    <!-- RecyclerView: List of photos -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/fragment_creator_RecyclerView"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/margin_normal"
+                        app:layout_constraintTop_toBottomOf="@id/fragment_creator_add_photo"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/icon_photo"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        tools:orientation="horizontal"
+                        tools:listitem="@layout/item_photo"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.cardview.widget.CardView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- FloatingActionButton -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fragment_creator_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:text="CREATOR"
-        android:textSize="30sp"/>
+        android:layout_margin="@dimen/margin_normal"
+        android:layout_gravity="bottom|end"
+        android:src="@drawable/ic_add"
+        android:tint="@android:color/black"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

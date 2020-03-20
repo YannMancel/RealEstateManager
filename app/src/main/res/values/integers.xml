@@ -11,4 +11,8 @@
     <!-- Guideline -->
     <item name="vertical_guideline_ratio" type="integer" format="float">0.3</item>
 
+    <!-- Weight -->
+    <integer name="horizontal_weight_address_left">35</integer>
+    <integer name="horizontal_weight_address_right">65</integer>
+
 </resources>
