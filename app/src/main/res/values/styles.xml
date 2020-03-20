@@ -84,4 +84,13 @@
         <item name="android:gravity">center</item>
     </style>
 
+    <!-- *********************************** Button ******************************************** -->
+
+    <!-- Borderless Button style -->
+    <style name="BorderlessButtonStyle" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
 </resources>

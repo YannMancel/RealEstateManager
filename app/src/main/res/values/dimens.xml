@@ -25,4 +25,7 @@
     <dimen name="padding_normal">16dp</dimen>
     <dimen name="padding_little">8dp</dimen>
 
+    <!-- Button -->
+    <dimen name="width_dialog_button">70dp</dimen>
+
 </resources>

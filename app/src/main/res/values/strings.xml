@@ -2,6 +2,9 @@
 
     <string name="app_name">Real Estate Manager</string>
 
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
     <!-- MainActivity.kt -->
     <string name="navigation_drawer_open" translatable="false">"Open navigation drawer"</string>
     <string name="navigation_drawer_close" translatable="false">"Close navigation drawer"</string>
@@ -11,6 +14,10 @@
 
     <!-- SettingsDialogFragment.kt -->
     <string name="title_settings_dialog_fragment">Settings</string>
+
+    <!-- PhotoDialogFragment.kt -->
+    <string name="title_photo_dialog_fragment">Photo selected</string>
+    <string name="no_description">No description</string>
 
     <!-- activity_main_menu_drawer.xml -->
     <string name="menu_drawer_settings">SETTINGS</string>
@@ -34,5 +41,8 @@
     <string name="hint_city">City</string>
     <string name="hint_country">Country</string>
     <string name="hint_post_code">Post code</string>
+
+    <!-- dialog_selected_photo.xml -->
+    <string name="hint_description">Description</string>
 
 </resources>

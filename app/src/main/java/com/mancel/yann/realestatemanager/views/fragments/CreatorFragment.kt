@@ -14,6 +14,7 @@ import com.mancel.yann.realestatemanager.R
 import com.mancel.yann.realestatemanager.views.adapters.AdapterListener
 import com.mancel.yann.realestatemanager.views.adapters.PhotoAdapter
 import com.mancel.yann.realestatemanager.views.bases.BaseFragment
+import com.mancel.yann.realestatemanager.views.dialogs.PhotoDialogFragment
 import kotlinx.android.synthetic.main.fragment_creator.view.*
 
 /**
@@ -147,6 +148,7 @@ class CreatorFragment : BaseFragment(), AdapterListener {
      * @param uri a [Uri] that corresponds to the path of photo from external storage
      */
     private fun handlePhoto(uri: Uri) {
-        Log.d(this::class.simpleName, "handlePhoto $uri")
+        PhotoDialogFragment.newInstance(uri)
+                           .show(this.activity!!.supportFragmentManager, "DIALOG PHOTO")
     }
 }
