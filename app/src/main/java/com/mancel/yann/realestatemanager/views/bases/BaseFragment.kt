@@ -1,11 +1,15 @@
 package com.mancel.yann.realestatemanager.views.bases
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.mancel.yann.realestatemanager.viewModels.RealEstateViewModel
 import com.mancel.yann.realestatemanager.views.fragments.FragmentListener
@@ -27,6 +31,10 @@ abstract class BaseFragment : Fragment() {
     protected var mCallback: FragmentListener? = null
 
     protected val mViewModel: RealEstateViewModel by viewModel()
+
+    companion object {
+        const val REQUEST_CODE_PERMISSION_READ_EXTERNAL_STORAGE = 1000
+    }
 
     // METHODS -------------------------------------------------------------------------------------
 
@@ -67,4 +75,49 @@ abstract class BaseFragment : Fragment() {
 
         return this.mRootView
     }
+
+    override fun onRequestPermissionsResult(requestCode: Int,
+                                            permissions: Array<out String>,
+                                            grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        when (requestCode) {
+            // To access to external storage
+            REQUEST_CODE_PERMISSION_READ_EXTERNAL_STORAGE -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    this.actionAfterPermission()
+                }
+                else {
+                    Log.d(this::class.simpleName, "PERMISSION_DENIED")
+                }
+            }
+
+            else -> { /* Ignore all other requests */}
+        }
+    }
+    // -- Permission --
+
+    /**
+     * Checks the permission: READ_EXTERNAL_STORAGE
+     */
+    protected fun checkReadExternalStoragePermission(): Boolean {
+        val permissionResult = ContextCompat.checkSelfPermission(this.context!!,
+                                                                 Manifest.permission.READ_EXTERNAL_STORAGE)
+
+        return when (permissionResult) {
+            PackageManager.PERMISSION_GRANTED -> true
+
+            else -> {
+                this.requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                                        REQUEST_CODE_PERMISSION_READ_EXTERNAL_STORAGE)
+
+                false
+            }
+        }
+    }
+
+    /**
+     * Method to override to perform action after the granted permission
+     */
+    protected open fun actionAfterPermission() {/* Do nothing here */}
 }
