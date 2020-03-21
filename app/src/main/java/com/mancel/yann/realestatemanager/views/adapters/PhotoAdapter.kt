@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mancel.yann.realestatemanager.R
+import com.mancel.yann.realestatemanager.models.Photo
 import com.mancel.yann.realestatemanager.utils.PhotoDiffCallback
 import kotlinx.android.synthetic.main.item_photo.view.*
 import java.lang.ref.WeakReference
@@ -19,7 +20,8 @@ import java.lang.ref.WeakReference
  * A [RecyclerView.Adapter] subclass.
  */
 class PhotoAdapter(
-    private val mCallback: AdapterListener? = null
+    private val mCallback: AdapterListener? = null,
+    private val mAdapterMode: AdapterMode = AdapterMode.DETAILS_MODE
     ) : RecyclerView.Adapter<PhotoAdapter.PhotoViewHolder>() {
 
     // NESTED CLASSES ------------------------------------------------------------------------------
@@ -34,9 +36,13 @@ class PhotoAdapter(
         lateinit var mCallback: WeakReference<AdapterListener?>
     }
 
+    // ENUMS ---------------------------------------------------------------------------------------
+
+    enum class AdapterMode {DETAILS_MODE, EDIT_MODE}
+
     // FIELDS --------------------------------------------------------------------------------------
 
-    private var mPhotos = emptyList<String>()
+    private var mPhotos = emptyList<Photo>()
 
     // METHODS -------------------------------------------------------------------------------------
 
@@ -55,25 +61,42 @@ class PhotoAdapter(
         // Callback
         holder.mCallback = WeakReference(this.mCallback)
 
-        // CardView
-        holder.itemView.item_photo_CardView.setOnClickListener {
+        // Image
+        Glide.with(holder.itemView)
+             .load(data.mUrlPicture)
+             .centerCrop()
+             .fallback(R.drawable.ic_photo)
+             .error(R.drawable.ic_clear)
+             .into(holder.itemView.item_photo_image)
+
+        // Description
+        holder.itemView.item_photo_description.text = data.mDescription
+
+        // Buttons
+        val visibility = when (this.mAdapterMode) {
+            AdapterMode.DETAILS_MODE -> View.GONE
+            AdapterMode.EDIT_MODE -> View.VISIBLE
+        }
+
+        holder.itemView.item_photo_delete_media.visibility = visibility
+        holder.itemView.item_photo_edit_media.visibility = visibility
+
+        // Listener of Buttons
+        holder.itemView.item_photo_delete_media.setOnClickListener {
             // Tag -> Data
-            it.tag = data
+            it.tag = position
 
             // Starts the callback
             holder.mCallback.get()?.onClick(it)
         }
 
-        // Image
-        Glide.with(holder.itemView)
-             .load(R.drawable.ic_home)
-             .centerCrop()
-             .fallback(R.drawable.ic_add)
-             .error(R.drawable.ic_edit)
-             .into(holder.itemView.item_photo_image)
+        holder.itemView.item_photo_edit_media.setOnClickListener {
+            // Tag -> Data
+            it.tag = position
 
-        // Description
-        holder.itemView.item_photo_description.text = data
+            // Starts the callback
+            holder.mCallback.get()?.onClick(it)
+        }
     }
 
     override fun getItemCount(): Int = this.mPhotos.size
@@ -82,9 +105,9 @@ class PhotoAdapter(
 
     /**
      * Updates data of [PhotoAdapter]
-     * @param newPhotos a [List] of [String]
+     * @param newPhotos a [List] of [Photo]
      */
-    fun updateData(newPhotos: List<String>) {
+    fun updateData(newPhotos: List<Photo>) {
         // Optimizes the performances of RecyclerView
         val diffCallback  = PhotoDiffCallback(this.mPhotos, newPhotos)
         val diffResult  = DiffUtil.calculateDiff(diffCallback )

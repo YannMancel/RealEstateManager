@@ -76,14 +76,26 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener {
     // -- AdapterListener interface --
 
     override fun onDataChanged() {
-//        this.mRootView.fragment_details_no_data.visibility = if (this.mAdapter.itemCount == 0)
-//            View.VISIBLE
-//        else
-//            View.GONE
+        this.mRootView.fragment_creator_RecyclerView.visibility = if (this.mAdapter.itemCount != 0)
+                                                                      View.VISIBLE
+                                                                  else
+                                                                      View.GONE
     }
 
     override fun onClick(v: View?) {
-//        Log.d(this::class.java.simpleName, "Data: ${v?.tag as? String}")
+        when (v?.id) {
+            // Button: DELETE
+            R.id.item_photo_delete_media -> {
+                Log.d(this::class.java.simpleName, "DELETE: ${v.tag as? Int}")
+            }
+
+            // Button: EDIT
+            R.id.item_photo_edit_media -> {
+                Log.d(this::class.java.simpleName, "EDIT: ${v.tag as? Int}")
+            }
+
+            else -> { /* Ignore all ids */}
+        }
     }
 
     // -- DialogListener interface --
@@ -95,7 +107,7 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener {
             mRealEstateId = 1L
         }
 
-        //Log.d(this::class.java.simpleName, "Photo ${photo.mDescription} & ${photo.mRealEstateId}")
+        this.mAdapter.updateData(listOf(photo))
     }
 
     // -- Listeners --
@@ -122,7 +134,8 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener {
      */
     private fun configureRecyclerView() {
         // Adapter
-        this.mAdapter = PhotoAdapter(mCallback = this@CreatorFragment)
+        this.mAdapter = PhotoAdapter(mCallback = this@CreatorFragment,
+                                     mAdapterMode = PhotoAdapter.AdapterMode.EDIT_MODE)
 
         // LayoutManager
         val viewManager = LinearLayoutManager(this.context,
@@ -139,6 +152,7 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener {
             layoutManager = viewManager
             addItemDecoration(divider)
             adapter = mAdapter
+            visibility = View.GONE
         }
     }
 

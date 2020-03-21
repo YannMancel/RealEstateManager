@@ -1,6 +1,7 @@
 package com.mancel.yann.realestatemanager.utils
 
 import androidx.recyclerview.widget.DiffUtil
+import com.mancel.yann.realestatemanager.models.Photo
 
 /**
  * Created by Yann MANCEL on 21/02/2020.
@@ -9,8 +10,8 @@ import androidx.recyclerview.widget.DiffUtil
  *
  * A [DiffUtil.Callback] subclass.
  */
-class PhotoDiffCallback(private val mOldList: List<String>,
-                        private val mNewList: List<String>) : DiffUtil.Callback() {
+class PhotoDiffCallback(private val mOldList: List<Photo>,
+                        private val mNewList: List<Photo>) : DiffUtil.Callback() {
 
     // METHODS -------------------------------------------------------------------------------------
 
@@ -19,14 +20,20 @@ class PhotoDiffCallback(private val mOldList: List<String>,
     override fun getNewListSize(): Int = this.mNewList.size
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        // Comparison based on:
+        // Comparison based on Id:
+        val oldId = this.mOldList[oldItemPosition].mId
+        val newId = this.mNewList[newItemPosition].mId
 
-        return false
+        return oldId == newId
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         // Comparison based on:
+        //  - the Id
+        //  - the url
+        //  - the description
+        //  - the real estate id
 
-        return false
+        return this.mOldList[oldItemPosition] == this.mNewList[newItemPosition]
     }
 }

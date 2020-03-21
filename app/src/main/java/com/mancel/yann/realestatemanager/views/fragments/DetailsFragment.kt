@@ -41,9 +41,9 @@ class DetailsFragment : BaseFragment(), AdapterListener {
         this.configureRecyclerView()
 
         // Test
-        this.mAdapter.apply {
-            updateData(listOf("Room", "Bedroom", "Bathroom", "Bed"))
-        }
+//        this.mAdapter.apply {
+//            updateData(listOf("Room", "Bedroom", "Bathroom", "Bed"))
+//        }
 
         Log.d(this::class.java.simpleName, "ItemId = ${this.mItemId}")
     }
@@ -58,7 +58,7 @@ class DetailsFragment : BaseFragment(), AdapterListener {
     }
 
     override fun onClick(v: View?) {
-        Log.d(this::class.java.simpleName, "Data: ${v?.tag as? String}")
+        //Log.d(this::class.java.simpleName, "Data: ${v?.tag as? String}")
     }
 
     // -- RecyclerView --
@@ -68,7 +68,8 @@ class DetailsFragment : BaseFragment(), AdapterListener {
      */
     private fun configureRecyclerView() {
         // Adapter
-        this.mAdapter = PhotoAdapter(mCallback = this@DetailsFragment)
+        this.mAdapter = PhotoAdapter(mCallback = this@DetailsFragment,
+                                     mAdapterMode = PhotoAdapter.AdapterMode.DETAILS_MODE)
 
         // LayoutManager
         val viewManager = LinearLayoutManager(this.context,
