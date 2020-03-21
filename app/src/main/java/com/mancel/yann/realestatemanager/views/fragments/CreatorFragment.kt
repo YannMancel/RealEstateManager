@@ -11,9 +11,11 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mancel.yann.realestatemanager.R
+import com.mancel.yann.realestatemanager.models.Photo
 import com.mancel.yann.realestatemanager.views.adapters.AdapterListener
 import com.mancel.yann.realestatemanager.views.adapters.PhotoAdapter
 import com.mancel.yann.realestatemanager.views.bases.BaseFragment
+import com.mancel.yann.realestatemanager.views.dialogs.DialogListener
 import com.mancel.yann.realestatemanager.views.dialogs.PhotoDialogFragment
 import kotlinx.android.synthetic.main.fragment_creator.view.*
 
@@ -22,9 +24,9 @@ import kotlinx.android.synthetic.main.fragment_creator.view.*
  * Name of the project: RealEstateManager
  * Name of the package: com.mancel.yann.realestatemanager.views.fragments
  *
- * A [BaseFragment] subclass which implements [AdapterListener].
+ * A [BaseFragment] subclass which implements [AdapterListener] and [DialogListener].
  */
-class CreatorFragment : BaseFragment(), AdapterListener {
+class CreatorFragment : BaseFragment(), AdapterListener, DialogListener {
 
     // FIELDS --------------------------------------------------------------------------------------
 
@@ -82,6 +84,18 @@ class CreatorFragment : BaseFragment(), AdapterListener {
 
     override fun onClick(v: View?) {
 //        Log.d(this::class.java.simpleName, "Data: ${v?.tag as? String}")
+    }
+
+    // -- DialogListener interface --
+
+    override fun getSelectedPhotoFromDialog(photo: Photo) {
+        // Changes the real estate id
+        photo.apply {
+            // Test
+            mRealEstateId = 1L
+        }
+
+        //Log.d(this::class.java.simpleName, "Photo ${photo.mDescription} & ${photo.mRealEstateId}")
     }
 
     // -- Listeners --
@@ -148,7 +162,7 @@ class CreatorFragment : BaseFragment(), AdapterListener {
      * @param uri a [Uri] that corresponds to the path of photo from external storage
      */
     private fun handlePhoto(uri: Uri) {
-        PhotoDialogFragment.newInstance(uri)
+        PhotoDialogFragment.newInstance(callback = this@CreatorFragment, uri = uri)
                            .show(this.activity!!.supportFragmentManager, "DIALOG PHOTO")
     }
 }
