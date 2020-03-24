@@ -21,7 +21,7 @@ import java.lang.ref.WeakReference
  */
 class PhotoAdapter(
     private val mCallback: AdapterListener? = null,
-    private val mAdapterMode: AdapterMode = AdapterMode.DETAILS_MODE
+    private val mButtonDisplayMode: ButtonDisplayMode = ButtonDisplayMode.NORMAL_MODE
     ) : RecyclerView.Adapter<PhotoAdapter.PhotoViewHolder>() {
 
     // NESTED CLASSES ------------------------------------------------------------------------------
@@ -38,11 +38,11 @@ class PhotoAdapter(
 
     // ENUMS ---------------------------------------------------------------------------------------
 
-    enum class AdapterMode {DETAILS_MODE, EDIT_MODE}
+    enum class ButtonDisplayMode {NORMAL_MODE, EDIT_MODE}
 
     // FIELDS --------------------------------------------------------------------------------------
 
-    private var mPhotos = emptyList<Photo>()
+    private val mPhotos = mutableListOf<Photo>()
 
     // METHODS -------------------------------------------------------------------------------------
 
@@ -72,27 +72,28 @@ class PhotoAdapter(
         // Description
         holder.itemView.item_photo_description.text = data.mDescription
 
-        // Buttons
-        val visibility = when (this.mAdapterMode) {
-            AdapterMode.DETAILS_MODE -> View.GONE
-            AdapterMode.EDIT_MODE -> View.VISIBLE
+        // Buttons: Visibility
+        val visibility = when (this.mButtonDisplayMode) {
+            ButtonDisplayMode.NORMAL_MODE -> View.GONE
+            ButtonDisplayMode.EDIT_MODE -> View.VISIBLE
         }
 
         holder.itemView.item_photo_delete_media.visibility = visibility
         holder.itemView.item_photo_edit_media.visibility = visibility
 
-        // Listener of Buttons
+        // Button DELETE: add Listener
         holder.itemView.item_photo_delete_media.setOnClickListener {
             // Tag -> Data
-            it.tag = position
+            it.tag = data
 
             // Starts the callback
             holder.mCallback.get()?.onClick(it)
         }
 
+        // Button EDIT: add Listener
         holder.itemView.item_photo_edit_media.setOnClickListener {
             // Tag -> Data
-            it.tag = position
+            it.tag = data
 
             // Starts the callback
             holder.mCallback.get()?.onClick(it)
@@ -113,7 +114,8 @@ class PhotoAdapter(
         val diffResult  = DiffUtil.calculateDiff(diffCallback )
 
         // New data
-        this.mPhotos = newPhotos
+        this.mPhotos.clear()
+        this.mPhotos.addAll(newPhotos)
 
         // Notifies adapter
         diffResult.dispatchUpdatesTo(this@PhotoAdapter)

@@ -23,12 +23,16 @@ import java.lang.ref.WeakReference
  */
 class PhotoDialogFragment : DialogFragment() {
 
+    // ENUMS ---------------------------------------------------------------------------------------
+
+    enum class PhotoDialogMode {ADD, UPDATE}
+    private var mMode: PhotoDialogMode = PhotoDialogMode.ADD
+
     // FIELDS --------------------------------------------------------------------------------------
 
-    private val mUriPhoto: Uri by lazy { this.arguments!!.getParcelable(BUNDLE_KEY_URI) as Uri}
-
+    private val mUriPhoto: Uri? by lazy { this.arguments!!.getParcelable(BUNDLE_KEY_URI) as? Uri}
+    private val mDescription: String? by lazy { this.arguments!!.getString(BUNDLE_KEY_DESCRIPTION)}
     private lateinit var mRootView: View
-
     private var mCallback: WeakReference<DialogListener?>? = null
 
     // METHODS -------------------------------------------------------------------------------------
@@ -36,20 +40,27 @@ class PhotoDialogFragment : DialogFragment() {
     companion object {
 
         const val BUNDLE_KEY_URI = "BUNDLE_KEY_URI"
+        const val BUNDLE_KEY_DESCRIPTION = "BUNDLE_KEY_DESCRIPTION"
 
         /**
          * Gets a new instance of [PhotoDialogFragment]
-         * @param callback a [DialogListener]
-         * @param uri a [Uri] that corresponds to the path of photo from external storage
+         * @param callback  a [DialogListener]
+         * @param uri       an [Uri] that corresponds to the path of photo from external storage
+         * @param mode      a [PhotoDialogMode]
          */
-        fun newInstance(callback: DialogListener, uri: Uri): PhotoDialogFragment {
+        fun newInstance(callback: DialogListener,
+                        uri: Uri?,
+                        description: String? = null,
+                        mode: PhotoDialogMode = PhotoDialogMode.ADD): PhotoDialogFragment {
             val dialog = PhotoDialogFragment().apply {
                 setCallback(callback)
+                setMode(mode)
             }
 
             // Bundle into Argument of Fragment
             dialog.arguments = Bundle().apply {
                 putParcelable(BUNDLE_KEY_URI, uri)
+                putString(BUNDLE_KEY_DESCRIPTION, description)
             }
 
             return dialog
@@ -83,6 +94,16 @@ class PhotoDialogFragment : DialogFragment() {
         this.mCallback = WeakReference(callback)
     }
 
+    // -- Mode --
+
+    /**
+     * Sets the mode into a [PhotoDialogMode]
+     * @param mode a [PhotoDialogMode]
+     */
+    private fun setMode(mode: PhotoDialogMode) {
+        this.mMode = mode
+    }
+
     // -- Photo --
 
     /**
@@ -102,6 +123,12 @@ class PhotoDialogFragment : DialogFragment() {
      * Configures the description of the photo
      */
     private fun configureDescriptionOfPhoto() {
+        // Description from argument
+        if (this.mDescription != null) {
+            this.mRootView.dialog_selected_photo_description.editText?.text?.append(this.mDescription)
+        }
+
+        // Add listener
         this.mRootView.dialog_selected_photo_description.editText?.addTextChangedListener(
             object : TextWatcher {
 
@@ -153,7 +180,7 @@ class PhotoDialogFragment : DialogFragment() {
                           mDescription = this.mRootView.dialog_selected_photo_description.editText!!.text.toString())
 
         // Callback
-        this.mCallback?.get()?.getSelectedPhotoFromDialog(photo)
+        this.mCallback?.get()?.getSelectedPhotoFromDialog(photo, this.mMode)
 
         // Close Dialog
         this.dismiss()

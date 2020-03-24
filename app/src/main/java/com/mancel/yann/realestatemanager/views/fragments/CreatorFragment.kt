@@ -7,10 +7,12 @@ import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import androidx.annotation.LayoutRes
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mancel.yann.realestatemanager.R
+import com.mancel.yann.realestatemanager.liveDatas.PhotoCreatorLiveData
 import com.mancel.yann.realestatemanager.models.Photo
 import com.mancel.yann.realestatemanager.views.adapters.AdapterListener
 import com.mancel.yann.realestatemanager.views.adapters.PhotoAdapter
@@ -31,6 +33,7 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener {
     // FIELDS --------------------------------------------------------------------------------------
 
     private lateinit var mAdapter: PhotoAdapter
+    private lateinit var mLiveData: PhotoCreatorLiveData
 
     companion object {
         const val REQUEST_CODE_PHOTO = 100
@@ -47,6 +50,9 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener {
         // UI
         this.configureListenerOFEachButton()
         this.configureRecyclerView()
+
+        // LiveData
+        this.configurePhotoCreatorLiveData()
     }
 
     override fun actionAfterPermission() = this.actionToAddPhoto()
@@ -85,13 +91,15 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener {
     override fun onClick(v: View?) {
         when (v?.id) {
             // Button: DELETE
-            R.id.item_photo_delete_media -> {
-                Log.d(this::class.java.simpleName, "DELETE: ${v.tag as? Int}")
-            }
+            R.id.item_photo_delete_media -> this.mLiveData.removePhoto(v.tag as Photo)
 
             // Button: EDIT
             R.id.item_photo_edit_media -> {
-                Log.d(this::class.java.simpleName, "EDIT: ${v.tag as? Int}")
+                PhotoDialogFragment.newInstance(callback = this@CreatorFragment,
+                                                uri = Uri.parse((v.tag as Photo).mUrlPicture),
+                                                description = (v.tag as Photo).mDescription,
+                                                mode = PhotoDialogFragment.PhotoDialogMode.UPDATE)
+                                   .show(this.activity!!.supportFragmentManager, "DIALOG PHOTO")
             }
 
             else -> { /* Ignore all ids */}
@@ -100,14 +108,21 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener {
 
     // -- DialogListener interface --
 
-    override fun getSelectedPhotoFromDialog(photo: Photo) {
+    override fun getSelectedPhotoFromDialog(photo: Photo,
+                                            mode: PhotoDialogFragment.PhotoDialogMode) {
         // Changes the real estate id
         photo.apply {
             // Test
             mRealEstateId = 1L
         }
 
-        this.mAdapter.updateData(listOf(photo))
+        when (mode) {
+            // ADD
+            PhotoDialogFragment.PhotoDialogMode.ADD -> this.mLiveData.addPhoto(photo)
+
+            // UPDATE
+            PhotoDialogFragment.PhotoDialogMode.UPDATE -> this.mLiveData.updatePhoto(photo)
+        }
     }
 
     // -- Listeners --
@@ -135,7 +150,7 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener {
     private fun configureRecyclerView() {
         // Adapter
         this.mAdapter = PhotoAdapter(mCallback = this@CreatorFragment,
-                                     mAdapterMode = PhotoAdapter.AdapterMode.EDIT_MODE)
+                                     mButtonDisplayMode = PhotoAdapter.ButtonDisplayMode.EDIT_MODE)
 
         // LayoutManager
         val viewManager = LinearLayoutManager(this.context,
@@ -153,6 +168,19 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener {
             addItemDecoration(divider)
             adapter = mAdapter
             visibility = View.GONE
+        }
+    }
+
+    // -- LiveData --
+
+    /**
+     * Configures the [PhotoCreatorLiveData]
+     */
+    private fun configurePhotoCreatorLiveData() {
+        this.mLiveData =  this.mViewModel.getPhotoCreator().apply {
+            observe(this@CreatorFragment.viewLifecycleOwner, Observer {
+                    photos -> this@CreatorFragment.mAdapter.updateData(photos)
+            })
         }
     }
 
@@ -176,6 +204,8 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener {
      * @param uri a [Uri] that corresponds to the path of photo from external storage
      */
     private fun handlePhoto(uri: Uri) {
+        // todo 24/03/2020 Analyse if possible with PhotoCreatorLiveData & database (see URL)
+
         PhotoDialogFragment.newInstance(callback = this@CreatorFragment, uri = uri)
                            .show(this.activity!!.supportFragmentManager, "DIALOG PHOTO")
     }

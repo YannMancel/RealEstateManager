@@ -13,7 +13,8 @@ interface DialogListener {
 
     /**
      * Called when the user has selected a [Photo]
-     * @param photo The selected [Photo]
+     * @param photo the selected [Photo]
+     * @param mode  a [PhotoDialogFragment.PhotoDialogMode]
      */
-    fun getSelectedPhotoFromDialog(photo: Photo)
+    fun getSelectedPhotoFromDialog(photo: Photo, mode: PhotoDialogFragment.PhotoDialogMode)
 }

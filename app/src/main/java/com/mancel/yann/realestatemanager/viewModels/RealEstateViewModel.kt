@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mancel.yann.realestatemanager.liveDatas.PhotoCreatorLiveData
 import com.mancel.yann.realestatemanager.models.IdTypeAddressPriceTupleOfRealEstate
 import com.mancel.yann.realestatemanager.models.User
 import com.mancel.yann.realestatemanager.repositories.RealEstateRepository
@@ -27,6 +28,8 @@ class RealEstateViewModel(
     private var mUsers: LiveData<List<User>>? = null
     private var mCountOfRealEstateByUserId: LiveData<Int>? = null
     private var mRealEstatesSimpleFormat: LiveData<List<IdTypeAddressPriceTupleOfRealEstate>>? = null
+
+    private var mPhotoCreator: PhotoCreatorLiveData? = null
 
     // CONSTRUCTORS --------------------------------------------------------------------------------
 
@@ -55,6 +58,7 @@ class RealEstateViewModel(
     /**
      * Gets the count of row where user Id is validated
      * @param userId a [Long] that contains the user Id
+     * @return a [LiveData] of [Int]
      */
     fun getCountOfRealEstatesByUserId(userId: Long): LiveData<Int> {
         if (this.mCountOfRealEstateByUserId == null) {
@@ -66,11 +70,25 @@ class RealEstateViewModel(
     /**
      * Gets all [IdTypeAddressPriceTupleOfRealEstate] thanks to [LiveData]
      * @param userId a [Long] that contains the user Id
+     * @return a [LiveData] of [IdTypeAddressPriceTupleOfRealEstate]
      */
     fun getRealEstatesSimpleFormatByUserId(userId: Long): LiveData<List<IdTypeAddressPriceTupleOfRealEstate>> {
         if (this.mRealEstatesSimpleFormat == null) {
             this.mRealEstatesSimpleFormat = this.mRealEstateRepository.getIdTypeAddressPriceTupleOfRealEstateByUserId(userId)
         }
         return this.mRealEstatesSimpleFormat!!
+    }
+
+    // -- Photo --
+
+    /**
+     * Gets a [PhotoCreatorLiveData]
+     * @return a [PhotoCreatorLiveData]
+     */
+    fun getPhotoCreator(): PhotoCreatorLiveData {
+        if (this.mPhotoCreator == null) {
+            this.mPhotoCreator = PhotoCreatorLiveData()
+        }
+        return this.mPhotoCreator!!
     }
 }
