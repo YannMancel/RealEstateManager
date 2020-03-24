@@ -4,6 +4,7 @@
 
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="no_data">No data</string>
 
     <!-- MainActivity.kt -->
     <string name="navigation_drawer_open" translatable="false">"Open navigation drawer"</string>
@@ -17,7 +18,6 @@
 
     <!-- PhotoDialogFragment.kt -->
     <string name="title_photo_dialog_fragment">Photo selected</string>
-    <string name="no_description">No description</string>
 
     <!-- activity_main_menu_drawer.xml -->
     <string name="menu_drawer_settings">SETTINGS</string>
@@ -31,7 +31,6 @@
     <string name="navigation_creator_name">Real estate creator</string>
 
     <!-- item.photo.xml & item_real_estate.xml -->
-    <string name="no_data">No data</string>
     <string name="menu_drawer_details">DETAILS</string>
 
     <!-- fragment_creator.xml -->

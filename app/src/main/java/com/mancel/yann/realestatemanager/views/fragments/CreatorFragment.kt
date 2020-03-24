@@ -4,6 +4,8 @@ import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.net.Uri
 import android.provider.MediaStore
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import androidx.annotation.LayoutRes
@@ -11,6 +13,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.textfield.TextInputLayout
 import com.mancel.yann.realestatemanager.R
 import com.mancel.yann.realestatemanager.liveDatas.PhotoCreatorLiveData
 import com.mancel.yann.realestatemanager.models.Photo
@@ -48,6 +51,7 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener {
 
     override fun configureDesign() {
         // UI
+        this.configureFieldsOfData()
         this.configureListenerOFEachButton()
         this.configureRecyclerView()
 
@@ -125,6 +129,20 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener {
         }
     }
 
+    // -- Fields of data --
+
+    /**
+     * Configures the fields of data
+     */
+    private fun configureFieldsOfData() {
+        this.configureListenerOfFields(this.mRootView.fragment_creator_type,
+                                       this.mRootView.fragment_creator_price,
+                                       this.mRootView.fragment_creator_address,
+                                       this.mRootView.fragment_creator_city,
+                                       this.mRootView.fragment_creator_post_code,
+                                       this.mRootView.fragment_creator_country)
+    }
+
     // -- Listeners --
 
     /**
@@ -138,8 +156,53 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener {
 
         // FAB
         this.mRootView.fragment_creator_fab.setOnClickListener {
-            Log.d(this@CreatorFragment::class.simpleName, "FAB")
+            this.actionToAddRealEstate()
         }
+    }
+
+    /**
+     * Configures the listener of each field
+     * @param textInputLayouts a variable array of [TextInputLayout]
+     */
+    private fun configureListenerOfFields(vararg textInputLayouts: TextInputLayout) {
+        for (textInputLayout in textInputLayouts) {
+            // Add listener
+            textInputLayout.editText?.addTextChangedListener(object : TextWatcher {
+
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                    // Do nothing
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    // Reset error
+                    textInputLayout.error = null
+                }
+
+                override fun afterTextChanged(s: Editable?) {
+                    // Do nothing
+                }
+            })
+        }
+    }
+
+    /**
+     * Configures the error of each field
+     * @param textInputLayouts a variable array of [TextInputLayout]
+     * @return a [Boolean] with true if is canceled
+     */
+    private fun configureErrorOfFields(vararg textInputLayouts: TextInputLayout): Boolean {
+        var isErrored = false
+
+        for (textInputLayout in textInputLayouts) {
+
+            // No Data
+            if (textInputLayout.editText?.text.toString().isEmpty()) {
+                textInputLayout.error = this.getString(R.string.no_data)
+                isErrored = true
+            }
+        }
+
+        return isErrored
     }
 
     // -- RecyclerView --
@@ -187,7 +250,7 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener {
     // -- Photo --
 
     /**
-     * Action to add a photo
+     * Action to add a [Photo]
      */
     private fun actionToAddPhoto() {
         if (this.checkReadExternalStoragePermission()) {
@@ -208,5 +271,24 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener {
 
         PhotoDialogFragment.newInstance(callback = this@CreatorFragment, uri = uri)
                            .show(this.activity!!.supportFragmentManager, "DIALOG PHOTO")
+    }
+
+    // -- Real Estate --
+
+    /**
+     * Action to add a [RealEstate]
+     */
+    private fun actionToAddRealEstate() {
+        // Errors
+        val isCanceled = this.configureErrorOfFields(this.mRootView.fragment_creator_type,
+                                                     this.mRootView.fragment_creator_price,
+                                                     this.mRootView.fragment_creator_address,
+                                                     this.mRootView.fragment_creator_city,
+                                                     this.mRootView.fragment_creator_post_code,
+                                                     this.mRootView.fragment_creator_country)
+
+        if (!isCanceled) {
+            // todo 24/03/2020 Add method to create a real estate
+        }
     }
 }

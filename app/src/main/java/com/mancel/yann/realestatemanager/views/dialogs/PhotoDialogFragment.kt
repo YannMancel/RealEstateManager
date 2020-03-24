@@ -169,9 +169,9 @@ class PhotoDialogFragment : DialogFragment() {
      * Action for the Yes button
      */
     private fun actionOfYesButton() {
-        // No description
+        // No data
         if (this.mRootView.dialog_selected_photo_description.editText?.text.toString().isEmpty()) {
-            this.mRootView.dialog_selected_photo_description.error = this.getString(R.string.no_description)
+            this.mRootView.dialog_selected_photo_description.error = this.getString(R.string.no_data)
             return
         }
 
