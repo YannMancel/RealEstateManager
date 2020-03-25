@@ -1,6 +1,6 @@
 package com.mancel.yann.realestatemanager
 
-import android.app.Application
+import androidx.multidex.MultiDexApplication
 import com.mancel.yann.realestatemanager.koin.appModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -11,13 +11,13 @@ import org.koin.core.context.startKoin
  * Name of the project: RealEstateManager
  * Name of the package: com.mancel.yann.realestatemanager
  *
- * An [Application] subclass.
+ * An [MultiDexApplication] subclass.
  */
-class RealEstateApplication : Application() {
+class RealEstateApplication : MultiDexApplication() {
 
     // METHODS -------------------------------------------------------------------------------------
 
-    // -- Application --
+    // -- MultiDexApplication --
 
     override fun onCreate() {
         super.onCreate()

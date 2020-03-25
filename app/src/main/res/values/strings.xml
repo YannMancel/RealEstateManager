@@ -13,6 +13,9 @@
     <string name="edit_real_estate_toolbar">Edit real estate</string>
     <string name="search_real_estate_toolbar">Search real estate</string>
 
+    <!-- CreatorFragment.kt -->
+    <string name="title_marker">Real Estate</string>
+
     <!-- SettingsDialogFragment.kt -->
     <string name="title_settings_dialog_fragment">Settings</string>
 
@@ -36,10 +39,7 @@
     <!-- fragment_creator.xml -->
     <string name="hint_type">Type</string>
     <string name="hint_price">Price</string>
-    <string name="hint_address">Address</string>
-    <string name="hint_city">City</string>
-    <string name="hint_country">Country</string>
-    <string name="hint_post_code">Post code</string>
+    <string name="hint_address">Full address</string>
 
     <!-- dialog_selected_photo.xml -->
     <string name="hint_description">Description</string>

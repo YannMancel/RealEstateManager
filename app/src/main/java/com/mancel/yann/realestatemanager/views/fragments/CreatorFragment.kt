@@ -9,10 +9,23 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import androidx.annotation.LayoutRes
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.api.model.TypeFilter
+import com.google.android.libraries.places.widget.Autocomplete
+import com.google.android.libraries.places.widget.AutocompleteActivity
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.textfield.TextInputLayout
 import com.mancel.yann.realestatemanager.R
 import com.mancel.yann.realestatemanager.liveDatas.PhotoCreatorLiveData
@@ -29,17 +42,20 @@ import kotlinx.android.synthetic.main.fragment_creator.view.*
  * Name of the project: RealEstateManager
  * Name of the package: com.mancel.yann.realestatemanager.views.fragments
  *
- * A [BaseFragment] subclass which implements [AdapterListener] and [DialogListener].
+ * A [BaseFragment] subclass which implements [AdapterListener], [DialogListener]
+ * and [OnMapReadyCallback].
  */
-class CreatorFragment : BaseFragment(), AdapterListener, DialogListener {
+class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReadyCallback {
 
     // FIELDS --------------------------------------------------------------------------------------
 
     private lateinit var mAdapter: PhotoAdapter
     private lateinit var mLiveData: PhotoCreatorLiveData
+    private var mGoogleMap: GoogleMap? = null
 
     companion object {
         const val REQUEST_CODE_PHOTO = 100
+        const val REQUEST_CODE_AUTOCOMPLETE = 200
     }
 
     // METHODS -------------------------------------------------------------------------------------
@@ -54,6 +70,7 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener {
         this.configureFieldsOfData()
         this.configureListenerOFEachButton()
         this.configureRecyclerView()
+        this.configureSupportMapFragment()
 
         // LiveData
         this.configurePhotoCreatorLiveData()
@@ -67,7 +84,7 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener {
         super.onActivityResult(requestCode, resultCode, data)
 
         when (requestCode) {
-            // To handle the photo
+            // Photo
             REQUEST_CODE_PHOTO -> {
                 if (resultCode == RESULT_OK) {
                     data?.let {
@@ -79,7 +96,10 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener {
                 }
             }
 
-            else -> { /* Ignore all other requests */}
+            // Search
+            REQUEST_CODE_AUTOCOMPLETE -> this.handleAddress(resultCode, data)
+
+            else -> { /* Ignore all other requests */ }
         }
     }
 
@@ -106,7 +126,7 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener {
                                    .show(this.activity!!.supportFragmentManager, "DIALOG PHOTO")
             }
 
-            else -> { /* Ignore all ids */}
+            else -> { /* Ignore all ids */ }
         }
     }
 
@@ -129,6 +149,15 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener {
         }
     }
 
+    // -- OnMapReadyCallback interface --
+
+    override fun onMapReady(googleMap: GoogleMap?) {
+        this.mGoogleMap = googleMap
+
+        // TOOLBAR
+        this.mGoogleMap?.uiSettings?.isMapToolbarEnabled = false
+    }
+
     // -- Fields of data --
 
     /**
@@ -137,27 +166,10 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener {
     private fun configureFieldsOfData() {
         this.configureListenerOfFields(this.mRootView.fragment_creator_type,
                                        this.mRootView.fragment_creator_price,
-                                       this.mRootView.fragment_creator_address,
-                                       this.mRootView.fragment_creator_city,
-                                       this.mRootView.fragment_creator_post_code,
-                                       this.mRootView.fragment_creator_country)
-    }
+                                       this.mRootView.fragment_creator_address)
 
-    // -- Listeners --
-
-    /**
-     * Configures the listener of Each button
-     */
-    private fun configureListenerOFEachButton() {
-        // Button: Add photo
-        this.mRootView.fragment_creator_add_photo.setOnClickListener {
-            this.actionToAddPhoto()
-        }
-
-        // FAB
-        this.mRootView.fragment_creator_fab.setOnClickListener {
-            this.actionToAddRealEstate()
-        }
+        // Hides field for address
+        this.mRootView.fragment_creator_address.visibility = View.GONE
     }
 
     /**
@@ -174,6 +186,17 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener {
                 }
 
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    // After that user has selected an address
+                    if (textInputLayout.id == R.id.fragment_creator_address && !textInputLayout.isVisible) {
+                        // Address
+                        textInputLayout.visibility = View.VISIBLE
+
+                        // Google Maps
+                        this@CreatorFragment.childFragmentManager.fragments[0].view?.visibility = View.VISIBLE
+
+                        return
+                    }
+
                     // Reset error
                     textInputLayout.error = null
                 }
@@ -194,7 +217,6 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener {
         var isErrored = false
 
         for (textInputLayout in textInputLayouts) {
-
             // No Data
             if (textInputLayout.editText?.text.toString().isEmpty()) {
                 textInputLayout.error = this.getString(R.string.no_data)
@@ -203,6 +225,65 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener {
         }
 
         return isErrored
+    }
+
+    /**
+     * Shows the address into [TextInputLayout]
+     * @param place a [Place] that contains the address
+     */
+    private fun showAddressIntoField(place: Place) {
+        // Shows address
+        val addressComponents = place.addressComponents?.asList()
+
+        var streetNumber: String? = null
+        var route: String? = null
+        var locality: String? = null
+        var postalCode: String? = null
+        var country: String? = null
+
+        addressComponents?.forEach {
+            when (it.types[0]) {
+                "street_number"-> streetNumber = it.name
+                "route"-> route = it.name
+                "locality"-> locality = it.name
+                "postal_code"-> postalCode = it.name
+                "country"-> country = it.name
+
+                else -> { /* Ignore all other types */ }
+            }
+        }
+
+        val address = """
+                    $streetNumber $route
+                    $locality
+                    $postalCode
+                    $country
+                """.trimIndent()
+
+        this.mRootView.fragment_creator_address.editText?.text?.clear()
+        this.mRootView.fragment_creator_address.editText?.text?.append(address)
+    }
+
+    // -- Listeners --
+
+    /**
+     * Configures the listener of Each button
+     */
+    private fun configureListenerOFEachButton() {
+        // Button: Add address
+        this.mRootView.fragment_creator_add_address.setOnClickListener {
+            this.actionToSearchAddress()
+        }
+
+        // Button: Add photo
+        this.mRootView.fragment_creator_add_photo.setOnClickListener {
+            this.actionToAddPhoto()
+        }
+
+        // FAB
+        this.mRootView.fragment_creator_fab.setOnClickListener {
+            this.actionToAddRealEstate()
+        }
     }
 
     // -- RecyclerView --
@@ -234,6 +315,28 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener {
         }
     }
 
+    // -- Child Fragment --
+
+    /**
+     * Configures the child fragment which contains the Google Maps
+     */
+    private fun configureSupportMapFragment() {
+        var childFragment = this.childFragmentManager.findFragmentById(R.id.fragment_creator_map_lite_mode) as? SupportMapFragment
+
+        if (childFragment == null) {
+            childFragment = SupportMapFragment.newInstance()
+
+            this.childFragmentManager.beginTransaction()
+                                     .add(R.id.fragment_creator_map_lite_mode, childFragment)
+                                     .commit()
+        }
+
+        childFragment?.getMapAsync(this@CreatorFragment)
+
+        // Hides the fragment
+        this.childFragmentManager.fragments[0].view?.visibility = View.GONE
+    }
+
     // -- LiveData --
 
     /**
@@ -244,6 +347,66 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener {
             observe(this@CreatorFragment.viewLifecycleOwner, Observer {
                     photos -> this@CreatorFragment.mAdapter.updateData(photos)
             })
+        }
+    }
+
+    // -- Google Maps --
+
+    /**
+     * Shows the point of interest into Google Maps
+     * @param latLng a [LatLng] that contains the location
+     */
+    private fun showPointOfInterest(latLng: LatLng) {
+        val newLocation = LatLng(latLng.latitude, latLng.longitude);
+
+        this.mGoogleMap?.clear()
+        this.mGoogleMap?.addMarker(MarkerOptions().position(newLocation)
+                                                  .title(this.getString(R.string.title_marker)))
+
+        this.mGoogleMap?.moveCamera(CameraUpdateFactory.newLatLng(newLocation))
+    }
+
+    /**
+     * Action to search the address
+     */
+    private fun actionToSearchAddress() {
+        // Configures Places with the Google Maps key
+        Places.initialize(this.context!!,
+                         this.getString(R.string.google_maps_key))
+
+        val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY,
+                                                listOf(Place.Field.ADDRESS_COMPONENTS,
+                                                       Place.Field.LAT_LNG))
+                                 .setTypeFilter(TypeFilter.ADDRESS)
+                                 .build(this.context!!)
+
+        this.startActivityForResult(intent, REQUEST_CODE_AUTOCOMPLETE)
+    }
+
+    /**
+     * Handles the address
+     * @param resultCode    an [Int] that contains the result code
+     * @param data          an [Intent] that contains the data
+     */
+    private fun handleAddress(resultCode: Int, data: Intent?) {
+        when (resultCode) {
+
+            RESULT_OK -> {
+                // Data
+                val place = Autocomplete.getPlaceFromIntent(data!!)
+
+                this.showPointOfInterest(place.latLng!!)
+                this.showAddressIntoField(place)
+            }
+
+            AutocompleteActivity.RESULT_ERROR -> {
+                val status = Autocomplete.getStatusFromIntent(data!!)
+                Log.e(this::class.simpleName, "${status.statusMessage} [Place API]")
+            }
+
+            else -> {
+                Log.d(this::class.simpleName, "SEARCH CANCELED")
+            }
         }
     }
 
@@ -281,11 +444,7 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener {
     private fun actionToAddRealEstate() {
         // Errors
         val isCanceled = this.configureErrorOfFields(this.mRootView.fragment_creator_type,
-                                                     this.mRootView.fragment_creator_price,
-                                                     this.mRootView.fragment_creator_address,
-                                                     this.mRootView.fragment_creator_city,
-                                                     this.mRootView.fragment_creator_post_code,
-                                                     this.mRootView.fragment_creator_country)
+                                                     this.mRootView.fragment_creator_price)
 
         if (!isCanceled) {
             // todo 24/03/2020 Add method to create a real estate

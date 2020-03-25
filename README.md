@@ -26,7 +26,11 @@
     * [ViewModel](https://developer.android.com/topic/libraries/architecture/viewmodel)
     * [Navigation](https://developer.android.com/guide/navigation/)
     * [Room](https://developer.android.com/topic/libraries/architecture/room)
-    
+
+* [Google Maps](https://cloud.google.com/maps-platform/)
+    * [Maps](https://developers.google.com/maps/documentation/android-sdk/intro)
+    * [Places](https://developers.google.com/places/web-service/intro)
+
 * [Library Glide](https://github.com/bumptech/glide)
 
 * [Library Koin](https://github.com/InsertKoinIO/koin)

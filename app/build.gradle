@@ -16,6 +16,12 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        // Enable use of 64K or more method references
+        multiDexEnabled true
+
+        // API Keys
+        resValue "string", "google_maps_key", (project.findProperty("GOOGLE_MAPS_API_KEY") ?: "")
     }
     buildTypes {
         release {
@@ -41,6 +47,10 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'com.google.android.material:material:1.1.0'
 
+    // MULTIDEX
+    def multidex_version = "2.0.1"
+    implementation "androidx.multidex:multidex:$multidex_version"
+
     // VIEWMODEL + LIVEDATA
     def lifecycle_version = "2.2.0"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
@@ -65,12 +75,21 @@ dependencies {
     // GLIDE
     def glide_version = "4.10.0"
     implementation "com.github.bumptech.glide:glide:$glide_version"
-    annotationProcessor "com.github.bumptech.glide:compiler:$glide_version"
+    kapt "com.github.bumptech.glide:compiler:$glide_version"
 
     // KOIN
     def koin_version = '2.1.4'
     implementation "org.koin:koin-android:$koin_version"
     implementation "org.koin:koin-androidx-viewmodel:$koin_version"
+
+    // GOOGLE MAPS
+    def google_maps_version = "17.0.0"
+    implementation "com.google.android.gms:play-services-location:$google_maps_version"
+    implementation "com.google.android.gms:play-services-maps:$google_maps_version"
+
+    // AUTOCOMPLETE OF GOOGLE MAPS
+    def autocomplete_google_maps_version = "2.2.0"
+    implementation "com.google.android.libraries.places:places:$autocomplete_google_maps_version"
 
     // TESTS ---------------------------------------------------------------------------------------
 
