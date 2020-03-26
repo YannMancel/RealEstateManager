@@ -9,8 +9,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <!-- CardView: For the user's interactions -->
-    <androidx.cardview.widget.CardView
+    <!-- MaterialCardView: For the user's interactions -->
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/item_photo_CardView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -93,6 +93,6 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

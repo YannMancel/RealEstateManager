@@ -8,6 +8,8 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import androidx.annotation.LayoutRes
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
@@ -85,16 +87,7 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
 
         when (requestCode) {
             // Photo
-            REQUEST_CODE_PHOTO -> {
-                if (resultCode == RESULT_OK) {
-                    data?.let {
-                        this.handlePhoto(it.data!!)
-                    }
-                }
-                else {
-                    Log.d(this::class.simpleName, "PHOTO CANCELED")
-                }
-            }
+            REQUEST_CODE_PHOTO -> this.handlePhoto(resultCode, data)
 
             // Search
             REQUEST_CODE_AUTOCOMPLETE -> this.handleAddress(resultCode, data)
@@ -123,7 +116,7 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
                                                 uri = Uri.parse((v.tag as Photo).mUrlPicture),
                                                 description = (v.tag as Photo).mDescription,
                                                 mode = PhotoDialogFragment.PhotoDialogMode.UPDATE)
-                                   .show(this.activity!!.supportFragmentManager, "DIALOG PHOTO")
+                                   .show(this.requireActivity().supportFragmentManager, "DIALOG PHOTO")
             }
 
             else -> { /* Ignore all ids */ }
@@ -170,6 +163,12 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
 
         // Hides field for address
         this.mRootView.fragment_creator_address.visibility = View.GONE
+
+        // Type: Populates the adapter
+        (this.mRootView.fragment_creator_type.editText as? AutoCompleteTextView)?.setAdapter(
+            ArrayAdapter(this.requireContext(),
+                         R.layout.item_type,
+                         this.resources.getStringArray(R.array.creator_types)))
     }
 
     /**
@@ -214,17 +213,17 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
      * @return a [Boolean] with true if is canceled
      */
     private fun configureErrorOfFields(vararg textInputLayouts: TextInputLayout): Boolean {
-        var isErrored = false
+        var isIncorrect = false
 
         for (textInputLayout in textInputLayouts) {
             // No Data
             if (textInputLayout.editText?.text.toString().isEmpty()) {
                 textInputLayout.error = this.getString(R.string.no_data)
-                isErrored = true
+                isIncorrect = true
             }
         }
 
-        return isErrored
+        return isIncorrect
     }
 
     /**
@@ -297,12 +296,12 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
                                      mButtonDisplayMode = PhotoAdapter.ButtonDisplayMode.EDIT_MODE)
 
         // LayoutManager
-        val viewManager = LinearLayoutManager(this.context,
+        val viewManager = LinearLayoutManager(this.requireContext(),
                                               LinearLayoutManager.HORIZONTAL,
                                              false)
 
         // Divider
-        val divider = DividerItemDecoration(this.context,
+        val divider = DividerItemDecoration(this.requireContext(),
                                             DividerItemDecoration.HORIZONTAL)
 
         // RecyclerView
@@ -357,7 +356,7 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
      * @param latLng a [LatLng] that contains the location
      */
     private fun showPointOfInterest(latLng: LatLng) {
-        val newLocation = LatLng(latLng.latitude, latLng.longitude);
+        val newLocation = LatLng(latLng.latitude, latLng.longitude)
 
         this.mGoogleMap?.clear()
         this.mGoogleMap?.addMarker(MarkerOptions().position(newLocation)
@@ -371,14 +370,14 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
      */
     private fun actionToSearchAddress() {
         // Configures Places with the Google Maps key
-        Places.initialize(this.context!!,
-                         this.getString(R.string.google_maps_key))
+        Places.initialize(this.requireContext(),
+                          this.getString(R.string.google_maps_key))
 
         val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY,
                                                 listOf(Place.Field.ADDRESS_COMPONENTS,
                                                        Place.Field.LAT_LNG))
                                  .setTypeFilter(TypeFilter.ADDRESS)
-                                 .build(this.context!!)
+                                 .build(this.requireContext())
 
         this.startActivityForResult(intent, REQUEST_CODE_AUTOCOMPLETE)
     }
@@ -390,7 +389,6 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
      */
     private fun handleAddress(resultCode: Int, data: Intent?) {
         when (resultCode) {
-
             RESULT_OK -> {
                 // Data
                 val place = Autocomplete.getPlaceFromIntent(data!!)
@@ -427,13 +425,21 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
 
     /**
      * Handles the photo
-     * @param uri a [Uri] that corresponds to the path of photo from external storage
+     * @param resultCode    an [Int] that contains the result code
+     * @param data          an [Intent] that contains the data
      */
-    private fun handlePhoto(uri: Uri) {
-        // todo 24/03/2020 Analyse if possible with PhotoCreatorLiveData & database (see URL)
+    private fun handlePhoto(resultCode: Int, data: Intent?) {
+        if (resultCode == RESULT_OK) {
+            data?.let {
+                // todo 24/03/2020 Analyse if possible with PhotoCreatorLiveData & database (see URL)
 
-        PhotoDialogFragment.newInstance(callback = this@CreatorFragment, uri = uri)
-                           .show(this.activity!!.supportFragmentManager, "DIALOG PHOTO")
+                PhotoDialogFragment.newInstance(callback = this@CreatorFragment, uri = it.data!!)
+                                   .show(this.requireActivity().supportFragmentManager, "DIALOG PHOTO")
+            }
+        }
+        else {
+            Log.d(this::class.simpleName, "PHOTO CANCELED")
+        }
     }
 
     // -- Real Estate --

@@ -40,6 +40,11 @@
     <string name="hint_type">Type</string>
     <string name="hint_price">Price</string>
     <string name="hint_address">Full address</string>
+    <string-array name="creator_types">
+        <item>Flat</item>
+        <item>House</item>
+        <item>Other</item>
+    </string-array>
 
     <!-- dialog_selected_photo.xml -->
     <string name="hint_description">Description</string>

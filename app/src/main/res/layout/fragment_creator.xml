@@ -21,15 +21,16 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <!-- CardView: Type -->
-            <androidx.cardview.widget.CardView
+            <!-- MaterialCardView: Type -->
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardview_type"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/cardview_address"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+                app:layout_constraintEnd_toEndOf="parent"
+                style="@style/Widget.MaterialComponents.CardView">
 
                 <!-- ConstraintLayout -->
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -42,8 +43,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/margin_normal"
-                        app:layout_constraintTop_toTopOf="@id/fragment_creator_type"
-                        app:layout_constraintBottom_toBottomOf="@id/fragment_creator_type"
+                        app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/fragment_creator_type"
                         android:baselineAlignBottom="true"
@@ -63,16 +63,17 @@
                         app:layout_constraintBottom_toTopOf="@id/fragment_creator_price"
                         app:layout_constraintStart_toEndOf="@id/icon_home"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:hintEnabled="true"
                         app:errorEnabled="true"
-                        app:endIconMode="clear_text">
+                        app:hintEnabled="true"
+                        app:boxBackgroundColor="@android:color/transparent"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu">
 
-                        <!-- TextInputEditText: Type -->
-                        <com.google.android.material.textfield.TextInputEditText
+                        <!-- AutoCompleteTextView: Type -->
+                        <AutoCompleteTextView
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:hint="@string/hint_type"
-                            android:inputType="text"/>
+                            android:inputType="none"/>
 
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -89,7 +90,11 @@
                         app:layout_constraintStart_toStartOf="@id/fragment_creator_type"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:hintEnabled="true"
-                        app:errorEnabled="true">
+                        app:errorEnabled="true"
+                        app:background="@null"
+                        app:endIconMode="clear_text"
+                        app:boxBackgroundColor="@android:color/transparent"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox">
 
                         <!-- TextInputEditText: Type -->
                         <com.google.android.material.textfield.TextInputEditText
@@ -102,10 +107,10 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
-            <!-- CardView: Address -->
-            <androidx.cardview.widget.CardView
+            <!-- MaterialCardView: Address -->
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardview_address"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -113,7 +118,8 @@
                 app:layout_constraintTop_toBottomOf="@id/cardview_type"
                 app:layout_constraintBottom_toTopOf="@id/cardview_photo"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+                app:layout_constraintEnd_toEndOf="parent"
+                style="@style/Widget.MaterialComponents.CardView">
 
                 <!-- ConstraintLayout -->
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -158,7 +164,9 @@
                         app:layout_constraintBottom_toTopOf="@id/fragment_creator_map_lite_mode"
                         app:layout_constraintStart_toEndOf="@id/icon_place"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:hintEnabled="true">
+                        app:hintEnabled="true"
+                        app:boxBackgroundColor="@android:color/transparent"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox">
 
                         <!-- TextInputEditText: Type -->
                         <com.google.android.material.textfield.TextInputEditText
@@ -190,10 +198,10 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
-            <!-- CardView: Photo -->
-            <androidx.cardview.widget.CardView
+            <!-- MaterialCardView: Photo -->
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardview_photo"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -202,7 +210,8 @@
                 app:layout_constraintTop_toBottomOf="@id/cardview_address"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+                app:layout_constraintEnd_toEndOf="parent"
+                style="@style/Widget.MaterialComponents.CardView">
 
                 <!-- ConstraintLayout -->
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -252,7 +261,7 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -266,6 +275,7 @@
         android:layout_margin="@dimen/margin_normal"
         android:layout_gravity="bottom|end"
         android:src="@drawable/ic_add"
-        android:tint="@android:color/black"/>
+        android:tint="@android:color/black"
+        style="@style/Widget.MaterialComponents.FloatingActionButton"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

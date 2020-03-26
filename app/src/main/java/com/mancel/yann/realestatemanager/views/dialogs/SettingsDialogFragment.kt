@@ -4,8 +4,8 @@ import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mancel.yann.realestatemanager.R
 
 /**
@@ -31,12 +31,11 @@ class SettingsDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         // Creates the View thanks to the inflater
-        this.mRootView = this.activity!!.layoutInflater
-                                        .inflate(R.layout.dialog_fragment_settings, null)
+        this.mRootView = this.requireActivity().layoutInflater
+                                               .inflate(R.layout.dialog_fragment_settings, null)
 
-        return AlertDialog.Builder(this.activity!!)
-                          .setView(this.mRootView)
-                          .setTitle(R.string.title_settings_dialog_fragment)
-                          .create()
+        return MaterialAlertDialogBuilder(this.requireContext()).setView(this.mRootView)
+                                                                .setTitle(R.string.title_settings_dialog_fragment)
+                                                                .create()
     }
 }

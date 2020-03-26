@@ -30,14 +30,16 @@
         android:id="@+id/dialog_selected_photo_description"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_normal"
+        android:layout_marginTop="@dimen/margin_little"
         app:layout_constraintTop_toBottomOf="@id/dialog_selected_photo_image"
         app:layout_constraintBottom_toTopOf="@id/dialog_selected_photo_yes"
         app:layout_constraintStart_toStartOf="@id/dialog_selected_photo_image"
         app:layout_constraintEnd_toEndOf="@id/dialog_selected_photo_image"
         app:hintEnabled="true"
         app:errorEnabled="true"
-        app:endIconMode="clear_text">
+        app:endIconMode="clear_text"
+        app:boxBackgroundColor="@android:color/transparent"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox">
 
         <!-- TextInputEditText: Description -->
         <com.google.android.material.textfield.TextInputEditText
@@ -48,8 +50,8 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Button: Yes button -->
-    <Button
+    <!-- MaterialButton: Yes button -->
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/dialog_selected_photo_yes"
         android:layout_width="@dimen/width_dialog_button"
         android:layout_height="wrap_content"
@@ -60,8 +62,8 @@
         android:text="@string/yes"
         style="@style/BorderlessButtonStyle"/>
 
-    <!-- Button: No button -->
-    <Button
+    <!-- MaterialButton: No button -->
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/dialog_selected_photo_no"
         android:layout_width="@dimen/width_dialog_button"
         android:layout_height="wrap_content"

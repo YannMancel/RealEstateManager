@@ -6,9 +6,9 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import com.bumptech.glide.Glide
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mancel.yann.realestatemanager.R
 import com.mancel.yann.realestatemanager.models.Photo
 import kotlinx.android.synthetic.main.dialog_selected_photo.view.*
@@ -30,8 +30,8 @@ class PhotoDialogFragment : DialogFragment() {
 
     // FIELDS --------------------------------------------------------------------------------------
 
-    private val mUriPhoto: Uri? by lazy { this.arguments!!.getParcelable(BUNDLE_KEY_URI) as? Uri}
-    private val mDescription: String? by lazy { this.arguments!!.getString(BUNDLE_KEY_DESCRIPTION)}
+    private val mUriPhoto: Uri? by lazy { this.requireArguments().getParcelable(BUNDLE_KEY_URI) as? Uri}
+    private val mDescription: String? by lazy { this.requireArguments().getString(BUNDLE_KEY_DESCRIPTION)}
     private lateinit var mRootView: View
     private var mCallback: WeakReference<DialogListener?>? = null
 
@@ -71,17 +71,16 @@ class PhotoDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         // Creates the View thanks to the inflater
-        this.mRootView = this.activity!!.layoutInflater
-                                        .inflate(R.layout.dialog_selected_photo, null)
+        this.mRootView = this.requireActivity().layoutInflater
+                                               .inflate(R.layout.dialog_selected_photo, null)
 
         this.configureDisplayingOfPhoto()
         this.configureDescriptionOfPhoto()
         this.configureButtons()
 
-        return AlertDialog.Builder(this.activity!!)
-                          .setView(this.mRootView)
-                          .setTitle(R.string.title_photo_dialog_fragment)
-                          .create()
+        return MaterialAlertDialogBuilder(this.requireContext()).setView(this.mRootView)
+                                                                .setTitle(R.string.title_photo_dialog_fragment)
+                                                                .create()
     }
 
     // -- Callback --
@@ -111,7 +110,7 @@ class PhotoDialogFragment : DialogFragment() {
      */
     private fun configureDisplayingOfPhoto() {
         // Image with Glide library
-        Glide.with(this.activity!!)
+        Glide.with(this.requireActivity())
              .load(this.mUriPhoto)
              .centerCrop()
              .fallback(R.drawable.ic_photo)

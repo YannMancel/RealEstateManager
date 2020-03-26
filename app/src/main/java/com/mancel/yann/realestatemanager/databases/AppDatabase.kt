@@ -9,7 +9,6 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.mancel.yann.realestatemanager.dao.*
 import com.mancel.yann.realestatemanager.models.*
 import com.mancel.yann.realestatemanager.utils.Converters
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -76,7 +75,7 @@ abstract class AppDatabase : RoomDatabase() {
     /**
      * A [RoomDatabase.Callback] subclass.
      */
-    private class UserDatabaseCallback() : RoomDatabase.Callback() {
+    private class UserDatabaseCallback : RoomDatabase.Callback() {
 
         // METHODS ---------------------------------------------------------------------------------
 

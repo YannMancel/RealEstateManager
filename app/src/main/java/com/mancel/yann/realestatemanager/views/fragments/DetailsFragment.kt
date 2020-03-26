@@ -71,12 +71,12 @@ class DetailsFragment : BaseFragment(), AdapterListener {
         this.mAdapter = PhotoAdapter(mCallback = this@DetailsFragment)
 
         // LayoutManager
-        val viewManager = LinearLayoutManager(this.context,
+        val viewManager = LinearLayoutManager(this.requireContext(),
                                               LinearLayoutManager.HORIZONTAL,
                                              false)
 
         // Divider
-        val divider = DividerItemDecoration(this.context,
+        val divider = DividerItemDecoration(this.requireContext(),
                                             DividerItemDecoration.HORIZONTAL)
 
         // RecyclerView

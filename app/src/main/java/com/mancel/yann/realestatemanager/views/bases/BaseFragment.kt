@@ -101,7 +101,7 @@ abstract class BaseFragment : Fragment() {
      * Checks the permission: READ_EXTERNAL_STORAGE
      */
     protected fun checkReadExternalStoragePermission(): Boolean {
-        val permissionResult = ContextCompat.checkSelfPermission(this.context!!,
+        val permissionResult = ContextCompat.checkSelfPermission(this.requireContext(),
                                                                  Manifest.permission.READ_EXTERNAL_STORAGE)
 
         return when (permissionResult) {

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
 
         <!-- Color theme -->
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -87,10 +87,8 @@
     <!-- *********************************** Button ******************************************** -->
 
     <!-- Borderless Button style -->
-    <style name="BorderlessButtonStyle" parent="Widget.AppCompat.Button.Borderless">
-        <item name="android:textSize">14sp</item>
+    <style name="BorderlessButtonStyle" parent="@style/Widget.MaterialComponents.Button.TextButton">
         <item name="android:textColor">@color/colorAccent</item>
-        <item name="android:background">@android:color/transparent</item>
     </style>
 
 </resources>

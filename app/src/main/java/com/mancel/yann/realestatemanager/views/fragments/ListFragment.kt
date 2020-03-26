@@ -64,10 +64,10 @@ class ListFragment : BaseFragment(), AdapterListener {
         this.mAdapter = RealEstateAdapter(mCallback = this@ListFragment)
 
         // LayoutManager
-        val viewManager = LinearLayoutManager(this.context)
+        val viewManager = LinearLayoutManager(this.requireContext())
 
         // Divider
-        val divider = DividerItemDecoration(this.context,
+        val divider = DividerItemDecoration(this.requireContext(),
                                             DividerItemDecoration.VERTICAL)
 
         // RecyclerView
