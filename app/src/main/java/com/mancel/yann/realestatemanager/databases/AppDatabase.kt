@@ -93,7 +93,7 @@ abstract class AppDatabase : RoomDatabase() {
 
             INSTANCE?.let { database ->
                 CoroutineScope(Dispatchers.IO).launch {
-                    populateDatabase(database.userDAO())
+                    this@UserDatabaseCallback.populateDatabase(database.userDAO())
                 }
             }
         }

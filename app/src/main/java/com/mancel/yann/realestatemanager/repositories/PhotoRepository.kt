@@ -14,9 +14,9 @@ interface PhotoRepository {
 
     // -- Create --
 
-    fun insertPhoto(photo: Photo): Long
+    suspend fun insertPhoto(photo: Photo): Long
 
-    fun insertPhotos(vararg photos: Photo): List<Long>
+    suspend fun insertPhotos(vararg photos: Photo): List<Long>
 
     // -- Read --
 
@@ -26,9 +26,9 @@ interface PhotoRepository {
 
     // -- Update --
 
-    fun updatePhoto(photo: Photo): Int
+    suspend fun updatePhoto(photo: Photo): Int
 
     // -- Delete --
 
-    fun deletePhoto(photo: Photo): Int
+    suspend fun deletePhoto(photo: Photo): Int
 }

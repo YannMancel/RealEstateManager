@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import androidx.annotation.LayoutRes
 import androidx.core.view.isVisible
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -51,7 +52,8 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
     // FIELDS --------------------------------------------------------------------------------------
 
     private lateinit var mAdapter: PhotoAdapter
-    private lateinit var mLiveData: PhotoCreatorLiveData
+    private lateinit var mPhotosFromDatabase: LiveData<List<Photo>>
+    private lateinit var mPhotoCreatorLiveData: PhotoCreatorLiveData
     private var mGoogleMap: GoogleMap? = null
 
     companion object {
@@ -74,6 +76,7 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
         this.configureSupportMapFragment()
 
         // LiveData
+        this.configurePhotosFomDatabase()
         this.configurePhotoCreatorLiveData()
     }
 
@@ -107,7 +110,7 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
     override fun onClick(v: View?) {
         when (v?.id) {
             // Button: DELETE
-            R.id.item_photo_delete_media -> this.mLiveData.removePhoto(v.tag as Photo)
+            R.id.item_photo_delete_media -> this.mPhotoCreatorLiveData.removePhoto(v.tag as Photo)
 
             // Button: EDIT
             R.id.item_photo_edit_media -> {
@@ -136,10 +139,10 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
 
         when (mode) {
             // ADD
-            PhotoDialogFragment.PhotoDialogMode.ADD -> this.mLiveData.addPhoto(photo)
+            PhotoDialogFragment.PhotoDialogMode.ADD -> this.mPhotoCreatorLiveData.addPhoto(photo)
 
             // UPDATE
-            PhotoDialogFragment.PhotoDialogMode.UPDATE -> this.mLiveData.updatePhoto(photo)
+            PhotoDialogFragment.PhotoDialogMode.UPDATE -> this.mPhotoCreatorLiveData.updatePhoto(photo)
         }
     }
 
@@ -340,12 +343,23 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
     // -- LiveData --
 
     /**
+     * Configures all [Photo] from database
+     */
+    private fun configurePhotosFomDatabase() {
+        this.mPhotosFromDatabase =  this.mViewModel.getPhotos().apply {
+            observe(this@CreatorFragment.viewLifecycleOwner, Observer {
+                /* Do nothing */
+            })
+        }
+    }
+
+    /**
      * Configures the [PhotoCreatorLiveData]
      */
     private fun configurePhotoCreatorLiveData() {
-        this.mLiveData =  this.mViewModel.getPhotoCreator().apply {
+        this.mPhotoCreatorLiveData =  this.mViewModel.getPhotoCreator().apply {
             observe(this@CreatorFragment.viewLifecycleOwner, Observer {
-                    photos -> this@CreatorFragment.mAdapter.updateData(photos)
+                photos -> this@CreatorFragment.mAdapter.updateData(photos)
             })
         }
     }
@@ -431,11 +445,27 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
      */
     private fun handlePhoto(resultCode: Int, data: Intent?) {
         if (resultCode == RESULT_OK) {
-            data?.let {
-                // todo 24/03/2020 Analyse if possible with PhotoCreatorLiveData & database (see URL)
+            data?.data?.let { uri ->
+                // Database: Search if is already present into the database
+                val isAlreadyPresentIntoDatabase = this.mPhotosFromDatabase.value?.any() {
+                    it.mUrlPicture == uri.toString()
+                } ?: false
 
-                PhotoDialogFragment.newInstance(callback = this@CreatorFragment, uri = it.data!!)
-                                   .show(this.requireActivity().supportFragmentManager, "DIALOG PHOTO")
+                // CreatorLiveData: Search if is already present into the LiveData
+                val isAlreadyPresentIntoCreator = this.mPhotoCreatorLiveData.value?.any {
+                    it.mUrlPicture == uri.toString()
+                } ?: false
+
+                if (!isAlreadyPresentIntoDatabase && !isAlreadyPresentIntoCreator) {
+                    PhotoDialogFragment.newInstance(callback = this@CreatorFragment, uri = uri)
+                                       .show(
+                                           this.requireActivity().supportFragmentManager,
+                                           "DIALOG PHOTO"
+                                       )
+                }
+                else {
+                    Log.d(this::class.simpleName, "PHOTO IS ALREADY PRESENT")
+                }
             }
         }
         else {

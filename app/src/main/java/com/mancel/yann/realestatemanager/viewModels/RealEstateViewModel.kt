@@ -6,7 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mancel.yann.realestatemanager.liveDatas.PhotoCreatorLiveData
 import com.mancel.yann.realestatemanager.models.IdTypeAddressPriceTupleOfRealEstate
+import com.mancel.yann.realestatemanager.models.Photo
 import com.mancel.yann.realestatemanager.models.User
+import com.mancel.yann.realestatemanager.repositories.PhotoRepository
 import com.mancel.yann.realestatemanager.repositories.RealEstateRepository
 import com.mancel.yann.realestatemanager.repositories.UserRepository
 import kotlinx.coroutines.launch
@@ -20,15 +22,19 @@ import kotlinx.coroutines.launch
  */
 class RealEstateViewModel(
     private val mUserRepository: UserRepository,
-    private val mRealEstateRepository: RealEstateRepository
+    private val mRealEstateRepository: RealEstateRepository,
+    private val mPhotoRepository: PhotoRepository
 ) : ViewModel() {
 
     // FIELDS --------------------------------------------------------------------------------------
 
     private var mUser: LiveData<User>? = null
+
     private var mCountOfRealEstateByUserId: LiveData<Int>? = null
     private var mRealEstatesSimpleFormat: LiveData<List<IdTypeAddressPriceTupleOfRealEstate>>? = null
 
+    private var mPhotosByRealEstateId: LiveData<List<Photo>>? = null
+    private var mPhotos: LiveData<List<Photo>>? = null
     private var mPhotoCreator: PhotoCreatorLiveData? = null
 
     // CONSTRUCTORS --------------------------------------------------------------------------------
@@ -94,6 +100,29 @@ class RealEstateViewModel(
     }
 
     // -- Photo --
+
+    /**
+     * Gets all [Photo] with the same real estate id
+     * @param realEstateId a [Long] that corresponds to the real estate id
+     * @return a [LiveData] of [List] of [Photo]
+     */
+    fun getPhotosByRealEstateId(realEstateId: Long): LiveData<List<Photo>> {
+        if (this.mPhotosByRealEstateId == null) {
+            this.mPhotosByRealEstateId = this.mPhotoRepository.getPhotoByRealEstateId(realEstateId)
+        }
+        return this.mPhotosByRealEstateId!!
+    }
+
+    /**
+     * Gets all [Photo]
+     * @return a [LiveData] of [List] of [Photo]
+     */
+    fun getPhotos(): LiveData<List<Photo>> {
+        if (this.mPhotos == null) {
+            this.mPhotos = this.mPhotoRepository.getAllPhotos()
+        }
+        return this.mPhotos!!
+    }
 
     /**
      * Gets a [PhotoCreatorLiveData]

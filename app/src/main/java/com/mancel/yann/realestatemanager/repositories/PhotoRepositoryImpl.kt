@@ -17,33 +17,25 @@ class PhotoRepositoryImpl(private val mPhotoDAO: PhotoDAO) : PhotoRepository {
 
     // -- Create --
 
-    override fun insertPhoto(photo: Photo): Long {
-        TODO("Not yet implemented")
-    }
+    override suspend fun insertPhoto(photo: Photo): Long = this.mPhotoDAO.insertPhoto(photo)
 
-    override fun insertPhotos(vararg photos: Photo): List<Long> {
-        TODO("Not yet implemented")
+    override suspend fun insertPhotos(vararg photos: Photo): List<Long> {
+        return this.mPhotoDAO.insertPhotos(*photos)
     }
 
     // -- Read --
 
     override fun getPhotoByRealEstateId(realEstateId: Long): LiveData<List<Photo>> {
-        TODO("Not yet implemented")
+        return this.mPhotoDAO.getPhotoByRealEstateId(realEstateId)
     }
 
-    override fun getAllPhotos(): LiveData<List<Photo>> {
-        TODO("Not yet implemented")
-    }
+    override fun getAllPhotos(): LiveData<List<Photo>> = this.mPhotoDAO.getAllPhotos()
 
     // -- Update --
 
-    override fun updatePhoto(photo: Photo): Int {
-        TODO("Not yet implemented")
-    }
+    override suspend fun updatePhoto(photo: Photo): Int = this.mPhotoDAO.updatePhoto(photo)
 
     // -- Delete --
 
-    override fun deletePhoto(photo: Photo): Int {
-        TODO("Not yet implemented")
-    }
+    override suspend fun deletePhoto(photo: Photo): Int = this.mPhotoDAO.deletePhoto(photo)
 }
