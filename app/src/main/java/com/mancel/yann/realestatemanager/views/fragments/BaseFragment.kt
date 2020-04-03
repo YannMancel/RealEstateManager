@@ -1,4 +1,4 @@
-package com.mancel.yann.realestatemanager.views.bases
+package com.mancel.yann.realestatemanager.views.fragments
 
 import android.Manifest
 import android.content.Context
@@ -12,7 +12,6 @@ import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.mancel.yann.realestatemanager.viewModels.RealEstateViewModel
-import com.mancel.yann.realestatemanager.views.fragments.FragmentListener
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.lang.ClassCastException
 
@@ -108,8 +107,10 @@ abstract class BaseFragment : Fragment() {
             PackageManager.PERMISSION_GRANTED -> true
 
             else -> {
-                this.requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                                        REQUEST_CODE_PERMISSION_READ_EXTERNAL_STORAGE)
+                this.requestPermissions(
+                    arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                    REQUEST_CODE_PERMISSION_READ_EXTERNAL_STORAGE
+                )
 
                 false
             }

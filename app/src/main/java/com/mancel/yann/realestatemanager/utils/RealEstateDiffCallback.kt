@@ -13,7 +13,7 @@ import com.mancel.yann.realestatemanager.models.IdTypeAddressPriceTupleOfRealEst
 class RealEstateDiffCallback(
     private val mOldList: List<IdTypeAddressPriceTupleOfRealEstate>,
     private val mNewList: List<IdTypeAddressPriceTupleOfRealEstate>
-    ) : DiffUtil.Callback() {
+) : DiffUtil.Callback() {
 
     // METHODS -------------------------------------------------------------------------------------
 

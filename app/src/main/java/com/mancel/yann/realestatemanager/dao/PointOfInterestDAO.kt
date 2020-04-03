@@ -41,6 +41,9 @@ interface PointOfInterestDAO {
      * dao.getAllPointsOfInterest()
      *    .observe(this, Observer { pointsOfInterest -> ... })
      */
-    @Query("SELECT * FROM point_of_interest")
+    @Query("""
+        SELECT * 
+        FROM point_of_interest
+        """)
     fun getAllPointsOfInterest(): LiveData<List<PointOfInterest>>
 }

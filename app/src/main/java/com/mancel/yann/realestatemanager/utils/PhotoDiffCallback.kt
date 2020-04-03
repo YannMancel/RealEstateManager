@@ -10,8 +10,10 @@ import com.mancel.yann.realestatemanager.models.Photo
  *
  * A [DiffUtil.Callback] subclass.
  */
-class PhotoDiffCallback(private val mOldList: List<Photo>,
-                        private val mNewList: List<Photo>) : DiffUtil.Callback() {
+class PhotoDiffCallback(
+    private val mOldList: List<Photo>,
+    private val mNewList: List<Photo>
+) : DiffUtil.Callback() {
 
     // METHODS -------------------------------------------------------------------------------------
 

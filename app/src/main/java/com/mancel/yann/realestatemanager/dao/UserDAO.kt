@@ -39,7 +39,11 @@ interface UserDAO {
      * dao.getUserById(userId)
      *    .observe(this, Observer { user -> ... })
      */
-    @Query("SELECT * FROM user WHERE id_user = :userId")
+    @Query("""
+        SELECT * 
+        FROM user 
+        WHERE id_user = :userId
+        """)
     fun getUserById(userId: Long): LiveData<User>
 
     /**
@@ -47,7 +51,10 @@ interface UserDAO {
      * dao.getAllUsers()
      *    .observe(this, Observer { users -> ... })
      */
-    @Query("SELECT * FROM user")
+    @Query("""
+        SELECT * 
+        FROM user
+        """)
     fun getAllUsers(): LiveData<List<User>>
 
     // -- Update --
@@ -72,6 +79,10 @@ interface UserDAO {
      * Usage:
      * val numberOfDeletedRow = dao.deleteUserById(userId)
      */
-    @Query("DELETE FROM user WHERE id_user = :userId")
+    @Query("""
+        DELETE 
+        FROM user 
+        WHERE id_user = :userId
+        """)
     suspend fun deleteUserById(userId: Long): Int
 }

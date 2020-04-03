@@ -39,8 +39,8 @@
                 tools:srcCompat="@tools:sample/backgrounds/scenic"
                 tools:scaleType="centerCrop"/>
 
-            <!-- TextView: Type of real estate -->
-            <TextView
+            <!-- MaterialTextView: Type of real estate -->
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/item_real_estate_type"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -54,8 +54,8 @@
                 style="@style/TextViewStyle1"
                 tools:text="House"/>
 
-            <!-- TextView: City of real estate -->
-            <TextView
+            <!-- MaterialTextView: City of real estate -->
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/item_real_estate_city"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -69,8 +69,8 @@
                 style="@style/TextViewStyle2"
                 tools:text="@tools:sample/cities"/>
 
-            <!-- TextView: Price of real estate -->
-            <TextView
+            <!-- MaterialTextView: Price of real estate -->
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/item_real_estate_price"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

@@ -21,11 +21,11 @@ import kotlinx.coroutines.launch
 class RealEstateViewModel(
     private val mUserRepository: UserRepository,
     private val mRealEstateRepository: RealEstateRepository
-    ) : ViewModel() {
+) : ViewModel() {
 
     // FIELDS --------------------------------------------------------------------------------------
 
-    private var mUsers: LiveData<List<User>>? = null
+    private var mUser: LiveData<User>? = null
     private var mCountOfRealEstateByUserId: LiveData<Int>? = null
     private var mRealEstatesSimpleFormat: LiveData<List<IdTypeAddressPriceTupleOfRealEstate>>? = null
 
@@ -51,7 +51,21 @@ class RealEstateViewModel(
     /**
      * Inserts the new [User] in argument
      */
-    fun insertUser(user: User) = viewModelScope.launch { mUserRepository.insertUser(user) }
+    fun insertUser(user: User) = viewModelScope.launch {
+        this@RealEstateViewModel.mUserRepository.insertUser(user)
+    }
+
+    /**
+     * Gets the [User] with the id in argument
+     * @param userId a [Long] that contains the user Id
+     * @return a [LiveData] of [User]
+     */
+    fun getUserById(userId: Long): LiveData<User> {
+        if (this.mUser == null) {
+            this.mUser = this.mUserRepository.getUserById(userId)
+        }
+        return this.mUser!!
+    }
 
     // -- Real Estate --
 

@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mancel.yann.realestatemanager.R
 import com.mancel.yann.realestatemanager.views.adapters.AdapterListener
 import com.mancel.yann.realestatemanager.views.adapters.RealEstateAdapter
-import com.mancel.yann.realestatemanager.views.bases.BaseFragment
 import kotlinx.android.synthetic.main.fragment_list.view.*
 
 /**
@@ -71,7 +70,7 @@ class ListFragment : BaseFragment(), AdapterListener {
                                             DividerItemDecoration.VERTICAL)
 
         // RecyclerView
-        this.mRootView.fragment_list_RecyclerView.apply {
+        with(this.mRootView.fragment_list_RecyclerView) {
             setHasFixedSize(true)
             layoutManager = viewManager
             addItemDecoration(divider)
@@ -82,7 +81,7 @@ class ListFragment : BaseFragment(), AdapterListener {
     // -- LiveData --
 
     /**
-     * Configures the [LiveData] thanks to a simple format
+     * Configures the LiveData thanks to a simple format
      */
     private fun configureRealEstateLiveData() {
         this.mViewModel.getRealEstatesSimpleFormatByUserId(1L)

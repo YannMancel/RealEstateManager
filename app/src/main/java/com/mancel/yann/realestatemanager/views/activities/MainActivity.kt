@@ -13,7 +13,6 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
 import com.mancel.yann.realestatemanager.R
-import com.mancel.yann.realestatemanager.views.bases.BaseActivity
 import com.mancel.yann.realestatemanager.views.fragments.DetailsFragmentArgs
 import com.mancel.yann.realestatemanager.views.fragments.FragmentListener
 import com.mancel.yann.realestatemanager.views.fragments.ListFragmentDirections

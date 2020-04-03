@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mancel.yann.realestatemanager.R
 import com.mancel.yann.realestatemanager.views.adapters.AdapterListener
 import com.mancel.yann.realestatemanager.views.adapters.PhotoAdapter
-import com.mancel.yann.realestatemanager.views.bases.BaseFragment
 import kotlinx.android.synthetic.main.fragment_details.view.*
 
 /**
@@ -23,11 +22,11 @@ class DetailsFragment : BaseFragment(), AdapterListener {
 
     // FIELDS --------------------------------------------------------------------------------------
 
-    private lateinit var mAdapter: PhotoAdapter
-
     private val mItemId: Long by lazy {
         DetailsFragmentArgs.fromBundle(this.arguments!!).itemId
     }
+
+    private lateinit var mAdapter: PhotoAdapter
 
     // METHODS -------------------------------------------------------------------------------------
 
@@ -80,7 +79,7 @@ class DetailsFragment : BaseFragment(), AdapterListener {
                                             DividerItemDecoration.HORIZONTAL)
 
         // RecyclerView
-        this.mRootView.fragment_details_RecyclerView.apply {
+        with(this.mRootView.fragment_details_RecyclerView) {
             setHasFixedSize(true)
             layoutManager = viewManager
             addItemDecoration(divider)

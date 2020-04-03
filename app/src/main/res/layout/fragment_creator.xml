@@ -65,6 +65,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:errorEnabled="true"
                         app:hintEnabled="true"
+                        app:endIconMode="dropdown_menu"
                         app:boxBackgroundColor="@android:color/transparent"
                         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu">
 

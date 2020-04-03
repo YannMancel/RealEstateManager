@@ -1,4 +1,4 @@
-package com.mancel.yann.realestatemanager.views.bases
+package com.mancel.yann.realestatemanager.views.activities
 
 import android.os.Bundle
 import androidx.annotation.LayoutRes

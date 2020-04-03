@@ -9,7 +9,8 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.mancel.yann.realestatemanager.dao.*
 import com.mancel.yann.realestatemanager.models.*
 import com.mancel.yann.realestatemanager.utils.Converters
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 /**
@@ -49,6 +50,11 @@ abstract class AppDatabase : RoomDatabase() {
         @Volatile
         private var INSTANCE: AppDatabase? = null
 
+        /**
+         * Gets the [AppDatabase]
+         * @param context a [Context]
+         * @return the [AppDatabase]
+         */
         fun getDatabase(context: Context): AppDatabase {
             val tempInstance = INSTANCE
 
@@ -86,7 +92,7 @@ abstract class AppDatabase : RoomDatabase() {
             super.onCreate(db)
 
             INSTANCE?.let { database ->
-                GlobalScope.launch {
+                CoroutineScope(Dispatchers.IO).launch {
                     populateDatabase(database.userDAO())
                 }
             }

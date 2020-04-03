@@ -32,6 +32,7 @@ class PhotoDialogFragment : DialogFragment() {
 
     private val mUriPhoto: Uri? by lazy { this.requireArguments().getParcelable(BUNDLE_KEY_URI) as? Uri}
     private val mDescription: String? by lazy { this.requireArguments().getString(BUNDLE_KEY_DESCRIPTION)}
+
     private lateinit var mRootView: View
     private var mCallback: WeakReference<DialogListener?>? = null
 

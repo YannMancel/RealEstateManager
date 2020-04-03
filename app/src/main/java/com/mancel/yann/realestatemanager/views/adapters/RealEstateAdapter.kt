@@ -21,19 +21,7 @@ import java.lang.ref.WeakReference
  */
 class RealEstateAdapter(
     private val mCallback: AdapterListener? = null
-    ) : RecyclerView.Adapter<RealEstateAdapter.RealEstateViewHolder>() {
-
-    // NESTED CLASSES ------------------------------------------------------------------------------
-
-    /**
-     * A [RecyclerView.ViewHolder] subclass.
-     */
-    class RealEstateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        // FIELDS ----------------------------------------------------------------------------------
-
-        lateinit var mCallback: WeakReference<AdapterListener?>
-    }
+) : RecyclerView.Adapter<RealEstateAdapter.RealEstateViewHolder>() {
 
     // FIELDS --------------------------------------------------------------------------------------
 
@@ -46,44 +34,51 @@ class RealEstateAdapter(
         val view = LayoutInflater.from(parent.context)
                                  .inflate(R.layout.item_real_estate, parent, false)
 
-        return RealEstateViewHolder(view)
+        return RealEstateViewHolder(view, WeakReference(this.mCallback))
     }
 
     override fun onBindViewHolder(holder: RealEstateViewHolder, position: Int) {
-        // Data
-        val data = this.mRealEstates[position]
+        val realEstate = this.mRealEstates[position]
+        this.configureDesign(holder, realEstate)
+    }
 
-        // Callback
-        holder.mCallback = WeakReference(this.mCallback)
+    override fun getItemCount(): Int = this.mRealEstates.size
 
+    // -- Design item --
+
+    /**
+     * Configures the design of each item
+     * @param holder        a [RealEstateViewHolder] that corresponds to the item
+     * @param realEstate    a [IdTypeAddressPriceTupleOfRealEstate]
+     */
+    private fun configureDesign(holder: RealEstateViewHolder, realEstate: IdTypeAddressPriceTupleOfRealEstate) {
         // CardView
         holder.itemView.item_real_estate_CardView.setOnClickListener {
             // Tag -> Data's Id
-            it.tag = data.mId
+            it.tag = realEstate.mId
 
             // Starts the callback
             holder.mCallback.get()?.onClick(it)
         }
 
         // Image
+        // todo Add photo
         Glide.with(holder.itemView)
-             .load(R.drawable.ic_home)
-             .centerCrop()
-             .fallback(R.drawable.ic_add)
-             .error(R.drawable.ic_edit)
-             .into(holder.itemView.item_real_estate_image)
+            .load(R.drawable.ic_home)
+            .centerCrop()
+            .fallback(R.drawable.ic_add)
+            .error(R.drawable.ic_edit)
+            .into(holder.itemView.item_real_estate_image)
 
         // Type
-        holder.itemView.item_real_estate_type.text = data.mType
+        realEstate.mType?.let { holder.itemView.item_real_estate_type.text = it }
 
         // City
-        holder.itemView.item_real_estate_city.text = data.mAddress?.mCity
+        realEstate.mAddress?.mCity?.let { holder.itemView.item_real_estate_city.text = it }
 
         // Price
-        holder.itemView.item_real_estate_price.text = data.mPrice.toString()
+        realEstate.mPrice?.let { holder.itemView.item_real_estate_price.text = it.toString() }
     }
-
-    override fun getItemCount(): Int = this.mRealEstates.size
 
     // -- Real Estate --
 
@@ -105,4 +100,14 @@ class RealEstateAdapter(
         // Callback
         this.mCallback?.onDataChanged()
     }
+
+    // NESTED CLASSES ------------------------------------------------------------------------------
+
+    /**
+     * A [RecyclerView.ViewHolder] subclass.
+     */
+    class RealEstateViewHolder(
+        itemView: View,
+        var mCallback: WeakReference<AdapterListener?>
+    ) : RecyclerView.ViewHolder(itemView)
 }

@@ -22,19 +22,7 @@ import java.lang.ref.WeakReference
 class PhotoAdapter(
     private val mCallback: AdapterListener? = null,
     private val mButtonDisplayMode: ButtonDisplayMode = ButtonDisplayMode.NORMAL_MODE
-    ) : RecyclerView.Adapter<PhotoAdapter.PhotoViewHolder>() {
-
-    // NESTED CLASSES ------------------------------------------------------------------------------
-
-    /**
-     * A [RecyclerView.ViewHolder] subclass.
-     */
-    class PhotoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        // FIELDS ----------------------------------------------------------------------------------
-
-        lateinit var mCallback: WeakReference<AdapterListener?>
-    }
+) : RecyclerView.Adapter<PhotoAdapter.PhotoViewHolder>() {
 
     // ENUMS ---------------------------------------------------------------------------------------
 
@@ -51,26 +39,36 @@ class PhotoAdapter(
         val view = LayoutInflater.from(parent.context)
                                  .inflate(R.layout.item_photo, parent, false)
 
-        return PhotoViewHolder(view)
+        return PhotoViewHolder(view, WeakReference(this.mCallback))
     }
 
     override fun onBindViewHolder(holder: PhotoViewHolder, position: Int) {
-        // Data
-        val data = this.mPhotos[position]
+        val photo = this.mPhotos[position]
+        this.configureDesign(holder, photo)
+    }
 
-        // Callback
-        holder.mCallback = WeakReference(this.mCallback)
+    override fun getItemCount(): Int = this.mPhotos.size
 
+    // -- Design item --
+
+    /**
+     * Configures the design of each item
+     * @param holder    a [PhotoViewHolder] that corresponds to the item
+     * @param photo     a [Photo]
+     */
+    private fun configureDesign(holder: PhotoViewHolder, photo: Photo) {
         // Image
-        Glide.with(holder.itemView)
-             .load(data.mUrlPicture)
-             .centerCrop()
-             .fallback(R.drawable.ic_photo)
-             .error(R.drawable.ic_clear)
-             .into(holder.itemView.item_photo_image)
+        photo.mUrlPicture?.let {
+            Glide.with(holder.itemView)
+                 .load(photo.mUrlPicture)
+                 .centerCrop()
+                 .fallback(R.drawable.ic_photo)
+                 .error(R.drawable.ic_clear)
+                 .into(holder.itemView.item_photo_image)
+        }
 
         // Description
-        holder.itemView.item_photo_description.text = data.mDescription
+        photo.mDescription?.let { holder.itemView.item_photo_description.text = it }
 
         // Buttons: Visibility
         val visibility = when (this.mButtonDisplayMode) {
@@ -81,10 +79,15 @@ class PhotoAdapter(
         holder.itemView.item_photo_delete_media.visibility = visibility
         holder.itemView.item_photo_edit_media.visibility = visibility
 
+        // Here the listeners are not useful
+        if (visibility == View.GONE) {
+            return
+        }
+
         // Button DELETE: add Listener
         holder.itemView.item_photo_delete_media.setOnClickListener {
-            // Tag -> Data
-            it.tag = data
+            // Tag -> photo
+            it.tag = photo
 
             // Starts the callback
             holder.mCallback.get()?.onClick(it)
@@ -92,15 +95,13 @@ class PhotoAdapter(
 
         // Button EDIT: add Listener
         holder.itemView.item_photo_edit_media.setOnClickListener {
-            // Tag -> Data
-            it.tag = data
+            // Tag -> photo
+            it.tag = photo
 
             // Starts the callback
             holder.mCallback.get()?.onClick(it)
         }
     }
-
-    override fun getItemCount(): Int = this.mPhotos.size
 
     // -- Photo --
 
@@ -123,4 +124,14 @@ class PhotoAdapter(
         // Callback
         this.mCallback?.onDataChanged()
     }
+
+    // NESTED CLASSES ------------------------------------------------------------------------------
+
+    /**
+     * A [RecyclerView.ViewHolder] subclass.
+     */
+    class PhotoViewHolder(
+        itemView: View,
+        var mCallback: WeakReference<AdapterListener?>
+    ) : RecyclerView.ViewHolder(itemView)
 }

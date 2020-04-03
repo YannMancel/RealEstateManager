@@ -11,7 +11,7 @@ import org.koin.core.context.startKoin
  * Name of the project: RealEstateManager
  * Name of the package: com.mancel.yann.realestatemanager
  *
- * An [MultiDexApplication] subclass.
+ * A [MultiDexApplication] subclass.
  */
 class RealEstateApplication : MultiDexApplication() {
 

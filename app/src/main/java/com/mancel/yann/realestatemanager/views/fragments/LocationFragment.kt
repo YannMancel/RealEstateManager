@@ -2,7 +2,6 @@ package com.mancel.yann.realestatemanager.views.fragments
 
 import androidx.annotation.LayoutRes
 import com.mancel.yann.realestatemanager.R
-import com.mancel.yann.realestatemanager.views.bases.BaseFragment
 
 /**
  * Created by Yann MANCEL on 20/02/2020.

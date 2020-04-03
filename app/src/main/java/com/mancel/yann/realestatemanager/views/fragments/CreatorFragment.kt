@@ -34,7 +34,6 @@ import com.mancel.yann.realestatemanager.liveDatas.PhotoCreatorLiveData
 import com.mancel.yann.realestatemanager.models.Photo
 import com.mancel.yann.realestatemanager.views.adapters.AdapterListener
 import com.mancel.yann.realestatemanager.views.adapters.PhotoAdapter
-import com.mancel.yann.realestatemanager.views.bases.BaseFragment
 import com.mancel.yann.realestatemanager.views.dialogs.DialogListener
 import com.mancel.yann.realestatemanager.views.dialogs.PhotoDialogFragment
 import kotlinx.android.synthetic.main.fragment_creator.view.*
@@ -125,8 +124,10 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
 
     // -- DialogListener interface --
 
-    override fun getSelectedPhotoFromDialog(photo: Photo,
-                                            mode: PhotoDialogFragment.PhotoDialogMode) {
+    override fun getSelectedPhotoFromDialog(
+        photo: Photo,
+        mode: PhotoDialogFragment.PhotoDialogMode
+    ) {
         // Changes the real estate id
         photo.apply {
             // Test
@@ -305,7 +306,7 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
                                             DividerItemDecoration.HORIZONTAL)
 
         // RecyclerView
-        this.mRootView.fragment_creator_RecyclerView.apply {
+        with(this.mRootView.fragment_creator_RecyclerView) {
             setHasFixedSize(true)
             layoutManager = viewManager
             addItemDecoration(divider)
@@ -415,7 +416,7 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
      */
     private fun actionToAddPhoto() {
         if (this.checkReadExternalStoragePermission()) {
-            // Goal: Retrieves a photo from  external storage
+            // Goal: Retrieves a photo from external storage
             val intent = Intent(Intent.ACTION_PICK,
                                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
             

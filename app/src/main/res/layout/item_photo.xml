@@ -52,8 +52,8 @@
                 android:background="@android:color/black"
                 android:alpha="@integer/opacity_filter"/>
 
-            <!-- TextView: Description of photo -->
-            <TextView
+            <!-- MaterialTextView: Description of photo -->
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/item_photo_description"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

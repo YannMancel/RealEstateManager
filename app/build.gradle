@@ -45,62 +45,53 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation 'com.google.android.material:material:1.1.0'
 
-    // MULTIDEX
-    def multidex_version = "2.0.1"
+    // Material design
+    implementation "com.google.android.material:material:$material_design_version"
+
+    // Multidex
     implementation "androidx.multidex:multidex:$multidex_version"
 
-    // VIEWMODEL + LIVEDATA
-    def lifecycle_version = "2.2.0"
+    // ViewModel + LiveData
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
 
-    // NAVIGATION
-    def nav_version = "2.3.0-alpha02"
+    // Navigation
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
-    // ROOM
-    def room_version = "2.2.4"
+    // Room
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
 
-    // COROUTINES
-    def coroutines_version = "1.3.4"
+    // Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
 
-    // GLIDE
-    def glide_version = "4.10.0"
+    // Glide
     implementation "com.github.bumptech.glide:glide:$glide_version"
     kapt "com.github.bumptech.glide:compiler:$glide_version"
 
-    // KOIN
-    def koin_version = '2.1.4'
+    // Koin
     implementation "org.koin:koin-android:$koin_version"
     implementation "org.koin:koin-androidx-viewmodel:$koin_version"
 
-    // GOOGLE MAPS
-    def google_maps_version = "17.0.0"
+    // Google Maps
     implementation "com.google.android.gms:play-services-location:$google_maps_version"
     implementation "com.google.android.gms:play-services-maps:$google_maps_version"
 
-    // AUTOCOMPLETE OF GOOGLE MAPS
-    def autocomplete_google_maps_version = "2.2.0"
+    // Autocomplete of Google Maps
     implementation "com.google.android.libraries.places:places:$autocomplete_google_maps_version"
 
     // TESTS ---------------------------------------------------------------------------------------
 
     testImplementation 'junit:junit:4.12'
 
-    // MOCKITO
-    def mockito_version = "3.3.1"
+    // Mockito
     testImplementation "org.mockito:mockito-core:$mockito_version"
 
-    // MOCKITO-KOTLIN
-    def mockito_kotlin_version = "2.2.0"
+    // Mockito-Kotlin
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockito_kotlin_version"
 
     // Rules

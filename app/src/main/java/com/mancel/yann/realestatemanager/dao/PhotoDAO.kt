@@ -39,7 +39,11 @@ interface PhotoDAO {
      * dao.getPhotoByRealEstateId(realEstateId)
      *    .observe(this, Observer { photos -> ... })
      */
-    @Query("SELECT * FROM photo WHERE real_estate_id = :realEstateId")
+    @Query("""
+        SELECT * 
+        FROM photo 
+        WHERE real_estate_id = :realEstateId
+        """)
     fun getPhotoByRealEstateId(realEstateId: Long): LiveData<List<Photo>>
 
     /**
@@ -47,7 +51,10 @@ interface PhotoDAO {
      * dao.getAllPhotos()
      *    .observe(this, Observer { photos -> ... })
      */
-    @Query("SELECT * FROM photo")
+    @Query("""
+        SELECT * 
+        FROM photo
+        """)
     fun getAllPhotos(): LiveData<List<Photo>>
 
     // -- Update --

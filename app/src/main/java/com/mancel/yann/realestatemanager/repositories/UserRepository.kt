@@ -16,13 +16,9 @@ interface UserRepository {
 
     suspend fun insertUser(user: User): Long
 
-    suspend fun insertUsers(vararg users: User): List<Long>
-
     // -- Read --
 
     fun getUserById(userId: Long): LiveData<User>
-
-    fun getAllUsers(): LiveData<List<User>>
 
     // -- Update --
 
@@ -31,6 +27,4 @@ interface UserRepository {
     // -- Delete --
 
     suspend fun deleteUser(user: User): Int
-
-    suspend fun deleteUserById(userId: Long): Int
 }

@@ -11,7 +11,9 @@ import com.mancel.yann.realestatemanager.models.User
  *
  * A class which implements [UserRepository].
  */
-class UserRepositoryImpl(private val mUserDAO: UserDAO) : UserRepository {
+class UserRepositoryImpl(
+    private val mUserDAO: UserDAO
+) : UserRepository {
 
     // METHODS -------------------------------------------------------------------------------------
 
@@ -19,21 +21,15 @@ class UserRepositoryImpl(private val mUserDAO: UserDAO) : UserRepository {
 
     override suspend fun insertUser(user: User): Long = this.mUserDAO.insertUser(user)
 
-    override suspend fun insertUsers(vararg users: User): List<Long> = this.mUserDAO.insertUsers(*users)
-
     // -- Read --
 
     override fun getUserById(userId: Long): LiveData<User> = this.mUserDAO.getUserById(userId)
-
-    override fun getAllUsers(): LiveData<List<User>> = this.mUserDAO.getAllUsers()
 
     // -- Update --
 
     override suspend fun updateUser(user: User): Int = this.mUserDAO.updateUser(user)
 
-    override suspend fun deleteUser(user: User): Int = this.mUserDAO.deleteUser(user)
-
     // -- Delete --
 
-    override suspend fun deleteUserById(userId: Long): Int = this.mUserDAO.deleteUserById(userId)
+    override suspend fun deleteUser(user: User): Int = this.mUserDAO.deleteUser(user)
 }

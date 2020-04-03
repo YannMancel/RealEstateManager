@@ -24,8 +24,8 @@
         tools:orientation="horizontal"
         tools:listitem="@layout/item_photo"/>
 
-    <!-- TextView: No data -->
-    <TextView
+    <!-- MaterialTextView: No data -->
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/fragment_details_no_data"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
