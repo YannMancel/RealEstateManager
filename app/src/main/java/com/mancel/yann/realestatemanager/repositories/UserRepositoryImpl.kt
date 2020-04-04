@@ -3,6 +3,8 @@ package com.mancel.yann.realestatemanager.repositories
 import androidx.lifecycle.LiveData
 import com.mancel.yann.realestatemanager.dao.UserDAO
 import com.mancel.yann.realestatemanager.models.User
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  * Created by Yann MANCEL on 05/03/2020.
@@ -19,7 +21,9 @@ class UserRepositoryImpl(
 
     // -- Create --
 
-    override suspend fun insertUser(user: User): Long = this.mUserDAO.insertUser(user)
+    override suspend fun insertUser(user: User): Long = withContext(Dispatchers.IO) {
+        this@UserRepositoryImpl.mUserDAO.insertUser(user)
+    }
 
     // -- Read --
 
@@ -27,9 +31,13 @@ class UserRepositoryImpl(
 
     // -- Update --
 
-    override suspend fun updateUser(user: User): Int = this.mUserDAO.updateUser(user)
+    override suspend fun updateUser(user: User): Int = withContext(Dispatchers.IO) {
+        this@UserRepositoryImpl.mUserDAO.updateUser(user)
+    }
 
     // -- Delete --
 
-    override suspend fun deleteUser(user: User): Int = this.mUserDAO.deleteUser(user)
+    override suspend fun deleteUser(user: User): Int = withContext(Dispatchers.IO) {
+        this@UserRepositoryImpl.mUserDAO.deleteUser(user)
+    }
 }

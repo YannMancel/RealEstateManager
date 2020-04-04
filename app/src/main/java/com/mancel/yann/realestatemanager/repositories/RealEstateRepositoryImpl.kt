@@ -6,6 +6,8 @@ import com.mancel.yann.realestatemanager.models.IdTypeAddressPriceTupleOfRealEst
 import com.mancel.yann.realestatemanager.models.RealEstate
 import com.mancel.yann.realestatemanager.models.RealEstateWithPhotos
 import com.mancel.yann.realestatemanager.models.RealEstateWithPointsOfInterest
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  * Created by Yann MANCEL on 05/03/2020.
@@ -14,18 +16,24 @@ import com.mancel.yann.realestatemanager.models.RealEstateWithPointsOfInterest
  *
  * A class which implements [RealEstateRepository].
  */
-class RealEstateRepositoryImpl(private val mRealEstateDAO: RealEstateDAO) : RealEstateRepository {
+class RealEstateRepositoryImpl(
+    private val mRealEstateDAO: RealEstateDAO
+) : RealEstateRepository {
 
     // METHODS -------------------------------------------------------------------------------------
 
     // -- Create --
 
-    override suspend fun insertRealEstate(realEstate: RealEstate): Long {
-        return this.mRealEstateDAO.insertRealEstate(realEstate)
+    override suspend fun insertRealEstate(
+        realEstate: RealEstate
+    ): Long = withContext(Dispatchers.IO) {
+        this@RealEstateRepositoryImpl.mRealEstateDAO.insertRealEstate(realEstate)
     }
 
-    override suspend fun insertRealEstates(vararg realEstates: RealEstate): List<Long> {
-        return this.mRealEstateDAO.insertRealEstates(*realEstates)
+    override suspend fun insertRealEstates(
+        vararg realEstates: RealEstate
+    ): List<Long> = withContext(Dispatchers.IO) {
+        this@RealEstateRepositoryImpl.mRealEstateDAO.insertRealEstates(*realEstates)
     }
 
     // -- Read --
@@ -42,27 +50,37 @@ class RealEstateRepositoryImpl(private val mRealEstateDAO: RealEstateDAO) : Real
         return this.mRealEstateDAO.getCountOfRealEstatesByUserId(userId)
     }
 
-    override fun getIdTypeAddressPriceTupleOfRealEstateByUserId(userId: Long): LiveData<List<IdTypeAddressPriceTupleOfRealEstate>> {
+    override fun getIdTypeAddressPriceTupleOfRealEstateByUserId(
+        userId: Long
+    ): LiveData<List<IdTypeAddressPriceTupleOfRealEstate>> {
         return this.mRealEstateDAO.getIdTypeAddressPriceTupleOfRealEstateByUserId(userId)
     }
 
-    override fun getRealEstatesWithPhotosByUserId(userId: Long): LiveData<List<RealEstateWithPhotos>> {
+    override fun getRealEstatesWithPhotosByUserId(
+        userId: Long
+    ): LiveData<List<RealEstateWithPhotos>> {
         return this.mRealEstateDAO.getRealEstatesWithPhotosByUserId(userId)
     }
 
-    override fun getRealEstatesWithPointsOfInterestByUserId(userId: Long): LiveData<List<RealEstateWithPointsOfInterest>> {
+    override fun getRealEstatesWithPointsOfInterestByUserId(
+        userId: Long
+    ): LiveData<List<RealEstateWithPointsOfInterest>> {
         return this.mRealEstateDAO.getRealEstatesWithPointsOfInterestByUserId(userId)
     }
 
     // -- Update --
 
-    override suspend fun updateRealEstate(realEstate: RealEstate): Int {
-        return this.mRealEstateDAO.updateRealEstate(realEstate)
+    override suspend fun updateRealEstate(
+        realEstate: RealEstate
+    ): Int = withContext(Dispatchers.IO) {
+        this@RealEstateRepositoryImpl.mRealEstateDAO.updateRealEstate(realEstate)
     }
 
     // -- Delete --
 
-    override suspend fun deleteRealEstate(realEstate: RealEstate): Int {
-        return this.mRealEstateDAO.deleteRealEstate(realEstate)
+    override suspend fun deleteRealEstate(
+        realEstate: RealEstate
+    ): Int = withContext(Dispatchers.IO) {
+        this@RealEstateRepositoryImpl.mRealEstateDAO.deleteRealEstate(realEstate)
     }
 }

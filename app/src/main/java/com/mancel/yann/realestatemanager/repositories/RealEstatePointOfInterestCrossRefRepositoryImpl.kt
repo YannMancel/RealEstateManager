@@ -2,6 +2,8 @@ package com.mancel.yann.realestatemanager.repositories
 
 import com.mancel.yann.realestatemanager.dao.RealEstatePointOfInterestCrossRefDAO
 import com.mancel.yann.realestatemanager.models.RealEstatePointOfInterestCrossRef
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  * Created by Yann MANCEL on 05/03/2020.
@@ -11,18 +13,22 @@ import com.mancel.yann.realestatemanager.models.RealEstatePointOfInterestCrossRe
  * A class which implements [RealEstatePointOfInterestCrossRefRepository].
  */
 class RealEstatePointOfInterestCrossRefRepositoryImpl(
-    private val mRealEstatePointOfInterestCrossRefDAO: RealEstatePointOfInterestCrossRefDAO
-    ) : RealEstatePointOfInterestCrossRefRepository {
+    private val mCrossRefDAO: RealEstatePointOfInterestCrossRefDAO
+) : RealEstatePointOfInterestCrossRefRepository {
 
     // METHODS -------------------------------------------------------------------------------------
 
     // -- Create --
 
-    override fun insertCrossRef(crossRef: RealEstatePointOfInterestCrossRef): Long {
-        TODO("Not yet implemented")
+    override suspend fun insertCrossRef(
+        crossRef: RealEstatePointOfInterestCrossRef
+    ): Long = withContext(Dispatchers.IO) {
+        this@RealEstatePointOfInterestCrossRefRepositoryImpl.insertCrossRef(crossRef)
     }
 
-    override fun insertSeveralCrossRef(vararg severalCrossRef: RealEstatePointOfInterestCrossRef): List<Long> {
-        TODO("Not yet implemented")
+    override suspend fun insertSeveralCrossRef(
+        vararg severalCrossRef: RealEstatePointOfInterestCrossRef
+    ): List<Long> = withContext(Dispatchers.IO) {
+        this@RealEstatePointOfInterestCrossRefRepositoryImpl.insertSeveralCrossRef(*severalCrossRef)
     }
 }

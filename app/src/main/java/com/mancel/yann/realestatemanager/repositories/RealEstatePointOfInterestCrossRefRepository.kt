@@ -13,7 +13,7 @@ interface RealEstatePointOfInterestCrossRefRepository {
 
     // -- Create --
 
-    fun insertCrossRef(crossRef: RealEstatePointOfInterestCrossRef): Long
+    suspend fun insertCrossRef(crossRef: RealEstatePointOfInterestCrossRef): Long
 
-    fun insertSeveralCrossRef(vararg severalCrossRef: RealEstatePointOfInterestCrossRef): List<Long>
+    suspend fun insertSeveralCrossRef(vararg severalCrossRef: RealEstatePointOfInterestCrossRef): List<Long>
 }

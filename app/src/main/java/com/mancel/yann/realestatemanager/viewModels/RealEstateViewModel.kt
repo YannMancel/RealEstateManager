@@ -1,17 +1,16 @@
 package com.mancel.yann.realestatemanager.viewModels
 
+import android.database.sqlite.SQLiteConstraintException
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mancel.yann.realestatemanager.liveDatas.PhotoCreatorLiveData
-import com.mancel.yann.realestatemanager.models.IdTypeAddressPriceTupleOfRealEstate
-import com.mancel.yann.realestatemanager.models.Photo
-import com.mancel.yann.realestatemanager.models.User
+import com.mancel.yann.realestatemanager.models.*
 import com.mancel.yann.realestatemanager.repositories.PhotoRepository
 import com.mancel.yann.realestatemanager.repositories.RealEstateRepository
 import com.mancel.yann.realestatemanager.repositories.UserRepository
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 /**
  * Created by Yann MANCEL on 09/03/2020.
@@ -56,9 +55,19 @@ class RealEstateViewModel(
 
     /**
      * Inserts the new [User] in argument
+     * @param user a [User]
      */
-    fun insertUser(user: User) = viewModelScope.launch {
-        this@RealEstateViewModel.mUserRepository.insertUser(user)
+    fun insertUser(user: User) = viewModelScope.launch(Dispatchers.IO) {
+        // Fetch the new rowId for the inserted item
+        val deferred = async { this@RealEstateViewModel.mUserRepository.insertUser(user) }
+
+        try {
+            Log.i(this@RealEstateViewModel::class.java.simpleName, "insertUser: id=${deferred.await()}")
+        }
+        catch (e: SQLiteConstraintException) {
+            // UNIQUE constraint failed
+            Log.e(this@RealEstateViewModel::class.java.simpleName, "insertUser: ${e.message}")
+        }
     }
 
     /**
@@ -74,6 +83,30 @@ class RealEstateViewModel(
     }
 
     // -- Real Estate --
+
+    /**
+     * Inserts the new [RealEstate] in argument
+     * @param realEstate        a [RealEstate]
+     * @param photos            a [List] of [Photo]
+     * @param pointsOfInterest  a [List] of [PointOfInterest]
+     */
+    fun insertRealEstate(
+        realEstate: RealEstate,
+        photos: List<Photo>? = null,
+        pointsOfInterest: List<PointOfInterest>? = null
+    ) = viewModelScope.launch(Dispatchers.IO) {
+        // Fetch the new rowId for the inserted item
+        val deferred = async { this@RealEstateViewModel.mRealEstateRepository.insertRealEstate(realEstate) }
+
+        try {
+            val realEstateId = deferred.await()
+            Log.w(this@RealEstateViewModel::class.java.simpleName, "insertRealEstate: id=${realEstateId}")
+        }
+        catch (e: SQLiteConstraintException) {
+            // UNIQUE constraint failed
+            Log.e(this@RealEstateViewModel::class.java.simpleName, "insertRealEstate: ${e.message}")
+        }
+    }
 
     /**
      * Gets the count of row where user Id is validated
