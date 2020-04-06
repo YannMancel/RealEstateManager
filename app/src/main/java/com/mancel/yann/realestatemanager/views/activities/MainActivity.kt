@@ -13,6 +13,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
 import com.mancel.yann.realestatemanager.R
+import com.mancel.yann.realestatemanager.utils.MessageTools
 import com.mancel.yann.realestatemanager.views.fragments.DetailsFragmentArgs
 import com.mancel.yann.realestatemanager.views.fragments.FragmentListener
 import com.mancel.yann.realestatemanager.views.fragments.ListFragmentDirections
@@ -68,9 +69,7 @@ class MainActivity : BaseActivity(), FragmentListener {
     // -- Activity --
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        // Gets the MenuInflater to add the menu xml file into the Toolbar
         this.menuInflater.inflate(R.menu.toolbar_menu, menu)
-
         return true
     }
 
@@ -88,6 +87,13 @@ class MainActivity : BaseActivity(), FragmentListener {
     }
 
     // -- FragmentListener interface --
+
+    override fun showMessage(message: String) {
+        MessageTools.showMassageWithSnackbar(
+            this.activity_main_CoordinatorLayout,
+            message
+        )
+    }
 
     override fun navigateToDetailsFragment(v: View?) {
         // Tag

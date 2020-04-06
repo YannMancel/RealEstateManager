@@ -27,9 +27,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/cardview_address"
+                app:layout_constraintBottom_toTopOf="@id/cardview_characteristics"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:cardElevation="@dimen/elevation_card"
                 style="@style/Widget.MaterialComponents.CardView">
 
                 <!-- ConstraintLayout -->
@@ -83,7 +84,6 @@
                         android:id="@+id/fragment_creator_price"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_little"
                         android:layout_marginBottom="@dimen/margin_little"
                         android:layout_marginEnd="@dimen/margin_normal"
                         app:layout_constraintTop_toBottomOf="@id/fragment_creator_type"
@@ -110,16 +110,128 @@
 
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- MaterialCardView: Characteristics -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardview_characteristics"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_normal"
+                app:layout_constraintTop_toBottomOf="@id/cardview_type"
+                app:layout_constraintBottom_toTopOf="@id/cardview_address"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:cardElevation="@dimen/elevation_card"
+                style="@style/Widget.MaterialComponents.CardView">
+
+                <!-- ConstraintLayout -->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <!-- ImageView: Setting icon -->
+                    <ImageView
+                        android:id="@+id/icon_setting"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/margin_normal"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/fragment_creator_surface"
+                        android:src="@drawable/ic_settings"
+                        android:tint="@android:color/black"
+                        android:contentDescription="@null"/>
+
+                    <!-- TextInputLayout: Surface -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/fragment_creator_surface"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_little"
+                        android:layout_marginBottom="@dimen/margin_little"
+                        android:layout_marginEnd="@dimen/margin_normal"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toTopOf="@id/fragment_creator_number_of_room"
+                        app:layout_constraintStart_toEndOf="@id/icon_setting"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:errorEnabled="true"
+                        app:hintEnabled="true"
+                        app:boxBackgroundColor="@android:color/transparent"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox">
+
+                        <!-- TextInputEditText: Surface -->
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:hint="@string/hint_surface"
+                            android:inputType="numberDecimal"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- TextInputLayout: Number of room -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/fragment_creator_number_of_room"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/margin_little"
+                        android:layout_marginEnd="@dimen/margin_normal"
+                        app:layout_constraintTop_toBottomOf="@id/fragment_creator_surface"
+                        app:layout_constraintBottom_toTopOf="@id/fragment_creator_description"
+                        app:layout_constraintStart_toStartOf="@id/fragment_creator_surface"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:errorEnabled="true"
+                        app:hintEnabled="true"
+                        app:boxBackgroundColor="@android:color/transparent"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox">
+
+                        <!-- TextInputEditText: Number of room -->
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:hint="@string/hint_number_of_room"
+                            android:inputType="number"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- TextInputLayout: Description -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/fragment_creator_description"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/margin_little"
+                        android:layout_marginEnd="@dimen/margin_normal"
+                        app:layout_constraintTop_toBottomOf="@id/fragment_creator_number_of_room"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="@id/fragment_creator_surface"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:errorEnabled="true"
+                        app:hintEnabled="true"
+                        app:boxBackgroundColor="@android:color/transparent"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox">
+
+                        <!-- TextInputEditText: Type -->
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:hint="@string/hint_description"
+                            android:inputType="textMultiLine"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
             <!-- MaterialCardView: Address -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardview_address"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_normal"
-                app:layout_constraintTop_toBottomOf="@id/cardview_type"
-                app:layout_constraintBottom_toTopOf="@id/cardview_photo"
+                app:layout_constraintTop_toBottomOf="@id/cardview_characteristics"
+                app:layout_constraintBottom_toTopOf="@id/cardview_date"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:cardElevation="@dimen/elevation_card"
                 style="@style/Widget.MaterialComponents.CardView">
 
                 <!-- ConstraintLayout -->
@@ -162,7 +274,7 @@
                         android:layout_marginStart="@dimen/margin_normal"
                         android:layout_marginEnd="@dimen/margin_normal"
                         app:layout_constraintTop_toBottomOf="@id/fragment_creator_add_address"
-                        app:layout_constraintBottom_toTopOf="@id/fragment_creator_map_lite_mode"
+                        app:layout_constraintBottom_toTopOf="@id/fragment_creator_city"
                         app:layout_constraintStart_toEndOf="@id/icon_place"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:hintEnabled="true"
@@ -174,7 +286,83 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:hint="@string/hint_address"
-                            android:inputType="textMultiLine"
+                            android:inputType="text"
+                            android:enabled="false"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- TextInputLayout: City -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/fragment_creator_city"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_little"
+                        android:layout_marginEnd="@dimen/margin_normal"
+                        app:layout_constraintTop_toBottomOf="@id/fragment_creator_address"
+                        app:layout_constraintBottom_toTopOf="@id/fragment_creator_post_code"
+                        app:layout_constraintStart_toStartOf="@id/fragment_creator_address"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:hintEnabled="true"
+                        app:boxBackgroundColor="@android:color/transparent"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox">
+
+                        <!-- TextInputEditText: City -->
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:hint="@string/hint_city"
+                            android:inputType="text"
+                            android:enabled="false"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- TextInputLayout: Post code -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/fragment_creator_post_code"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_little"
+                        android:layout_marginEnd="@dimen/margin_normal"
+                        app:layout_constraintTop_toBottomOf="@id/fragment_creator_city"
+                        app:layout_constraintBottom_toTopOf="@id/fragment_creator_map_lite_mode"
+                        app:layout_constraintStart_toStartOf="@id/fragment_creator_address"
+                        app:layout_constraintEnd_toStartOf="@id/fragment_creator_country"
+                        app:layout_constraintHorizontal_weight="@integer/horizontal_weight_address_left"
+                        app:hintEnabled="true"
+                        app:boxBackgroundColor="@android:color/transparent"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox">
+
+                        <!-- TextInputEditText: Post code -->
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:hint="@string/hint_post_code"
+                            android:inputType="number"
+                            android:enabled="false"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- TextInputLayout: Country -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/fragment_creator_country"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/margin_normal"
+                        app:layout_constraintTop_toTopOf="@id/fragment_creator_post_code"
+                        app:layout_constraintBottom_toBottomOf="@id/fragment_creator_post_code"
+                        app:layout_constraintStart_toEndOf="@id/fragment_creator_post_code"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_weight="@integer/horizontal_weight_address_right"
+                        app:hintEnabled="true"
+                        app:boxBackgroundColor="@android:color/transparent"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox">
+
+                        <!-- TextInputEditText: Country -->
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:hint="@string/hint_country"
+                            android:inputType="text"
                             android:enabled="false"/>
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -188,7 +376,7 @@
                         android:layout_marginTop="@dimen/margin_normal"
                         android:layout_marginBottom="@dimen/margin_normal"
                         android:layout_marginEnd="@dimen/margin_normal"
-                        app:layout_constraintTop_toBottomOf="@id/fragment_creator_address"
+                        app:layout_constraintTop_toBottomOf="@id/fragment_creator_post_code"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="@id/fragment_creator_address"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -201,6 +389,82 @@
 
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- MaterialCardView: Date -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardview_date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_normal"
+                app:layout_constraintTop_toBottomOf="@id/cardview_address"
+                app:layout_constraintBottom_toTopOf="@id/cardview_photo"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:cardElevation="@dimen/elevation_card"
+                style="@style/Widget.MaterialComponents.CardView">
+
+                <!-- ConstraintLayout -->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <!-- ImageView: Date icon -->
+                    <ImageView
+                        android:id="@+id/icon_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/margin_normal"
+                        app:layout_constraintTop_toTopOf="@id/fragment_creator_enable"
+                        app:layout_constraintBottom_toBottomOf="@id/fragment_creator_enable"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/fragment_creator_enable"
+                        android:src="@drawable/ic_date"
+                        android:tint="@android:color/black"
+                        android:contentDescription="@null"/>
+
+                    <!-- SwitchMaterial: Enable -->
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/fragment_creator_enable"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_little"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toTopOf="@id/fragment_creator_effective_date"
+                        app:layout_constraintStart_toEndOf="@id/icon_date"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:padding="@dimen/padding_normal"
+                        android:text="@string/creator_enable"
+                        android:checked="true"/>
+
+                    <!-- TextInputLayout: Effective date -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/fragment_creator_effective_date"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_little"
+                        android:layout_marginBottom="@dimen/margin_little"
+                        android:layout_marginEnd="@dimen/margin_normal"
+                        app:layout_constraintTop_toBottomOf="@id/fragment_creator_enable"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="@id/fragment_creator_enable"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:errorEnabled="true"
+                        app:hintEnabled="true"
+                        app:boxBackgroundColor="@android:color/transparent"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox">
+
+                        <!-- TextInputEditText: Effective date -->
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:hint="@string/hint_date"
+                            android:inputType="date"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
             <!-- MaterialCardView: Photo -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardview_photo"
@@ -208,10 +472,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_normal"
                 android:layout_marginBottom="@dimen/margin_heavy"
-                app:layout_constraintTop_toBottomOf="@id/cardview_address"
+                app:layout_constraintTop_toBottomOf="@id/cardview_date"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:cardElevation="@dimen/elevation_card"
                 style="@style/Widget.MaterialComponents.CardView">
 
                 <!-- ConstraintLayout -->

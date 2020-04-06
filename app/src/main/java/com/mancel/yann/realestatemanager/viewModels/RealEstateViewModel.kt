@@ -58,11 +58,10 @@ class RealEstateViewModel(
      * @param user a [User]
      */
     fun insertUser(user: User) = viewModelScope.launch(Dispatchers.IO) {
-        // Fetch the new rowId for the inserted item
-        val deferred = async { this@RealEstateViewModel.mUserRepository.insertUser(user) }
-
         try {
-            Log.i(this@RealEstateViewModel::class.java.simpleName, "insertUser: id=${deferred.await()}")
+            // Fetch the new rowId for the inserted item
+            val userId: Long = this@RealEstateViewModel.mUserRepository.insertUser(user)
+            Log.i(this@RealEstateViewModel::class.java.simpleName, "insertUser: id=$userId")
         }
         catch (e: SQLiteConstraintException) {
             // UNIQUE constraint failed
@@ -95,16 +94,48 @@ class RealEstateViewModel(
         photos: List<Photo>? = null,
         pointsOfInterest: List<PointOfInterest>? = null
     ) = viewModelScope.launch(Dispatchers.IO) {
-        // Fetch the new rowId for the inserted item
-        val deferred = async { this@RealEstateViewModel.mRealEstateRepository.insertRealEstate(realEstate) }
+        val realEstateId: Long
 
+        // REAL ESTATE
         try {
-            val realEstateId = deferred.await()
-            Log.w(this@RealEstateViewModel::class.java.simpleName, "insertRealEstate: id=${realEstateId}")
+            // Fetch the new rowId for the inserted item
+            realEstateId = this@RealEstateViewModel.mRealEstateRepository.insertRealEstate(realEstate)
+            Log.w(this@RealEstateViewModel::class.java.simpleName, "insertRealEstate: id=$realEstateId")
         }
         catch (e: SQLiteConstraintException) {
             // UNIQUE constraint failed
             Log.e(this@RealEstateViewModel::class.java.simpleName, "insertRealEstate: ${e.message}")
+            return@launch
+        }
+
+        // PHOTOS
+        photos?.let { photos ->
+            // Change the [real_estate_id] of each photo
+            photos.forEach { photo ->
+                photo.mRealEstateId = realEstateId
+            }
+
+            val deferred: Deferred<List<Long>> = async {
+                try {
+                    this@RealEstateViewModel.mPhotoRepository.insertPhotos(*photos.toTypedArray())
+                }
+                catch (e: SQLiteConstraintException) {
+                    // UNIQUE constraint failed
+                    Log.e(this@RealEstateViewModel::class.java.simpleName, "insertPhotos: ${e.message}")
+                    emptyList<Long>()
+                }
+            }
+
+            deferred.await().let {
+                if (it.isNotEmpty()) {
+                    Log.w(this@RealEstateViewModel::class.java.simpleName, "insertPhotos: ids=$it")
+                }
+            }
+        }
+
+        // POINTS OF INTEREST
+        pointsOfInterest?.let {
+            // todo - 05/04/2020 - add the points of interest
         }
     }
 

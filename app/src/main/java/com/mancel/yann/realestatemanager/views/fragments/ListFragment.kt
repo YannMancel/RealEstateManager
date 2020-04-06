@@ -84,6 +84,7 @@ class ListFragment : BaseFragment(), AdapterListener {
      * Configures the LiveData thanks to a simple format
      */
     private fun configureRealEstateLiveData() {
+        // todo - 06/04/2020 - Next feature: Add user's authentication instead of 1L
         this.mViewModel.getRealEstatesSimpleFormatByUserId(1L)
             .observe(this.viewLifecycleOwner,
                      Observer { this.mAdapter.updateData(it) })

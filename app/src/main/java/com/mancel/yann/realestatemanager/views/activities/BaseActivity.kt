@@ -45,8 +45,6 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.setContentView(this.getActivityLayout())
-
-        // Configures the design
         this.configureDesign()
     }
 

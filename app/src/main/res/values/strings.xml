@@ -15,6 +15,9 @@
 
     <!-- CreatorFragment.kt -->
     <string name="title_marker">Real Estate</string>
+    <string name="creation_photo_already_present">This photo is already present in database</string>
+    <string name="creation_photo_cancel">Photo canceled</string>
+    <string name="creator_search_cancel">Search canceled</string>
 
     <!-- SettingsDialogFragment.kt -->
     <string name="title_settings_dialog_fragment">Settings</string>
@@ -36,17 +39,23 @@
     <!-- item.photo.xml & item_real_estate.xml -->
     <string name="menu_drawer_details">DETAILS</string>
 
-    <!-- fragment_creator.xml -->
+    <!-- fragment_creator.xml & dialog_selected_photo.xml -->
     <string name="hint_type">Type</string>
     <string name="hint_price">Price</string>
-    <string name="hint_address">Full address</string>
+    <string name="hint_surface">Surface</string>
+    <string name="hint_number_of_room">Number of room</string>
+    <string name="hint_description">Description</string>
+    <string name="hint_address">Address</string>
+    <string name="hint_city">City</string>
+    <string name="hint_post_code">Post code</string>
+    <string name="hint_country">Country</string>
+    <string name="hint_date">Effective date</string>
+    <string name="creator_enable">Is enable</string>
+    <string name="creator_real_estate_lack_information">Lack of information</string>
     <string-array name="creator_types">
         <item>Flat</item>
         <item>House</item>
         <item>Other</item>
     </string-array>
-
-    <!-- dialog_selected_photo.xml -->
-    <string name="hint_description">Description</string>
 
 </resources>

@@ -12,6 +12,11 @@ interface FragmentListener {
     // METHODS -------------------------------------------------------------------------------------
 
     /**
+     * Called from fragment to activity
+     */
+    fun showMessage(message: String)
+
+    /**
      * Called when the user has selected an item of [ListFragment]
      * @param v The [View] that was clicked.
      */

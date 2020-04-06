@@ -11,7 +11,6 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import androidx.annotation.LayoutRes
-import androidx.core.view.isVisible
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -32,12 +31,16 @@ import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.textfield.TextInputLayout
 import com.mancel.yann.realestatemanager.R
 import com.mancel.yann.realestatemanager.liveDatas.PhotoCreatorLiveData
+import com.mancel.yann.realestatemanager.models.Address
 import com.mancel.yann.realestatemanager.models.Photo
+import com.mancel.yann.realestatemanager.models.RealEstate
 import com.mancel.yann.realestatemanager.views.adapters.AdapterListener
 import com.mancel.yann.realestatemanager.views.adapters.PhotoAdapter
 import com.mancel.yann.realestatemanager.views.dialogs.DialogListener
 import com.mancel.yann.realestatemanager.views.dialogs.PhotoDialogFragment
+import kotlinx.android.synthetic.main.fragment_creator.*
 import kotlinx.android.synthetic.main.fragment_creator.view.*
+import java.text.SimpleDateFormat
 
 /**
  * Created by Yann MANCEL on 20/02/2020.
@@ -161,18 +164,29 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
      * Configures the fields of data
      */
     private fun configureFieldsOfData() {
-        this.configureListenerOfFields(this.mRootView.fragment_creator_type,
-                                       this.mRootView.fragment_creator_price,
-                                       this.mRootView.fragment_creator_address)
+        this.configureListenerOfFields(
+            this.mRootView.fragment_creator_type,
+            this.mRootView.fragment_creator_price,
+            this.mRootView.fragment_creator_surface,
+            this.mRootView.fragment_creator_number_of_room,
+            this.mRootView.fragment_creator_description,
+            this.mRootView.fragment_creator_effective_date
+        )
 
         // Hides field for address
         this.mRootView.fragment_creator_address.visibility = View.GONE
+        this.mRootView.fragment_creator_city.visibility = View.GONE
+        this.mRootView.fragment_creator_post_code.visibility = View.GONE
+        this.mRootView.fragment_creator_country.visibility = View.GONE
 
         // Type: Populates the adapter
         (this.mRootView.fragment_creator_type.editText as? AutoCompleteTextView)?.setAdapter(
-            ArrayAdapter(this.requireContext(),
-                         R.layout.item_type,
-                         this.resources.getStringArray(R.array.creator_types)))
+            ArrayAdapter(
+                this.requireContext(),
+                R.layout.item_type,
+                this.resources.getStringArray(R.array.creator_types)
+            )
+        )
     }
 
     /**
@@ -189,17 +203,6 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
                 }
 
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    // After that user has selected an address
-                    if (textInputLayout.id == R.id.fragment_creator_address && !textInputLayout.isVisible) {
-                        // Address
-                        textInputLayout.visibility = View.VISIBLE
-
-                        // Google Maps
-                        this@CreatorFragment.childFragmentManager.fragments[0].view?.visibility = View.VISIBLE
-
-                        return
-                    }
-
                     // Reset error
                     textInputLayout.error = null
                 }
@@ -235,16 +238,23 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
      * @param place a [Place] that contains the address
      */
     private fun showAddressIntoField(place: Place) {
-        // Shows address
-        val addressComponents = place.addressComponents?.asList()
+        // Show field for address
+        this.mRootView.fragment_creator_address.visibility = View.VISIBLE
+        this.mRootView.fragment_creator_city.visibility = View.VISIBLE
+        this.mRootView.fragment_creator_post_code.visibility = View.VISIBLE
+        this.mRootView.fragment_creator_country.visibility = View.VISIBLE
 
+        // Show Google Maps
+        this@CreatorFragment.childFragmentManager.fragments[0].view?.visibility = View.VISIBLE
+
+        // Retrieve address
         var streetNumber: String? = null
         var route: String? = null
         var locality: String? = null
         var postalCode: String? = null
         var country: String? = null
 
-        addressComponents?.forEach {
+        place.addressComponents?.asList()?.forEach {
             when (it.types[0]) {
                 "street_number"-> streetNumber = it.name
                 "route"-> route = it.name
@@ -256,15 +266,29 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
             }
         }
 
-        val address = """
-                    $streetNumber $route
-                    $locality
-                    $postalCode
-                    $country
-                """.trimIndent()
+        // Street
+        this.mRootView.fragment_creator_address.editText?.text?.let {
+            it.clear()
+            it.append("$streetNumber $route")
+        }
 
-        this.mRootView.fragment_creator_address.editText?.text?.clear()
-        this.mRootView.fragment_creator_address.editText?.text?.append(address)
+        // City
+        this.mRootView.fragment_creator_city.editText?.text?.let {
+            it.clear()
+            it.append(locality)
+        }
+
+        // Post code
+        this.mRootView.fragment_creator_post_code.editText?.text?.let {
+            it.clear()
+            it.append(postalCode)
+        }
+
+        // Country
+        this.mRootView.fragment_creator_country.editText?.text?.let {
+            it.clear()
+            it.append(country)
+        }
     }
 
     // -- Listeners --
@@ -418,7 +442,9 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
             }
 
             else -> {
-                Log.d(this::class.simpleName, "SEARCH CANCELED")
+                this.mCallback?.showMessage(
+                    this.getString(R.string.creator_search_cancel)
+                )
             }
         }
     }
@@ -464,12 +490,16 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
                                        )
                 }
                 else {
-                    Log.d(this::class.simpleName, "PHOTO IS ALREADY PRESENT")
+                    this.mCallback?.showMessage(
+                        this.getString(R.string.creation_photo_already_present)
+                    )
                 }
             }
         }
         else {
-            Log.d(this::class.simpleName, "PHOTO CANCELED")
+            this.mCallback?.showMessage(
+                this.getString(R.string.creation_photo_cancel)
+            )
         }
     }
 
@@ -480,11 +510,47 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
      */
     private fun actionToAddRealEstate() {
         // Errors
-        val isCanceled = this.configureErrorOfFields(this.mRootView.fragment_creator_type,
-                                                     this.mRootView.fragment_creator_price)
+        val isCanceled = this.configureErrorOfFields(
+            this.mRootView.fragment_creator_type,
+            this.mRootView.fragment_creator_price,
+            this.mRootView.fragment_creator_surface,
+            this.mRootView.fragment_creator_number_of_room,
+            this.mRootView.fragment_creator_description,
+            this.mRootView.fragment_creator_effective_date
+        )
 
-        if (!isCanceled) {
-            // todo 24/03/2020 Add method to create a real estate
+        if (isCanceled) {
+            this.mCallback?.showMessage(
+                this.getString(R.string.creator_real_estate_lack_information)
+            )
+            return
         }
+
+        // todo - 06/04/2020 - Add test on address
+
+        // todo - 06/04/2020 - Next feature: Add user's authentication instead of 1L
+        val realEstate = RealEstate(
+            mType = this.fragment_creator_type.editText?.text?.toString(),
+            mPrice = this.fragment_creator_price.editText?.text?.toString()?.toDouble(),
+            mSurface = this.mRootView.fragment_creator_surface.editText?.text?.toString()?.toDouble(),
+            mNumberOfRoom = this.mRootView.fragment_creator_number_of_room.editText?.text?.toString()?.toInt(),
+            mDescription = this.mRootView.fragment_creator_description.editText?.text?.toString(),
+            mIsEnable = this.mRootView.fragment_creator_enable.isChecked,
+            mEffectiveDate = SimpleDateFormat("dd/MM/yyyy").parse(this.mRootView.fragment_creator_effective_date.editText?.text?.toString()),
+            mSaleDate = null,
+            mEstateAgentId = 1L,
+            mAddress = Address(
+                mStreet = this.fragment_creator_address.editText?.text?.toString(),
+                mCity = this.fragment_creator_city.editText?.text?.toString(),
+                mPostCode = this.fragment_creator_post_code.editText?.text?.toString()?.toInt(),
+                mState = this.fragment_creator_country.editText?.text?.toString()
+            )
+        )
+
+        this.mViewModel.insertRealEstate(
+            realEstate,
+            this.mPhotoCreatorLiveData.value,
+            null
+        )
     }
 }

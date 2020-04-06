@@ -4,6 +4,7 @@
 
     <!-- Elevation -->
     <dimen name="elevation_toolbar">4dp</dimen>
+    <dimen name="elevation_card">1dp</dimen>
 
     <!-- NavigationView Header height -->
     <dimen name="navigation_header_height">220dp</dimen>
