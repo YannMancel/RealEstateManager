@@ -30,7 +30,7 @@ class RealEstateViewModel(
     private var mUser: LiveData<User>? = null
 
     private var mCountOfRealEstateByUserId: LiveData<Int>? = null
-    private var mRealEstatesSimpleFormat: LiveData<List<IdTypeAddressPriceTupleOfRealEstate>>? = null
+    private var mRealEstatesWithPhotos: LiveData<List<RealEstateWithPhotos>>? = null
 
     private var mPhotosByRealEstateId: LiveData<List<Photo>>? = null
     private var mPhotos: LiveData<List<Photo>>? = null
@@ -152,15 +152,15 @@ class RealEstateViewModel(
     }
 
     /**
-     * Gets all [IdTypeAddressPriceTupleOfRealEstate] thanks to [LiveData]
+     * Gets all [RealEstateWithPhotos] for an [User]
      * @param userId a [Long] that contains the user Id
-     * @return a [LiveData] of [IdTypeAddressPriceTupleOfRealEstate]
+     * @return a [LiveData] of [List] of [RealEstateWithPhotos]
      */
-    fun getRealEstatesSimpleFormatByUserId(userId: Long): LiveData<List<IdTypeAddressPriceTupleOfRealEstate>> {
-        if (this.mRealEstatesSimpleFormat == null) {
-            this.mRealEstatesSimpleFormat = this.mRealEstateRepository.getIdTypeAddressPriceTupleOfRealEstateByUserId(userId)
+    fun getRealEstatesWithPhotosByUserId(userId: Long): LiveData<List<RealEstateWithPhotos>> {
+        if (this.mRealEstatesWithPhotos == null) {
+            this.mRealEstatesWithPhotos = this.mRealEstateRepository.getRealEstatesWithPhotosByUserId(userId)
         }
-        return this.mRealEstatesSimpleFormat!!
+        return this.mRealEstatesWithPhotos!!
     }
 
     // -- Photo --

@@ -1,5 +1,6 @@
 package com.mancel.yann.realestatemanager.views.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,7 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mancel.yann.realestatemanager.R
-import com.mancel.yann.realestatemanager.models.IdTypeAddressPriceTupleOfRealEstate
+import com.mancel.yann.realestatemanager.models.RealEstateWithPhotos
 import com.mancel.yann.realestatemanager.utils.RealEstateDiffCallback
 import kotlinx.android.synthetic.main.item_real_estate.view.*
 import java.lang.ref.WeakReference
@@ -25,7 +26,7 @@ class RealEstateAdapter(
 
     // FIELDS --------------------------------------------------------------------------------------
 
-    private var mRealEstates = emptyList<IdTypeAddressPriceTupleOfRealEstate>()
+    private var mRealEstates = emptyList<RealEstateWithPhotos>()
 
     // METHODS -------------------------------------------------------------------------------------
 
@@ -49,44 +50,53 @@ class RealEstateAdapter(
     /**
      * Configures the design of each item
      * @param holder        a [RealEstateViewHolder] that corresponds to the item
-     * @param realEstate    a [IdTypeAddressPriceTupleOfRealEstate]
+     * @param realEstate    a [RealEstateWithPhotos]
      */
-    private fun configureDesign(holder: RealEstateViewHolder, realEstate: IdTypeAddressPriceTupleOfRealEstate) {
+    private fun configureDesign(holder: RealEstateViewHolder, realEstate: RealEstateWithPhotos) {
         // CardView
         holder.itemView.item_real_estate_CardView.setOnClickListener {
             // Tag -> Data's Id
-            it.tag = realEstate.mId
+            it.tag = realEstate.mRealEstate?.mId
 
             // Starts the callback
             holder.mCallback.get()?.onClick(it)
         }
 
+        Log.w("RealEstate", "${realEstate.mPhotos}")
+
         // Image
-        // todo Add photo
-        Glide.with(holder.itemView)
-            .load(R.drawable.ic_home)
-            .centerCrop()
-            .fallback(R.drawable.ic_add)
-            .error(R.drawable.ic_edit)
-            .into(holder.itemView.item_real_estate_image)
+        realEstate.mPhotos?.let {
+            if (it.isNotEmpty()) {
+                Glide.with(holder.itemView)
+                     .load(it[0].mUrlPicture)
+                     .centerCrop()
+                     .placeholder(R.drawable.placeholder_image)
+                     .fallback(R.drawable.ic_photo)
+                     .error(R.drawable.ic_clear)
+                     .into(holder.itemView.item_real_estate_image)
+            }
+            else {
+                holder.itemView.item_real_estate_image.setImageResource(R.drawable.ic_photo)
+            }
+        }
 
         // Type
-        realEstate.mType?.let { holder.itemView.item_real_estate_type.text = it }
+        realEstate.mRealEstate?.mType?.let { holder.itemView.item_real_estate_type.text = it }
 
         // City
-        realEstate.mAddress?.mCity?.let { holder.itemView.item_real_estate_city.text = it }
+        realEstate.mRealEstate?.mAddress?.mCity?.let { holder.itemView.item_real_estate_city.text = it }
 
         // Price
-        realEstate.mPrice?.let { holder.itemView.item_real_estate_price.text = it.toString() }
+        realEstate.mRealEstate?.mPrice?.let { holder.itemView.item_real_estate_price.text = it.toString() }
     }
 
     // -- Real Estate --
 
     /**
      * Updates data of [RealEstateAdapter]
-     * @param newRealEstates a [List] of [IdTypeAddressPriceTupleOfRealEstate]
+     * @param newRealEstates a [List] of [RealEstateWithPhotos]
      */
-    fun updateData(newRealEstates: List<IdTypeAddressPriceTupleOfRealEstate>) {
+    fun updateData(newRealEstates: List<RealEstateWithPhotos>) {
         // Optimizes the performances of RecyclerView
         val diffCallback  = RealEstateDiffCallback(this.mRealEstates, newRealEstates)
         val diffResult  = DiffUtil.calculateDiff(diffCallback )
