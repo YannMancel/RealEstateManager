@@ -1,7 +1,6 @@
 package com.mancel.yann.realestatemanager.views.dialogs
 
 import android.app.Dialog
-import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -30,8 +29,8 @@ class PhotoDialogFragment : DialogFragment() {
 
     // FIELDS --------------------------------------------------------------------------------------
 
-    private val mUriPhoto: Uri? by lazy { this.requireArguments().getParcelable(BUNDLE_KEY_URI) as? Uri}
-    private val mDescription: String? by lazy { this.requireArguments().getString(BUNDLE_KEY_DESCRIPTION)}
+    private val mUrlPhoto: String? by lazy { this.requireArguments().getString(BUNDLE_KEY_URL_PHOTO) }
+    private val mDescription: String? by lazy { this.requireArguments().getString(BUNDLE_KEY_DESCRIPTION) }
 
     private lateinit var mRootView: View
     private var mCallback: WeakReference<DialogListener?>? = null
@@ -40,19 +39,22 @@ class PhotoDialogFragment : DialogFragment() {
 
     companion object {
 
-        const val BUNDLE_KEY_URI = "BUNDLE_KEY_URI"
+        const val BUNDLE_KEY_URL_PHOTO = "BUNDLE_KEY_URL_PHOTO"
         const val BUNDLE_KEY_DESCRIPTION = "BUNDLE_KEY_DESCRIPTION"
 
         /**
          * Gets a new instance of [PhotoDialogFragment]
-         * @param callback  a [DialogListener]
-         * @param uri       an [Uri] that corresponds to the path of photo from external storage
-         * @param mode      a [PhotoDialogMode]
+         * @param callback      a [DialogListener]
+         * @param urlPhoto      a [String] that corresponds to the path of photo from external storage
+         * @param description   a [String] that contains the description of the photo
+         * @param mode          a [PhotoDialogMode]
          */
-        fun newInstance(callback: DialogListener,
-                        uri: Uri?,
-                        description: String? = null,
-                        mode: PhotoDialogMode = PhotoDialogMode.ADD): PhotoDialogFragment {
+        fun newInstance(
+            callback: DialogListener,
+            urlPhoto: String? = null,
+            description: String? = null,
+            mode: PhotoDialogMode = PhotoDialogMode.ADD
+        ): PhotoDialogFragment {
             val dialog = PhotoDialogFragment().apply {
                 setCallback(callback)
                 setMode(mode)
@@ -60,7 +62,7 @@ class PhotoDialogFragment : DialogFragment() {
 
             // Bundle into Argument of Fragment
             dialog.arguments = Bundle().apply {
-                putParcelable(BUNDLE_KEY_URI, uri)
+                putString(BUNDLE_KEY_URL_PHOTO, urlPhoto)
                 putString(BUNDLE_KEY_DESCRIPTION, description)
             }
 
@@ -79,9 +81,11 @@ class PhotoDialogFragment : DialogFragment() {
         this.configureDescriptionOfPhoto()
         this.configureButtons()
 
-        return MaterialAlertDialogBuilder(this.requireContext()).setView(this.mRootView)
-                                                                .setTitle(R.string.title_photo_dialog_fragment)
-                                                                .create()
+        return MaterialAlertDialogBuilder(
+            this.requireContext()
+        ).setView(this.mRootView)
+         .setTitle(R.string.title_photo_dialog_fragment)
+         .create()
     }
 
     // -- Callback --
@@ -112,8 +116,9 @@ class PhotoDialogFragment : DialogFragment() {
     private fun configureDisplayingOfPhoto() {
         // Image with Glide library
         Glide.with(this.requireActivity())
-             .load(this.mUriPhoto)
+             .load(this.mUrlPhoto)
              .centerCrop()
+             .placeholder(R.drawable.placeholder_image)
              .fallback(R.drawable.ic_photo)
              .error(R.drawable.ic_clear)
              .into(this.mRootView.dialog_selected_photo_image)
@@ -124,8 +129,8 @@ class PhotoDialogFragment : DialogFragment() {
      */
     private fun configureDescriptionOfPhoto() {
         // Description from argument
-        if (this.mDescription != null) {
-            this.mRootView.dialog_selected_photo_description.editText?.text?.append(this.mDescription)
+        this.mDescription?.let {
+            this.mRootView.dialog_selected_photo_description.editText?.text?.append(it)
         }
 
         // Add listener
@@ -176,7 +181,7 @@ class PhotoDialogFragment : DialogFragment() {
         }
 
         // Photo
-        val photo = Photo(mUrlPicture = this.mUriPhoto.toString(),
+        val photo = Photo(mUrlPicture = this.mUrlPhoto,
                           mDescription = this.mRootView.dialog_selected_photo_description.editText!!.text.toString())
 
         // Callback

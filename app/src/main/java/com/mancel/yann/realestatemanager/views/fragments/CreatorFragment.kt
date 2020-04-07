@@ -2,7 +2,6 @@ package com.mancel.yann.realestatemanager.views.fragments
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
-import android.net.Uri
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
@@ -117,10 +116,11 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
 
             // Button: EDIT
             R.id.item_photo_edit_media -> {
-                PhotoDialogFragment.newInstance(callback = this@CreatorFragment,
-                                                uri = Uri.parse((v.tag as Photo).mUrlPicture),
-                                                description = (v.tag as Photo).mDescription,
-                                                mode = PhotoDialogFragment.PhotoDialogMode.UPDATE)
+                PhotoDialogFragment.newInstance(
+                                        callback = this@CreatorFragment,
+                                        urlPhoto = (v.tag as Photo).mUrlPicture,
+                                        description = (v.tag as Photo).mDescription,
+                                        mode = PhotoDialogFragment.PhotoDialogMode.UPDATE)
                                    .show(this.requireActivity().supportFragmentManager, "DIALOG PHOTO")
             }
 
@@ -473,7 +473,7 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
         if (resultCode == RESULT_OK) {
             data?.data?.let { uri ->
                 // Database: Search if is already present into the database
-                val isAlreadyPresentIntoDatabase = this.mPhotosFromDatabase.value?.any() {
+                val isAlreadyPresentIntoDatabase = this.mPhotosFromDatabase.value?.any {
                     it.mUrlPicture == uri.toString()
                 } ?: false
 
@@ -483,7 +483,9 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
                 } ?: false
 
                 if (!isAlreadyPresentIntoDatabase && !isAlreadyPresentIntoCreator) {
-                    PhotoDialogFragment.newInstance(callback = this@CreatorFragment, uri = uri)
+                    PhotoDialogFragment.newInstance(
+                                            callback = this@CreatorFragment,
+                                            urlPhoto = uri.toString())
                                        .show(
                                            this.requireActivity().supportFragmentManager,
                                            "DIALOG PHOTO"
