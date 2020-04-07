@@ -13,6 +13,9 @@
     <string name="edit_real_estate_toolbar">Edit real estate</string>
     <string name="search_real_estate_toolbar">Search real estate</string>
 
+    <!-- BaseFragment.kt -->
+    <string name="permission_denied">Permission denied</string>
+
     <!-- CreatorFragment.kt -->
     <string name="title_marker">Real Estate</string>
     <string name="creation_photo_already_present">This photo is already present in database</string>

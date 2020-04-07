@@ -1,16 +1,21 @@
 package com.mancel.yann.realestatemanager.viewModels
 
+import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mancel.yann.realestatemanager.liveDatas.LocationLiveData
 import com.mancel.yann.realestatemanager.liveDatas.PhotoCreatorLiveData
 import com.mancel.yann.realestatemanager.models.*
 import com.mancel.yann.realestatemanager.repositories.PhotoRepository
 import com.mancel.yann.realestatemanager.repositories.RealEstateRepository
 import com.mancel.yann.realestatemanager.repositories.UserRepository
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 /**
  * Created by Yann MANCEL on 09/03/2020.
@@ -26,6 +31,8 @@ class RealEstateViewModel(
 ) : ViewModel() {
 
     // FIELDS --------------------------------------------------------------------------------------
+
+    private var mLocation: LocationLiveData? = null
 
     private var mUser: LiveData<User>? = null
 
@@ -50,6 +57,25 @@ class RealEstateViewModel(
         super.onCleared()
         Log.d(this::class.java.simpleName, "RealEstateViewModel: onCleared")
     }
+
+    // -- Location --
+
+    /**
+     * Gets the [LiveData] of [LocationData]
+     * @param context a [Context]
+     * @return a [LiveData] of [LocationData]
+     */
+    fun getLocation(context: Context): LiveData<LocationData> {
+        if (this.mLocation == null) {
+            this.mLocation = LocationLiveData(context)
+        }
+        return this.mLocation!!
+    }
+
+    /**
+     * Starts the location update from [LocationLiveData]
+     */
+    fun startLocationUpdate() = this.mLocation?.requestUpdateLocation()!!
 
     // -- User --
 

@@ -73,7 +73,7 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
     override fun configureDesign() {
         // UI
         this.configureFieldsOfData()
-        this.configureListenerOFEachButton()
+        this.configureListenerOfEachButton()
         this.configureRecyclerView()
         this.configureSupportMapFragment()
 
@@ -296,7 +296,7 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
     /**
      * Configures the listener of Each button
      */
-    private fun configureListenerOFEachButton() {
+    private fun configureListenerOfEachButton() {
         // Button: Add address
         this.mRootView.fragment_creator_add_address.setOnClickListener {
             this.actionToSearchAddress()
@@ -348,7 +348,8 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
      * Configures the child fragment which contains the Google Maps
      */
     private fun configureSupportMapFragment() {
-        var childFragment = this.childFragmentManager.findFragmentById(R.id.fragment_creator_map_lite_mode) as? SupportMapFragment
+        var childFragment = this.childFragmentManager
+                                .findFragmentById(R.id.fragment_creator_map_lite_mode) as? SupportMapFragment
 
         if (childFragment == null) {
             childFragment = SupportMapFragment.newInstance()

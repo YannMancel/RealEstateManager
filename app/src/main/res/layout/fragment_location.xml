@@ -8,18 +8,28 @@
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#51426c"
     tools:context=".views.fragments.LocationFragment">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/location_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <!-- fragment: Google Maps -->
+    <fragment
+        android:id="@+id/fragment_location_map_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="LOCATION"
-        android:textSize="30sp"/>
+        android:name="com.google.android.gms.maps.SupportMapFragment"/>
+
+    <!-- FloatingActionButton -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fragment_location_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_normal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:src="@drawable/ic_gps_fixed"
+        style="@style/Widget.MaterialComponents.FloatingActionButton"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

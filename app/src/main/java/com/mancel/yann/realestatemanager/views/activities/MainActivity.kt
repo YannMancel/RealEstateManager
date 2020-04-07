@@ -1,5 +1,6 @@
 package com.mancel.yann.realestatemanager.views.activities
 
+import android.content.Intent
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -84,6 +85,17 @@ class MainActivity : BaseActivity(), FragmentListener {
         else {
             super.onBackPressed()
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        // Call the onActivityResult method of current Fragment
+        this.supportFragmentManager
+            .findFragmentById(R.id.activity_main_NavHostFragment)!!
+            .childFragmentManager
+            .fragments[0]
+            .onActivityResult(requestCode, resultCode, data)
     }
 
     // -- FragmentListener interface --

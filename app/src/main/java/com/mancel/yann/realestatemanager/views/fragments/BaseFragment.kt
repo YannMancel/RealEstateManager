@@ -1,19 +1,22 @@
 package com.mancel.yann.realestatemanager.views.fragments
 
 import android.Manifest
+import android.app.Activity.RESULT_OK
 import android.content.Context
+import android.content.Intent
+import android.content.IntentSender.SendIntentException
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.google.android.gms.common.api.ResolvableApiException
+import com.mancel.yann.realestatemanager.R
 import com.mancel.yann.realestatemanager.viewModels.RealEstateViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.lang.ClassCastException
 
 /**
  * Created by Yann MANCEL on 20/02/2020.
@@ -33,6 +36,8 @@ abstract class BaseFragment : Fragment() {
 
     companion object {
         const val REQUEST_CODE_PERMISSION_READ_EXTERNAL_STORAGE = 1000
+        const val REQUEST_CODE_PERMISSION_ACCESS_FINE_LOCATION = 2000
+        const val REQUEST_CODE_CHECK_SETTINGS_TO_LOCATION = 3000
     }
 
     // METHODS -------------------------------------------------------------------------------------
@@ -85,19 +90,30 @@ abstract class BaseFragment : Fragment() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         when (requestCode) {
-            // To access to external storage
-            REQUEST_CODE_PERMISSION_READ_EXTERNAL_STORAGE -> {
+            // Access to the external storage or the current location of device
+            REQUEST_CODE_PERMISSION_READ_EXTERNAL_STORAGE,
+            REQUEST_CODE_PERMISSION_ACCESS_FINE_LOCATION -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     this.actionAfterPermission()
                 }
                 else {
-                    Log.d(this::class.simpleName, "PERMISSION_DENIED")
+                    this.mCallback?.showMessage(this.getString(R.string.permission_denied))
                 }
             }
 
             else -> { /* Ignore all other requests */}
         }
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        // Check settings to location
+        if (requestCode == REQUEST_CODE_CHECK_SETTINGS_TO_LOCATION && resultCode == RESULT_OK) {
+            this.actionAfterPermission()
+        }
+    }
+
     // -- Permission --
 
     /**
@@ -122,7 +138,64 @@ abstract class BaseFragment : Fragment() {
     }
 
     /**
+     * Checks the permission: ACCESS_FINE_LOCATION
+     */
+    private fun checkAccessFineLocationPermission(): Boolean {
+        val permissionResult = ContextCompat.checkSelfPermission(this.requireContext(),
+                                                                 Manifest.permission.ACCESS_FINE_LOCATION)
+
+        return when (permissionResult) {
+            PackageManager.PERMISSION_GRANTED -> true
+
+            else -> {
+                this.requestPermissions(
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                    REQUEST_CODE_PERMISSION_ACCESS_FINE_LOCATION
+                )
+
+                false
+            }
+        }
+    }
+
+    /**
      * Method to override to perform action after the granted permission
      */
     protected open fun actionAfterPermission() {/* Do nothing here */}
+
+    // -- Exceptions --
+
+    /**
+     * Handles the location [Exception]
+     * @param exception an [Exception]
+     * @return a boolean that is true if there is an [Exception]
+     */
+    protected fun handleLocationException(exception: Exception?): Boolean {
+        // No exception
+        if (exception == null) {
+            return false
+        }
+
+        when (exception) {
+            is SecurityException -> this.checkAccessFineLocationPermission()
+
+            is ResolvableApiException -> {
+                // Location settings are not satisfied, but this can be fixed
+                // by showing the user a dialog.
+                try {
+                    // Show the dialog by calling startResolutionForResult(),
+                    // and check the result in onActivityResult().
+                    exception.startResolutionForResult(
+                        this.requireActivity(),
+                        REQUEST_CODE_CHECK_SETTINGS_TO_LOCATION
+                    )
+                }
+                catch (sendEx: SendIntentException) {
+                    // Ignore the error.
+                }
+            }
+        }
+
+        return true
+    }
 }
