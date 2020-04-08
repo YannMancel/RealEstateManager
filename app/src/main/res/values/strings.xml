@@ -43,10 +43,11 @@
 
     <!-- nav_graph.xml -->
     <string name="navigation_list_name">Real estate list</string>
-    <string name="navigation_details_name">Real estate details</string>
+    <string name="navigation_details_name">Details</string>
     <string name="navigation_settings_name">Settings</string>
     <string name="navigation_location_name">Location</string>
-    <string name="navigation_creator_name">Real estate creator</string>
+    <string name="navigation_creator_name">Creator</string>
+    <string name="navigation_edit_name">Edit</string>
 
     <!-- item.photo.xml & item_real_estate.xml -->
     <string name="menu_drawer_details">DETAILS</string>

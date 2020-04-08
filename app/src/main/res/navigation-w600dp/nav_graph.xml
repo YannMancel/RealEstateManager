@@ -49,6 +49,20 @@
         android:label="@string/navigation_creator_name"
         tools:layout="@layout/fragment_creator" />
 
+    <!-- fragment: EditFragment -->
+    <fragment
+        android:id="@+id/navigation_editFragment"
+        android:name="com.mancel.yann.realestatemanager.views.fragments.EditFragment"
+        android:label="@string/navigation_edit_name"
+        tools:layout="@layout/fragment_edit">
+
+        <argument
+            android:name="itemId"
+            app:argType="long"
+            android:defaultValue="0L" />
+
+    </fragment>
+
     <!-- dialog: settingsDialogFragment -->
     <dialog
         android:id="@+id/navigation_settingsDialogFragment"

@@ -31,7 +31,7 @@
         <argument
             android:name="itemId"
             app:argType="long"
-            android:defaultValue="0L" />
+            android:defaultValue="0L"/>
 
     </fragment>
 
@@ -40,14 +40,28 @@
         android:id="@+id/navigation_locationFragment"
         android:name="com.mancel.yann.realestatemanager.views.fragments.LocationFragment"
         android:label="@string/navigation_location_name"
-        tools:layout="@layout/fragment_location" />
+        tools:layout="@layout/fragment_location"/>
 
     <!-- fragment: CreatorFragment -->
     <fragment
         android:id="@+id/navigation_creatorFragment"
         android:name="com.mancel.yann.realestatemanager.views.fragments.CreatorFragment"
         android:label="@string/navigation_creator_name"
-        tools:layout="@layout/fragment_creator" />
+        tools:layout="@layout/fragment_creator"/>
+
+    <!-- fragment: EditFragment -->
+    <fragment
+        android:id="@+id/navigation_editFragment"
+        android:name="com.mancel.yann.realestatemanager.views.fragments.EditFragment"
+        android:label="@string/navigation_edit_name"
+        tools:layout="@layout/fragment_edit">
+
+        <argument
+            android:name="itemId"
+            app:argType="long"
+            android:defaultValue="0L" />
+
+    </fragment>
 
     <!-- dialog: settingsDialogFragment -->
     <dialog

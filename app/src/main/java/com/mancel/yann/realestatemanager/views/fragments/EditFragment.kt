@@ -50,7 +50,7 @@ import java.text.SimpleDateFormat
  * A [BaseFragment] subclass which implements [AdapterListener], [DialogListener]
  * and [OnMapReadyCallback].
  */
-class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReadyCallback {
+class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReadyCallback {
 
     // FIELDS --------------------------------------------------------------------------------------
 
@@ -69,7 +69,7 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
     // -- BaseFragment --
 
     @LayoutRes
-    override fun getFragmentLayout(): Int = R.layout.fragment_creator
+    override fun getFragmentLayout(): Int = R.layout.fragment_edit
 
     override fun configureDesign() {
         // UI
@@ -118,7 +118,7 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
             // Button: EDIT
             R.id.item_photo_edit_media -> {
                 PhotoDialogFragment.newInstance(
-                                        callback = this@CreatorFragment,
+                                        callback = this@EditFragment,
                                         urlPhoto = (v.tag as Photo).mUrlPicture,
                                         description = (v.tag as Photo).mDescription,
                                         mode = PhotoDialogFragment.PhotoDialogMode.UPDATE)
@@ -272,9 +272,9 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
             it.clear()
 
             val fullStreet = StringBuilder().run {
-                append(streetNumber ?: this@CreatorFragment.getString(R.string.details_no_street_number))
+                append(streetNumber ?: this@EditFragment.getString(R.string.details_no_street_number))
                 append(" ")
-                append(route ?: this@CreatorFragment.getString(R.string.details_no_street))
+                append(route ?: this@EditFragment.getString(R.string.details_no_street))
                 toString()
             }
 
@@ -329,7 +329,7 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
      */
     private fun configureRecyclerView() {
         // Adapter
-        this.mAdapter = PhotoAdapter(mCallback = this@CreatorFragment,
+        this.mAdapter = PhotoAdapter(mCallback = this@EditFragment,
                                      mButtonDisplayMode = PhotoAdapter.ButtonDisplayMode.EDIT_MODE)
 
         // LayoutManager
@@ -368,7 +368,7 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
                                      .commit()
         }
 
-        childFragment?.getMapAsync(this@CreatorFragment)
+        childFragment?.getMapAsync(this@EditFragment)
 
         // Hides the fragment
         this.childFragmentManager.fragments[0].view?.visibility = View.GONE
@@ -381,7 +381,7 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
      */
     private fun configurePhotosFomDatabase() {
         this.mPhotosFromDatabase =  this.mViewModel.getPhotos().apply {
-            observe(this@CreatorFragment.viewLifecycleOwner, Observer {
+            observe(this@EditFragment.viewLifecycleOwner, Observer {
                 /* Do nothing */
             })
         }
@@ -392,8 +392,8 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
      */
     private fun configurePhotoCreatorLiveData() {
         this.mPhotoCreatorLiveData =  this.mViewModel.getPhotoCreator().apply {
-            observe(this@CreatorFragment.viewLifecycleOwner, Observer {
-                photos -> this@CreatorFragment.mAdapter.updateData(photos)
+            observe(this@EditFragment.viewLifecycleOwner, Observer {
+                photos -> this@EditFragment.mAdapter.updateData(photos)
             })
         }
     }
@@ -496,7 +496,7 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
 
                 if (!isAlreadyPresentIntoDatabase && !isAlreadyPresentIntoCreator) {
                     PhotoDialogFragment.newInstance(
-                                            callback = this@CreatorFragment,
+                                            callback = this@EditFragment,
                                             urlPhoto = uri.toString())
                                        .show(
                                            this.requireActivity().supportFragmentManager,

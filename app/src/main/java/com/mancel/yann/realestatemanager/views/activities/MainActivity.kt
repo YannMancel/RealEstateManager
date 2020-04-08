@@ -61,8 +61,6 @@ class MainActivity : BaseActivity(), FragmentListener {
             //this.mViewModel.getCountOfRealEstatesByUserId(1L).removeObserver(this)
         })
 
-        Log.w(this@MainActivity::class.simpleName, "NAVIGATION")
-
         // Navigation
         this.configureFragmentNavigation()
     }
@@ -71,6 +69,7 @@ class MainActivity : BaseActivity(), FragmentListener {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         this.menuInflater.inflate(R.menu.toolbar_menu, menu)
+        this.configureBehaviorOfToolBar()
         return true
     }
 
@@ -168,5 +167,55 @@ class MainActivity : BaseActivity(), FragmentListener {
 
         // NavigationView
         this.activity_main_navigation_view.setupWithNavController(this.mNavController)
+    }
+
+    // -- Behaviors of Toolbar --
+
+    /**
+     * Configures the behavior of the [Toolbar]
+     */
+    private fun configureBehaviorOfToolBar() {
+        this.mNavController.addOnDestinationChangedListener { _, destination, _ ->
+            val addItem = this.getToolBar()!!
+                              .menu!!
+                              .findItem(R.id.navigation_creatorFragment)
+
+            val editItem = this.getToolBar()!!
+                               .menu!!
+                               .findItem(R.id.navigation_editFragment)
+
+            val searchItem = this.getToolBar()!!
+                                 .menu!!
+                                 .findItem(R.id.navigation_locationFragment)
+
+            when (destination.id) {
+                R.id.navigation_listFragment -> {
+                    addItem.isVisible = true
+                    editItem.isVisible = false
+                    searchItem.isVisible = true
+                }
+
+                R.id.navigation_detailsFragment -> {
+                    addItem.isVisible = true
+                    editItem.isVisible = true
+                    searchItem.isVisible = false
+                }
+
+                R.id.navigation_locationFragment -> {
+                    addItem.isVisible = false
+                    editItem.isVisible = false
+                    searchItem.isVisible = false
+                }
+
+                R.id.navigation_creatorFragment,
+                R.id.navigation_editFragment -> {
+                    addItem.isVisible = true
+                    editItem.isVisible = false
+                    searchItem.isVisible = false
+                }
+
+                else -> { /* Ignore all other ids */ }
+            }
+        }
     }
 }
