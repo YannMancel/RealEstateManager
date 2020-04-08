@@ -13,7 +13,7 @@ import androidx.room.*
  */
 @Entity(tableName = "point_of_interest",
         indices = [Index(value = ["name",
-                                  "loc_street", "loc_state", "loc_city", "loc_post_code"],
+                                  "loc_latitude", "loc_longitude"],
                          unique = true)])
 data class PointOfInterest(
 

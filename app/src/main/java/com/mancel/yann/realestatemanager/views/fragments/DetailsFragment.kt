@@ -148,28 +148,33 @@ class DetailsFragment : BaseFragment(), AdapterListener, OnMapReadyCallback {
             // Real estate
             it.mRealEstate?.let { realEstate ->
                 // Description
-                this.mRootView.fragment_details_description.text = realEstate.mDescription
+                this.mRootView.fragment_details_description.text =
+                    realEstate.mDescription ?:
+                            this.getString(R.string.details_no_description)
 
                 // Characteristics
                 this.mRootView.fragment_details_surface.text = this.getString(
                     R.string.details_characteristics,
-                    realEstate.mSurface,
-                    realEstate.mNumberOfRoom
+                    realEstate.mSurface ?: 0.0,
+                    realEstate.mNumberOfRoom ?: 0
                 )
 
                 // Address
                 realEstate.mAddress?.let { address ->
                     val fullAddress = """
-                        ${address.mStreet}
-                        ${address.mCity}
-                        ${address.mPostCode}
-                        ${address.mState}
+                        ${address.mStreet ?: this.getString(R.string.details_no_street)}
+                        ${address.mCity ?: this.getString(R.string.details_no_city)}
+                        ${address.mPostCode ?: this.getString(R.string.details_no_post_code)}
+                        ${address.mCountry ?: this.getString(R.string.details_no_country)}
                     """.trimIndent()
 
                     this.mRootView.fragment_details_address.text = fullAddress
 
                     // Google Maps
-                    this.showPointOfInterest(LatLng(-33.852, 151.211))
+                    this.showPointOfInterest(LatLng(
+                        address.mLatitude ?: 0.0,
+                        address.mLongitude ?: 0.0
+                    ))
                 }
             }
         }

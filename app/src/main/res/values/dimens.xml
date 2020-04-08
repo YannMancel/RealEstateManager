@@ -9,10 +9,15 @@
     <!-- NavigationView Header height -->
     <dimen name="navigation_header_height">220dp</dimen>
 
+    <!-- CardView Size -->
+    <dimen name="card_item_photo_width">150dp</dimen>
+    <dimen name="card_item_photo_height">180dp</dimen>
+    <dimen name="card_item_real_estate_height">80dp</dimen>
+
     <!-- ImageView Size -->
-    <dimen name="image_view_item_global_size">80dp</dimen>
-    <dimen name="image_view_item_photo_width">150dp</dimen>
-    <dimen name="image_view_item_photo_height">180dp</dimen>
+    <dimen name="image_view_item_real_estate_width">@dimen/card_item_real_estate_height</dimen>
+    <dimen name="image_view_item_photo_width">@dimen/card_item_photo_width</dimen>
+    <dimen name="image_view_item_photo_height">@dimen/card_item_photo_height</dimen>
     <dimen name="filter_photo_height">60dp</dimen>
 
     <!-- Margin -->

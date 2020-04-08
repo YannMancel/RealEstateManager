@@ -35,7 +35,7 @@ class PointOfInterestDAOTest {
     private lateinit var mPointOfInterestDAO: PointOfInterestDAO
 
     // The fields that correspond to an unique index or an unique indices couple must not be null.
-    private val mAddress = Address("1", "", "", 0)
+    private val mAddress = Address(mLatitude = 0.0, mLongitude = 0.0)
     private val mPointOfInterest1 = PointOfInterest(mName = "school", mAddress = this.mAddress)
     private val mPointOfInterest2 = PointOfInterest(mName = "business", mAddress = this.mAddress)
 

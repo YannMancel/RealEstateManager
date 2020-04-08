@@ -32,7 +32,7 @@ class RealEstateDAOTest {
     private lateinit var mRealEstateDAO: RealEstateDAO
 
     // The fields that correspond to an unique index or an unique indices couple must not be null.
-    private val mAddress = Address("1", "", "", 0)
+    private val mAddress = Address(mLatitude = 0.0, mLongitude = 0.0)
     private val mRealEstate1 = RealEstate(mType = "Flat", mSurface = 0.0, mNumberOfRoom = 2, mEstateAgentId = 1L, mAddress = this.mAddress)
     private val mRealEstate2 = RealEstate(mType = "House", mSurface = 0.0, mNumberOfRoom = 2, mEstateAgentId = 1L, mAddress = this.mAddress)
 

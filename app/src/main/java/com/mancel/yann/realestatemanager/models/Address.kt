@@ -12,12 +12,18 @@ data class Address(
     @ColumnInfo(name = "street")
     val mStreet: String? = null,
 
-    @ColumnInfo(name = "state")
-    val mState: String? = null,
-
     @ColumnInfo(name = "city")
     val mCity: String? = null,
 
     @ColumnInfo(name = "post_code")
-    val mPostCode: Int? = null
+    val mPostCode: Int? = null,
+
+    @ColumnInfo(name = "country")
+    val mCountry: String? = null,
+
+    @ColumnInfo(name = "latitude")
+    val mLatitude: Double? = null,
+
+    @ColumnInfo(name = "longitude")
+    val mLongitude: Double? = null
 )

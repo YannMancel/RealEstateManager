@@ -39,6 +39,7 @@ import com.mancel.yann.realestatemanager.views.dialogs.DialogListener
 import com.mancel.yann.realestatemanager.views.dialogs.PhotoDialogFragment
 import kotlinx.android.synthetic.main.fragment_creator.*
 import kotlinx.android.synthetic.main.fragment_creator.view.*
+import java.lang.StringBuilder
 import java.text.SimpleDateFormat
 
 /**
@@ -245,7 +246,7 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
         this.mRootView.fragment_creator_country.visibility = View.VISIBLE
 
         // Show Google Maps
-        this@CreatorFragment.childFragmentManager.fragments[0].view?.visibility = View.VISIBLE
+        this.childFragmentManager.fragments[0].view?.visibility = View.VISIBLE
 
         // Retrieve address
         var streetNumber: String? = null
@@ -269,25 +270,33 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
         // Street
         this.mRootView.fragment_creator_address.editText?.text?.let {
             it.clear()
-            it.append("$streetNumber $route")
+
+            val fullStreet = StringBuilder().run {
+                append(streetNumber ?: this@CreatorFragment.getString(R.string.details_no_street_number))
+                append(" ")
+                append(route ?: this@CreatorFragment.getString(R.string.details_no_street))
+                toString()
+            }
+
+            it.append(fullStreet)
         }
 
         // City
         this.mRootView.fragment_creator_city.editText?.text?.let {
             it.clear()
-            it.append(locality)
+            it.append(locality ?: this.getString(R.string.details_no_city))
         }
 
         // Post code
         this.mRootView.fragment_creator_post_code.editText?.text?.let {
             it.clear()
-            it.append(postalCode)
+            it.append(postalCode ?: this.getString(R.string.details_no_post_code))
         }
 
         // Country
         this.mRootView.fragment_creator_country.editText?.text?.let {
             it.clear()
-            it.append(country)
+            it.append(country ?: this.getString(R.string.details_no_country))
         }
     }
 
@@ -548,7 +557,9 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
                 mStreet = this.fragment_creator_address.editText?.text?.toString(),
                 mCity = this.fragment_creator_city.editText?.text?.toString(),
                 mPostCode = this.fragment_creator_post_code.editText?.text?.toString()?.toInt(),
-                mState = this.fragment_creator_country.editText?.text?.toString()
+                mCountry = this.fragment_creator_country.editText?.text?.toString(),
+                mLatitude = this.mGoogleMap?.projection?.visibleRegion?.latLngBounds?.center?.latitude,
+                mLongitude = this.mGoogleMap?.projection?.visibleRegion?.latLngBounds?.center?.longitude
             )
         )
 

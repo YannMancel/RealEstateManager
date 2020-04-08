@@ -62,6 +62,7 @@ class PhotoAdapter(
             Glide.with(holder.itemView)
                  .load(photo.mUrlPicture)
                  .centerCrop()
+                 .placeholder(R.drawable.placeholder_image)
                  .fallback(R.drawable.ic_photo)
                  .error(R.drawable.ic_clear)
                  .into(holder.itemView.item_photo_image)

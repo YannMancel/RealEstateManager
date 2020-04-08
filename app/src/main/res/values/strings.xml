@@ -24,6 +24,12 @@
 
     <!-- DetailsFragment.kt -->
     <string name="details_characteristics">Surface: %1$.2f m2\nNumber of rooms: %2$d</string>
+    <string name="details_no_description">No description</string>
+    <string name="details_no_street_number">[Street Number: No data]</string>
+    <string name="details_no_street">[Street: No data]</string>
+    <string name="details_no_city">[City: No data]</string>
+    <string name="details_no_post_code">[Post code: No data]</string>
+    <string name="details_no_country">[Country: No data]</string>
 
     <!-- SettingsDialogFragment.kt -->
     <string name="title_settings_dialog_fragment">Settings</string>

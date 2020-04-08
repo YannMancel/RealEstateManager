@@ -81,7 +81,7 @@ interface RealEstateDAO {
         SELECT id_real_estate, 
                type, 
                price_dollar, 
-               loc_street, loc_state, loc_city, loc_post_code
+               loc_street, loc_city, loc_post_code, loc_country, loc_latitude, loc_longitude
         FROM real_estate
         WHERE estate_agent_id = :userId
         """)

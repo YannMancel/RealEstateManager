@@ -21,7 +21,7 @@ import java.util.*
                                   onDelete = ForeignKey.NO_ACTION,
                                   onUpdate = ForeignKey.CASCADE)],
         indices = [Index(value = ["type", "surface_m2", "number_of_room",
-                                  "loc_street", "loc_state", "loc_city", "loc_post_code"],
+                                  "loc_latitude", "loc_longitude"],
                          unique = true)])
 data class RealEstate(
 
