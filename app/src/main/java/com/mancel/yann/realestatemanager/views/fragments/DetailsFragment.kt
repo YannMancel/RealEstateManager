@@ -61,9 +61,7 @@ class DetailsFragment : BaseFragment(), AdapterListener, OnMapReadyCallback {
                                                                  View.GONE
     }
 
-    override fun onClick(v: View?) {
-        //Log.d(this::class.java.simpleName, "Data: ${v?.tag as? String}")
-    }
+    override fun onClick(v: View?) { /* Do nothing */ }
 
     // -- OnMapReadyCallback interface --
 

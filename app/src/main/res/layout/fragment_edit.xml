@@ -46,7 +46,7 @@
                         android:layout_margin="@dimen/margin_normal"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toStartOf="@id/fragment_creator_type"
+                        app:layout_constraintEnd_toStartOf="@id/fragment_edit_type"
                         android:baselineAlignBottom="true"
                         android:src="@drawable/ic_home"
                         android:tint="@android:color/black"
@@ -54,14 +54,14 @@
 
                     <!-- TextInputLayout: Type -->
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/fragment_creator_type"
+                        android:id="@+id/fragment_edit_type"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_little"
                         android:layout_marginBottom="@dimen/margin_little"
                         android:layout_marginEnd="@dimen/margin_normal"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toTopOf="@id/fragment_creator_price"
+                        app:layout_constraintBottom_toTopOf="@id/fragment_edit_price"
                         app:layout_constraintStart_toEndOf="@id/icon_home"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:errorEnabled="true"
@@ -81,14 +81,14 @@
 
                     <!-- TextInputLayout: Price -->
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/fragment_creator_price"
+                        android:id="@+id/fragment_edit_price"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/margin_little"
                         android:layout_marginEnd="@dimen/margin_normal"
-                        app:layout_constraintTop_toBottomOf="@id/fragment_creator_type"
+                        app:layout_constraintTop_toBottomOf="@id/fragment_edit_type"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="@id/fragment_creator_type"
+                        app:layout_constraintStart_toStartOf="@id/fragment_edit_type"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:hintEnabled="true"
                         app:errorEnabled="true"
@@ -136,21 +136,21 @@
                         android:layout_margin="@dimen/margin_normal"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toStartOf="@id/fragment_creator_surface"
+                        app:layout_constraintEnd_toStartOf="@id/fragment_edit_surface"
                         android:src="@drawable/ic_settings"
                         android:tint="@android:color/black"
                         android:contentDescription="@null"/>
 
                     <!-- TextInputLayout: Surface -->
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/fragment_creator_surface"
+                        android:id="@+id/fragment_edit_surface"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_little"
                         android:layout_marginBottom="@dimen/margin_little"
                         android:layout_marginEnd="@dimen/margin_normal"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toTopOf="@id/fragment_creator_number_of_room"
+                        app:layout_constraintBottom_toTopOf="@id/fragment_edit_number_of_room"
                         app:layout_constraintStart_toEndOf="@id/icon_setting"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:errorEnabled="true"
@@ -169,14 +169,14 @@
 
                     <!-- TextInputLayout: Number of room -->
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/fragment_creator_number_of_room"
+                        android:id="@+id/fragment_edit_number_of_room"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/margin_little"
                         android:layout_marginEnd="@dimen/margin_normal"
-                        app:layout_constraintTop_toBottomOf="@id/fragment_creator_surface"
-                        app:layout_constraintBottom_toTopOf="@id/fragment_creator_description"
-                        app:layout_constraintStart_toStartOf="@id/fragment_creator_surface"
+                        app:layout_constraintTop_toBottomOf="@id/fragment_edit_surface"
+                        app:layout_constraintBottom_toTopOf="@id/fragment_edit_description"
+                        app:layout_constraintStart_toStartOf="@id/fragment_edit_surface"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:errorEnabled="true"
                         app:hintEnabled="true"
@@ -194,14 +194,14 @@
 
                     <!-- TextInputLayout: Description -->
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/fragment_creator_description"
+                        android:id="@+id/fragment_edit_description"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/margin_little"
                         android:layout_marginEnd="@dimen/margin_normal"
-                        app:layout_constraintTop_toBottomOf="@id/fragment_creator_number_of_room"
+                        app:layout_constraintTop_toBottomOf="@id/fragment_edit_number_of_room"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="@id/fragment_creator_surface"
+                        app:layout_constraintStart_toStartOf="@id/fragment_edit_surface"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:errorEnabled="true"
                         app:hintEnabled="true"
@@ -245,20 +245,20 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/margin_normal"
-                        app:layout_constraintTop_toTopOf="@id/fragment_creator_add_address"
-                        app:layout_constraintBottom_toBottomOf="@id/fragment_creator_add_address"
+                        app:layout_constraintTop_toTopOf="@id/fragment_edit_add_address"
+                        app:layout_constraintBottom_toBottomOf="@id/fragment_edit_add_address"
                         app:layout_constraintStart_toStartOf="parent"
                         android:src="@drawable/ic_place"
                         android:contentDescription="@null"/>
 
                     <!-- ImageButton: Add address -->
                     <ImageButton
-                        android:id="@+id/fragment_creator_add_address"
+                        android:id="@+id/fragment_edit_add_address"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/margin_normal"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toTopOf="@id/fragment_creator_address"
+                        app:layout_constraintBottom_toTopOf="@id/fragment_edit_address"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintVertical_bias="0"
                         android:src="@drawable/ic_add"
@@ -268,13 +268,13 @@
 
                     <!-- TextInputLayout: Address -->
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/fragment_creator_address"
+                        android:id="@+id/fragment_edit_address"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/margin_normal"
                         android:layout_marginEnd="@dimen/margin_normal"
-                        app:layout_constraintTop_toBottomOf="@id/fragment_creator_add_address"
-                        app:layout_constraintBottom_toTopOf="@id/fragment_creator_city"
+                        app:layout_constraintTop_toBottomOf="@id/fragment_edit_add_address"
+                        app:layout_constraintBottom_toTopOf="@id/fragment_edit_city"
                         app:layout_constraintStart_toEndOf="@id/icon_place"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:hintEnabled="true"
@@ -293,14 +293,14 @@
 
                     <!-- TextInputLayout: City -->
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/fragment_creator_city"
+                        android:id="@+id/fragment_edit_city"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_little"
                         android:layout_marginEnd="@dimen/margin_normal"
-                        app:layout_constraintTop_toBottomOf="@id/fragment_creator_address"
-                        app:layout_constraintBottom_toTopOf="@id/fragment_creator_post_code"
-                        app:layout_constraintStart_toStartOf="@id/fragment_creator_address"
+                        app:layout_constraintTop_toBottomOf="@id/fragment_edit_address"
+                        app:layout_constraintBottom_toTopOf="@id/fragment_edit_post_code"
+                        app:layout_constraintStart_toStartOf="@id/fragment_edit_address"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:hintEnabled="true"
                         app:boxBackgroundColor="@android:color/transparent"
@@ -318,15 +318,15 @@
 
                     <!-- TextInputLayout: Post code -->
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/fragment_creator_post_code"
+                        android:id="@+id/fragment_edit_post_code"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_little"
                         android:layout_marginEnd="@dimen/margin_normal"
-                        app:layout_constraintTop_toBottomOf="@id/fragment_creator_city"
-                        app:layout_constraintBottom_toTopOf="@id/fragment_creator_map_lite_mode"
-                        app:layout_constraintStart_toStartOf="@id/fragment_creator_address"
-                        app:layout_constraintEnd_toStartOf="@id/fragment_creator_country"
+                        app:layout_constraintTop_toBottomOf="@id/fragment_edit_city"
+                        app:layout_constraintBottom_toTopOf="@id/fragment_edit_map_lite_mode"
+                        app:layout_constraintStart_toStartOf="@id/fragment_edit_address"
+                        app:layout_constraintEnd_toStartOf="@id/fragment_edit_country"
                         app:layout_constraintHorizontal_weight="@integer/horizontal_weight_address_left"
                         app:hintEnabled="true"
                         app:boxBackgroundColor="@android:color/transparent"
@@ -344,13 +344,13 @@
 
                     <!-- TextInputLayout: Country -->
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/fragment_creator_country"
+                        android:id="@+id/fragment_edit_country"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/margin_normal"
-                        app:layout_constraintTop_toTopOf="@id/fragment_creator_post_code"
-                        app:layout_constraintBottom_toBottomOf="@id/fragment_creator_post_code"
-                        app:layout_constraintStart_toEndOf="@id/fragment_creator_post_code"
+                        app:layout_constraintTop_toTopOf="@id/fragment_edit_post_code"
+                        app:layout_constraintBottom_toBottomOf="@id/fragment_edit_post_code"
+                        app:layout_constraintStart_toEndOf="@id/fragment_edit_post_code"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_weight="@integer/horizontal_weight_address_right"
                         app:hintEnabled="true"
@@ -369,16 +369,16 @@
 
                     <!-- fragment: Google Maps (Lite Mode) -->
                     <fragment
-                        android:id="@+id/fragment_creator_map_lite_mode"
+                        android:id="@+id/fragment_edit_map_lite_mode"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
                         app:layout_constraintDimensionRatio="1:1"
                         android:layout_marginTop="@dimen/margin_normal"
                         android:layout_marginBottom="@dimen/margin_normal"
                         android:layout_marginEnd="@dimen/margin_normal"
-                        app:layout_constraintTop_toBottomOf="@id/fragment_creator_post_code"
+                        app:layout_constraintTop_toBottomOf="@id/fragment_edit_post_code"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="@id/fragment_creator_address"
+                        app:layout_constraintStart_toStartOf="@id/fragment_edit_address"
                         app:layout_constraintEnd_toEndOf="parent"
                         android:name="com.google.android.gms.maps.SupportMapFragment"
                         map:cameraZoom="17"
@@ -413,22 +413,22 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/margin_normal"
-                        app:layout_constraintTop_toTopOf="@id/fragment_creator_enable"
-                        app:layout_constraintBottom_toBottomOf="@id/fragment_creator_enable"
+                        app:layout_constraintTop_toTopOf="@id/fragment_edit_enable"
+                        app:layout_constraintBottom_toBottomOf="@id/fragment_edit_enable"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toStartOf="@id/fragment_creator_enable"
+                        app:layout_constraintEnd_toStartOf="@id/fragment_edit_enable"
                         android:src="@drawable/ic_date"
                         android:tint="@android:color/black"
                         android:contentDescription="@null"/>
 
                     <!-- SwitchMaterial: Enable -->
                     <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/fragment_creator_enable"
+                        android:id="@+id/fragment_edit_enable"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_little"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toTopOf="@id/fragment_creator_effective_date"
+                        app:layout_constraintBottom_toTopOf="@id/fragment_edit_effective_date"
                         app:layout_constraintStart_toEndOf="@id/icon_date"
                         app:layout_constraintEnd_toEndOf="parent"
                         android:padding="@dimen/padding_normal"
@@ -437,15 +437,15 @@
 
                     <!-- TextInputLayout: Effective date -->
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/fragment_creator_effective_date"
+                        android:id="@+id/fragment_edit_effective_date"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_little"
                         android:layout_marginBottom="@dimen/margin_little"
                         android:layout_marginEnd="@dimen/margin_normal"
-                        app:layout_constraintTop_toBottomOf="@id/fragment_creator_enable"
+                        app:layout_constraintTop_toBottomOf="@id/fragment_edit_enable"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="@id/fragment_creator_enable"
+                        app:layout_constraintStart_toStartOf="@id/fragment_edit_enable"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:errorEnabled="true"
                         app:hintEnabled="true"
@@ -490,15 +490,15 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/margin_normal"
-                        app:layout_constraintTop_toTopOf="@id/fragment_creator_add_photo"
-                        app:layout_constraintBottom_toBottomOf="@id/fragment_creator_add_photo"
+                        app:layout_constraintTop_toTopOf="@id/fragment_edit_add_photo"
+                        app:layout_constraintBottom_toBottomOf="@id/fragment_edit_add_photo"
                         app:layout_constraintStart_toStartOf="parent"
                         android:src="@drawable/ic_photo"
                         android:contentDescription="@null"/>
 
                     <!-- ImageButton: Add photo -->
                     <ImageButton
-                        android:id="@+id/fragment_creator_add_photo"
+                        android:id="@+id/fragment_edit_add_photo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/margin_normal"
@@ -513,11 +513,11 @@
 
                     <!-- RecyclerView: List of photos -->
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/fragment_creator_RecyclerView"
+                        android:id="@+id/fragment_edit_RecyclerView"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/margin_normal"
-                        app:layout_constraintTop_toBottomOf="@id/fragment_creator_add_photo"
+                        app:layout_constraintTop_toBottomOf="@id/fragment_edit_add_photo"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@id/icon_photo"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -535,7 +535,7 @@
 
     <!-- FloatingActionButton -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fragment_creator_fab"
+        android:id="@+id/fragment_edit_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_normal"

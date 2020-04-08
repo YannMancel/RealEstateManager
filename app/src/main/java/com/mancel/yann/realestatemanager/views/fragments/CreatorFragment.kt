@@ -135,12 +135,6 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
         photo: Photo,
         mode: PhotoDialogFragment.PhotoDialogMode
     ) {
-        // Changes the real estate id
-        photo.apply {
-            // Test
-            mRealEstateId = 1L
-        }
-
         when (mode) {
             // ADD
             PhotoDialogFragment.PhotoDialogMode.ADD -> this.mPhotoCreatorLiveData.addPhoto(photo)

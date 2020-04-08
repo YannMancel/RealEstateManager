@@ -37,8 +37,14 @@ import com.mancel.yann.realestatemanager.views.adapters.AdapterListener
 import com.mancel.yann.realestatemanager.views.adapters.PhotoAdapter
 import com.mancel.yann.realestatemanager.views.dialogs.DialogListener
 import com.mancel.yann.realestatemanager.views.dialogs.PhotoDialogFragment
-import kotlinx.android.synthetic.main.fragment_creator.*
-import kotlinx.android.synthetic.main.fragment_creator.view.*
+import kotlinx.android.synthetic.main.fragment_edit.*
+import kotlinx.android.synthetic.main.fragment_edit.view.*
+import kotlinx.android.synthetic.main.fragment_edit.view.fragment_edit_address
+import kotlinx.android.synthetic.main.fragment_edit.view.fragment_edit_city
+import kotlinx.android.synthetic.main.fragment_edit.view.fragment_edit_country
+import kotlinx.android.synthetic.main.fragment_edit.view.fragment_edit_post_code
+import kotlinx.android.synthetic.main.fragment_edit.view.fragment_edit_price
+import kotlinx.android.synthetic.main.fragment_edit.view.fragment_edit_type
 import java.lang.StringBuilder
 import java.text.SimpleDateFormat
 
@@ -53,6 +59,10 @@ import java.text.SimpleDateFormat
 class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReadyCallback {
 
     // FIELDS --------------------------------------------------------------------------------------
+
+    private val mItemId: Long by lazy {
+        EditFragmentArgs.fromBundle(this.requireArguments()).itemId
+    }
 
     private lateinit var mAdapter: PhotoAdapter
     private lateinit var mPhotosFromDatabase: LiveData<List<Photo>>
@@ -104,10 +114,10 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
     // -- AdapterListener interface --
 
     override fun onDataChanged() {
-        this.mRootView.fragment_creator_RecyclerView.visibility = if (this.mAdapter.itemCount != 0)
-                                                                      View.VISIBLE
-                                                                  else
-                                                                      View.GONE
+        this.mRootView.fragment_edit_RecyclerView.visibility = if (this.mAdapter.itemCount != 0)
+                                                                   View.VISIBLE
+                                                               else
+                                                                   View.GONE
     }
 
     override fun onClick(v: View?) {
@@ -135,12 +145,6 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
         photo: Photo,
         mode: PhotoDialogFragment.PhotoDialogMode
     ) {
-        // Changes the real estate id
-        photo.apply {
-            // Test
-            mRealEstateId = 1L
-        }
-
         when (mode) {
             // ADD
             PhotoDialogFragment.PhotoDialogMode.ADD -> this.mPhotoCreatorLiveData.addPhoto(photo)
@@ -166,22 +170,16 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
      */
     private fun configureFieldsOfData() {
         this.configureListenerOfFields(
-            this.mRootView.fragment_creator_type,
-            this.mRootView.fragment_creator_price,
-            this.mRootView.fragment_creator_surface,
-            this.mRootView.fragment_creator_number_of_room,
-            this.mRootView.fragment_creator_description,
-            this.mRootView.fragment_creator_effective_date
+            this.mRootView.fragment_edit_type,
+            this.mRootView.fragment_edit_price,
+            this.mRootView.fragment_edit_surface,
+            this.mRootView.fragment_edit_number_of_room,
+            this.mRootView.fragment_edit_description,
+            this.mRootView.fragment_edit_effective_date
         )
 
-        // Hides field for address
-        this.mRootView.fragment_creator_address.visibility = View.GONE
-        this.mRootView.fragment_creator_city.visibility = View.GONE
-        this.mRootView.fragment_creator_post_code.visibility = View.GONE
-        this.mRootView.fragment_creator_country.visibility = View.GONE
-
         // Type: Populates the adapter
-        (this.mRootView.fragment_creator_type.editText as? AutoCompleteTextView)?.setAdapter(
+        (this.mRootView.fragment_edit_type.editText as? AutoCompleteTextView)?.setAdapter(
             ArrayAdapter(
                 this.requireContext(),
                 R.layout.item_type,
@@ -239,15 +237,6 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
      * @param place a [Place] that contains the address
      */
     private fun showAddressIntoField(place: Place) {
-        // Show field for address
-        this.mRootView.fragment_creator_address.visibility = View.VISIBLE
-        this.mRootView.fragment_creator_city.visibility = View.VISIBLE
-        this.mRootView.fragment_creator_post_code.visibility = View.VISIBLE
-        this.mRootView.fragment_creator_country.visibility = View.VISIBLE
-
-        // Show Google Maps
-        this.childFragmentManager.fragments[0].view?.visibility = View.VISIBLE
-
         // Retrieve address
         var streetNumber: String? = null
         var route: String? = null
@@ -268,7 +257,7 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
         }
 
         // Street
-        this.mRootView.fragment_creator_address.editText?.text?.let {
+        this.mRootView.fragment_edit_address.editText?.text?.let {
             it.clear()
 
             val fullStreet = StringBuilder().run {
@@ -282,19 +271,19 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
         }
 
         // City
-        this.mRootView.fragment_creator_city.editText?.text?.let {
+        this.mRootView.fragment_edit_city.editText?.text?.let {
             it.clear()
             it.append(locality ?: this.getString(R.string.details_no_city))
         }
 
         // Post code
-        this.mRootView.fragment_creator_post_code.editText?.text?.let {
+        this.mRootView.fragment_edit_post_code.editText?.text?.let {
             it.clear()
             it.append(postalCode ?: this.getString(R.string.details_no_post_code))
         }
 
         // Country
-        this.mRootView.fragment_creator_country.editText?.text?.let {
+        this.mRootView.fragment_edit_country.editText?.text?.let {
             it.clear()
             it.append(country ?: this.getString(R.string.details_no_country))
         }
@@ -307,17 +296,17 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
      */
     private fun configureListenerOfEachButton() {
         // Button: Add address
-        this.mRootView.fragment_creator_add_address.setOnClickListener {
+        this.mRootView.fragment_edit_add_address.setOnClickListener {
             this.actionToSearchAddress()
         }
 
         // Button: Add photo
-        this.mRootView.fragment_creator_add_photo.setOnClickListener {
+        this.mRootView.fragment_edit_add_photo.setOnClickListener {
             this.actionToAddPhoto()
         }
 
         // FAB
-        this.mRootView.fragment_creator_fab.setOnClickListener {
+        this.mRootView.fragment_edit_fab.setOnClickListener {
             this.actionToAddRealEstate()
         }
     }
@@ -342,7 +331,7 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
                                             DividerItemDecoration.HORIZONTAL)
 
         // RecyclerView
-        with(this.mRootView.fragment_creator_RecyclerView) {
+        with(this.mRootView.fragment_edit_RecyclerView) {
             setHasFixedSize(true)
             layoutManager = viewManager
             addItemDecoration(divider)
@@ -358,20 +347,17 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
      */
     private fun configureSupportMapFragment() {
         var childFragment = this.childFragmentManager
-                                .findFragmentById(R.id.fragment_creator_map_lite_mode) as? SupportMapFragment
+                                .findFragmentById(R.id.fragment_edit_map_lite_mode) as? SupportMapFragment
 
         if (childFragment == null) {
             childFragment = SupportMapFragment.newInstance()
 
             this.childFragmentManager.beginTransaction()
-                                     .add(R.id.fragment_creator_map_lite_mode, childFragment)
+                                     .add(R.id.fragment_edit_map_lite_mode, childFragment)
                                      .commit()
         }
 
         childFragment?.getMapAsync(this@EditFragment)
-
-        // Hides the fragment
-        this.childFragmentManager.fragments[0].view?.visibility = View.GONE
     }
 
     // -- LiveData --
@@ -383,6 +369,7 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
         this.mPhotosFromDatabase =  this.mViewModel.getPhotos().apply {
             observe(this@EditFragment.viewLifecycleOwner, Observer {
                 /* Do nothing */
+                // todo: 08/04/2020 - Add action
             })
         }
     }
@@ -394,6 +381,7 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
         this.mPhotoCreatorLiveData =  this.mViewModel.getPhotoCreator().apply {
             observe(this@EditFragment.viewLifecycleOwner, Observer {
                 photos -> this@EditFragment.mAdapter.updateData(photos)
+                // todo: 08/04/2020 - Add action
             })
         }
     }
@@ -525,12 +513,12 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
     private fun actionToAddRealEstate() {
         // Errors
         val isCanceled = this.configureErrorOfFields(
-            this.mRootView.fragment_creator_type,
-            this.mRootView.fragment_creator_price,
-            this.mRootView.fragment_creator_surface,
-            this.mRootView.fragment_creator_number_of_room,
-            this.mRootView.fragment_creator_description,
-            this.mRootView.fragment_creator_effective_date
+            this.mRootView.fragment_edit_type,
+            this.mRootView.fragment_edit_price,
+            this.mRootView.fragment_edit_surface,
+            this.mRootView.fragment_edit_number_of_room,
+            this.mRootView.fragment_edit_description,
+            this.mRootView.fragment_edit_effective_date
         )
 
         if (isCanceled) {
@@ -544,29 +532,29 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
 
         // todo - 06/04/2020 - Next feature: Add user's authentication instead of 1L
         val realEstate = RealEstate(
-            mType = this.fragment_creator_type.editText?.text?.toString(),
-            mPrice = this.fragment_creator_price.editText?.text?.toString()?.toDouble(),
-            mSurface = this.mRootView.fragment_creator_surface.editText?.text?.toString()?.toDouble(),
-            mNumberOfRoom = this.mRootView.fragment_creator_number_of_room.editText?.text?.toString()?.toInt(),
-            mDescription = this.mRootView.fragment_creator_description.editText?.text?.toString(),
-            mIsEnable = this.mRootView.fragment_creator_enable.isChecked,
-            mEffectiveDate = SimpleDateFormat("dd/MM/yyyy").parse(this.mRootView.fragment_creator_effective_date.editText?.text?.toString()),
+            mType = this.fragment_edit_type.editText?.text?.toString(),
+            mPrice = this.fragment_edit_price.editText?.text?.toString()?.toDouble(),
+            mSurface = this.mRootView.fragment_edit_surface.editText?.text?.toString()?.toDouble(),
+            mNumberOfRoom = this.mRootView.fragment_edit_number_of_room.editText?.text?.toString()?.toInt(),
+            mDescription = this.mRootView.fragment_edit_description.editText?.text?.toString(),
+            mIsEnable = this.mRootView.fragment_edit_enable.isChecked,
+            mEffectiveDate = SimpleDateFormat("dd/MM/yyyy").parse(this.mRootView.fragment_edit_effective_date.editText?.text?.toString()),
             mSaleDate = null,
             mEstateAgentId = 1L,
             mAddress = Address(
-                mStreet = this.fragment_creator_address.editText?.text?.toString(),
-                mCity = this.fragment_creator_city.editText?.text?.toString(),
-                mPostCode = this.fragment_creator_post_code.editText?.text?.toString()?.toInt(),
-                mCountry = this.fragment_creator_country.editText?.text?.toString(),
+                mStreet = this.fragment_edit_address.editText?.text?.toString(),
+                mCity = this.fragment_edit_city.editText?.text?.toString(),
+                mPostCode = this.fragment_edit_post_code.editText?.text?.toString()?.toInt(),
+                mCountry = this.fragment_edit_country.editText?.text?.toString(),
                 mLatitude = this.mGoogleMap?.projection?.visibleRegion?.latLngBounds?.center?.latitude,
                 mLongitude = this.mGoogleMap?.projection?.visibleRegion?.latLngBounds?.center?.longitude
             )
         )
 
-        this.mViewModel.insertRealEstate(
-            realEstate,
-            this.mPhotoCreatorLiveData.value,
-            null
-        )
+//        this.mViewModel.insertRealEstate(
+//            realEstate,
+//            this.mPhotoCreatorLiveData.value,
+//            null
+//        )
     }
 }
