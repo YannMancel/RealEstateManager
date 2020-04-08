@@ -68,6 +68,10 @@ class RealEstateRepositoryImpl(
         return this.mRealEstateDAO.getRealEstatesWithPointsOfInterestByUserId(userId)
     }
 
+    override fun getRealEstateWithPhotosById(realEstateId: Long): LiveData<RealEstateWithPhotos> {
+        return this.mRealEstateDAO.getRealEstateWithPhotosById(realEstateId)
+    }
+
     // -- Update --
 
     override suspend fun updateRealEstate(

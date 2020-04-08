@@ -35,6 +35,8 @@ interface RealEstateRepository {
 
     fun getRealEstatesWithPointsOfInterestByUserId(userId: Long): LiveData<List<RealEstateWithPointsOfInterest>>
 
+    fun getRealEstateWithPhotosById(realEstateId: Long): LiveData<RealEstateWithPhotos>
+
     // -- Update --
 
     suspend fun updateRealEstate(realEstate: RealEstate): Int

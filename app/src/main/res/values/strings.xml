@@ -22,6 +22,9 @@
     <string name="creation_photo_cancel">Photo canceled</string>
     <string name="creator_search_cancel">Search canceled</string>
 
+    <!-- DetailsFragment.kt -->
+    <string name="details_characteristics">Surface: %1$.2f m2\nNumber of rooms: %2$d</string>
+
     <!-- SettingsDialogFragment.kt -->
     <string name="title_settings_dialog_fragment">Settings</string>
 
@@ -60,5 +63,11 @@
         <item>House</item>
         <item>Other</item>
     </string-array>
+
+    <!-- fragment_details.xml -->
+    <string name="title_media_details">Media</string>
+    <string name="title_description_details">Description</string>
+    <string name="title_description_characteristics">Characteristics</string>
+    <string name="title_description_address">Address</string>
 
 </resources>

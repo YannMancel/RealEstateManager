@@ -38,6 +38,7 @@ class RealEstateViewModel(
 
     private var mCountOfRealEstateByUserId: LiveData<Int>? = null
     private var mRealEstatesWithPhotos: LiveData<List<RealEstateWithPhotos>>? = null
+    private var mRealEstateWithPhotos: LiveData<RealEstateWithPhotos>? = null
 
     private var mPhotosByRealEstateId: LiveData<List<Photo>>? = null
     private var mPhotos: LiveData<List<Photo>>? = null
@@ -187,6 +188,18 @@ class RealEstateViewModel(
             this.mRealEstatesWithPhotos = this.mRealEstateRepository.getRealEstatesWithPhotosByUserId(userId)
         }
         return this.mRealEstatesWithPhotos!!
+    }
+
+    /**
+     * Gets a [RealEstateWithPhotos] by its Id
+     * @param realEstateId a [Long] that contains the real estate Id
+     * @return a [LiveData] of [RealEstateWithPhotos]
+     */
+    fun getRealEstateWithPhotosById(realEstateId: Long): LiveData<RealEstateWithPhotos> {
+        if (this.mRealEstateWithPhotos == null) {
+            this.mRealEstateWithPhotos = this.mRealEstateRepository.getRealEstateWithPhotosById(realEstateId)
+        }
+        return this.mRealEstateWithPhotos!!
     }
 
     // -- Photo --

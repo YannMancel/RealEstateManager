@@ -85,7 +85,9 @@ interface RealEstateDAO {
         FROM real_estate
         WHERE estate_agent_id = :userId
         """)
-    fun getIdTypeAddressPriceTupleOfRealEstateByUserId(userId: Long): LiveData<List<IdTypeAddressPriceTupleOfRealEstate>>
+    fun getIdTypeAddressPriceTupleOfRealEstateByUserId(
+        userId: Long
+    ): LiveData<List<IdTypeAddressPriceTupleOfRealEstate>>
 
     /**
      * Usage:
@@ -98,7 +100,9 @@ interface RealEstateDAO {
         FROM real_estate 
         WHERE estate_agent_id = :userId
         """)
-    fun getRealEstatesWithPhotosByUserId(userId: Long): LiveData<List<RealEstateWithPhotos>>
+    fun getRealEstatesWithPhotosByUserId(
+        userId: Long
+    ): LiveData<List<RealEstateWithPhotos>>
 
     /**
      * Usage:
@@ -111,7 +115,24 @@ interface RealEstateDAO {
         FROM real_estate 
         WHERE estate_agent_id = :userId
         """)
-    fun getRealEstatesWithPointsOfInterestByUserId(userId: Long): LiveData<List<RealEstateWithPointsOfInterest>>
+    fun getRealEstatesWithPointsOfInterestByUserId(
+        userId: Long
+    ): LiveData<List<RealEstateWithPointsOfInterest>>
+
+    /**
+     * Usage:
+     * dao.getRealEstateWithPhotosById(realEstateId)
+     *    .observe(this, Observer { RealEstateWithPhotos -> ... })
+     */
+    @Transaction
+    @Query("""
+        SELECT * 
+        FROM real_estate 
+        WHERE id_real_estate = :realEstateId
+        """)
+    fun getRealEstateWithPhotosById(
+        realEstateId: Long
+    ): LiveData<RealEstateWithPhotos>
 
     // -- Update --
 

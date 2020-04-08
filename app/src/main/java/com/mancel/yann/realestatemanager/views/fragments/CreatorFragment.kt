@@ -396,13 +396,15 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
      * @param latLng a [LatLng] that contains the location
      */
     private fun showPointOfInterest(latLng: LatLng) {
-        val newLocation = LatLng(latLng.latitude, latLng.longitude)
+        this.mGoogleMap?.let {
+            it.clear()
+            it.addMarker(
+                MarkerOptions().position(latLng)
+                               .title(this.getString(R.string.title_marker))
+            )
 
-        this.mGoogleMap?.clear()
-        this.mGoogleMap?.addMarker(MarkerOptions().position(newLocation)
-                                                  .title(this.getString(R.string.title_marker)))
-
-        this.mGoogleMap?.moveCamera(CameraUpdateFactory.newLatLng(newLocation))
+            it.moveCamera(CameraUpdateFactory.newLatLng(latLng))
+        }
     }
 
     /**

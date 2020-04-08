@@ -261,6 +261,24 @@ class RealEstateDAOTest {
         assertEquals("school", realEstatesWithPointsOfInterest[1].mPointsOfInterest?.get(0)?.mName)
     }
 
+    @Test
+    @Throws(InterruptedException::class)
+    fun getRealEstateWithPhotosById_shouldBeSuccess() = runBlocking {
+        // BEFORE: Add real estate
+        mRealEstateDAO.insertRealEstate(mRealEstate1)
+
+        // THEN: Add photos
+        mDatabase.photoDAO().insertPhoto(Photo(mUrlPicture = "URL1", mRealEstateId = 1L))
+
+        // THEN: Retrieve real estate with its photos
+        val realEstateWithPhotos = LiveDataTestUtil.getValue(mRealEstateDAO.getRealEstateWithPhotosById(1L))
+
+        // TEST: The real estate with its photos
+        assertEquals(mRealEstate1.mType, realEstateWithPhotos.mRealEstate?.mType)
+        assertEquals(1, realEstateWithPhotos.mPhotos?.size)
+        assertEquals("URL1", realEstateWithPhotos.mPhotos?.get(0)?.mUrlPicture)
+    }
+
     // -- Update --
 
     @Test
