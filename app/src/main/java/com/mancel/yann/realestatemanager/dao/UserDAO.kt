@@ -1,5 +1,6 @@
 package com.mancel.yann.realestatemanager.dao
 
+import android.database.Cursor
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.mancel.yann.realestatemanager.models.User
@@ -56,6 +57,27 @@ interface UserDAO {
         FROM user
         """)
     fun getAllUsers(): LiveData<List<User>>
+
+    /**
+     * Usage:
+     * dao.getUserByIdWithCursor(userId)
+     */
+    @Query("""
+        SELECT * 
+        FROM user 
+        WHERE id_user = :userId
+        """)
+    fun getUserByIdWithCursor(userId: Long): Cursor
+
+    /**
+     * Usage:
+     * dao.getAllUsersWithCursor()
+     */
+    @Query("""
+        SELECT * 
+        FROM user 
+        """)
+    fun getAllUsersWithCursor(): Cursor
 
     // -- Update --
 

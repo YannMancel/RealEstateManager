@@ -10,12 +10,9 @@ import com.mancel.yann.realestatemanager.dao.UserDAO
 import com.mancel.yann.realestatemanager.models.User
 import com.mancel.yann.realestatemanager.utils.LiveDataTestUtil
 import kotlinx.coroutines.runBlocking
-import org.junit.After
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNull
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
+import org.hamcrest.CoreMatchers.notNullValue
+import org.junit.*
+import org.junit.Assert.*
 import org.junit.runner.RunWith
 import java.io.IOException
 
@@ -152,6 +149,60 @@ class UserDAOTest {
         // TEST: Same users
         assertEquals(mUser1.mUsername, users[0].mUsername)
         assertEquals(mUser2.mUsername, users[1].mUsername)
+    }
+
+    @Test
+    @Throws(InterruptedException::class)
+    fun getUserByIdWithCursor_shouldBeEmpty() {
+        this.mUserDAO.getUserByIdWithCursor(1L).use {
+            // TEST: No user
+            assertThat(it, notNullValue())
+            assertEquals(0, it.count)
+        }
+    }
+
+    @Test
+    @Throws(InterruptedException::class)
+    fun getUserByIdWithCursor_shouldBeSuccess() = runBlocking {
+        // BEFORE: Add user
+        val id = mUserDAO.insertUser(mUser1)
+
+        // THEN: Retrieve the cursor
+        mUserDAO.getUserByIdWithCursor(id).use {
+            // TEST: nly one user
+            assertThat(it, notNullValue())
+            assertEquals(1, it.count)
+            assertTrue(it.moveToFirst())
+            assertEquals("Yann", it.getString(it.getColumnIndexOrThrow("username")))
+        }
+    }
+
+    @Test
+    @Throws(InterruptedException::class)
+    fun getAllUsersWithCursor_shouldBeEmpty() {
+        this.mUserDAO.getAllUsersWithCursor().use {
+            // TEST: No user
+            assertThat(it, notNullValue())
+            assertEquals(it.count, 0)
+        }
+    }
+
+    @Test
+    @Throws(InterruptedException::class)
+    fun getAllUsersWithCursor_shouldBeSuccess() = runBlocking {
+        // BEFORE: Add user
+        mUserDAO.insertUsers(mUser1, mUser2)
+
+        // THEN: Retrieve the cursor
+        mUserDAO.getAllUsersWithCursor().use {
+            // TEST: 2 users
+            assertThat(it, notNullValue())
+            assertEquals(2, it.count)
+            assertTrue(it.moveToFirst())
+            assertEquals("Yann", it.getString(it.getColumnIndexOrThrow("username")))
+            assertTrue(it.moveToNext())
+            assertEquals("Melina", it.getString(it.getColumnIndexOrThrow("username")))
+        }
     }
 
     // -- Update --

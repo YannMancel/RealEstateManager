@@ -10,6 +10,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_REAL_ESTATE_DATABASE"/>
+    <uses-permission android:name="android.permission.WRITE_REAL_ESTATE_DATABASE"/>
 
     <application
         android:allowBackup="true"
@@ -40,6 +42,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- ************************** Providers ********************************************** -->
+
+        <provider
+            android:name=".providers.RealEstateContentProvider"
+            android:authorities="com.mancel.yann.realestatemanager.providers"
+            android:enabled="true"
+            android:exported="true"
+            android:readPermission="android.permission.READ_REAL_ESTATE_DATABASE"
+            android:writePermission="android.permission.WRITE_REAL_ESTATE_DATABASE"/>
 
     </application>
 
