@@ -12,6 +12,7 @@ import android.widget.AutoCompleteTextView
 import androidx.annotation.LayoutRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -33,19 +34,13 @@ import com.mancel.yann.realestatemanager.liveDatas.PhotoCreatorLiveData
 import com.mancel.yann.realestatemanager.models.Address
 import com.mancel.yann.realestatemanager.models.Photo
 import com.mancel.yann.realestatemanager.models.RealEstate
+import com.mancel.yann.realestatemanager.models.RealEstateWithPhotos
 import com.mancel.yann.realestatemanager.views.adapters.AdapterListener
 import com.mancel.yann.realestatemanager.views.adapters.PhotoAdapter
 import com.mancel.yann.realestatemanager.views.dialogs.DialogListener
 import com.mancel.yann.realestatemanager.views.dialogs.PhotoDialogFragment
 import kotlinx.android.synthetic.main.fragment_edit.*
 import kotlinx.android.synthetic.main.fragment_edit.view.*
-import kotlinx.android.synthetic.main.fragment_edit.view.fragment_edit_address
-import kotlinx.android.synthetic.main.fragment_edit.view.fragment_edit_city
-import kotlinx.android.synthetic.main.fragment_edit.view.fragment_edit_country
-import kotlinx.android.synthetic.main.fragment_edit.view.fragment_edit_post_code
-import kotlinx.android.synthetic.main.fragment_edit.view.fragment_edit_price
-import kotlinx.android.synthetic.main.fragment_edit.view.fragment_edit_type
-import java.lang.StringBuilder
 import java.text.SimpleDateFormat
 
 /**
@@ -82,6 +77,9 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
     override fun getFragmentLayout(): Int = R.layout.fragment_edit
 
     override fun configureDesign() {
+        // Argument
+        this.eventWhenArgumentEqualsDefaultValue()
+
         // UI
         this.configureFieldsOfData()
         this.configureListenerOfEachButton()
@@ -89,6 +87,7 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
         this.configureSupportMapFragment()
 
         // LiveData
+        this.configureRealEstateLiveData()
         this.configurePhotosFomDatabase()
         this.configurePhotoCreatorLiveData()
     }
@@ -161,6 +160,20 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
 
         // TOOLBAR
         this.mGoogleMap?.uiSettings?.isMapToolbarEnabled = false
+    }
+
+    // -- Argument --
+
+    /**
+     * Event when argument equals default value (0L)
+     */
+    private fun eventWhenArgumentEqualsDefaultValue() {
+        if (this.mItemId == 0L) {
+            this.mCallback?.showMessage(this.getString(R.string.edit_impossible))
+
+            // Finish this fragment
+            this.findNavController().popBackStack()
+        }
     }
 
     // -- Fields of data --
@@ -363,6 +376,16 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
     // -- LiveData --
 
     /**
+     * Configures the LiveData thanks to a simple format
+     */
+    private fun configureRealEstateLiveData() {
+        this.mViewModel.getRealEstateWithPhotosById(realEstateId = this.mItemId)
+            .observe(this.viewLifecycleOwner,
+                Observer { this.configureUI(it) }
+            )
+    }
+
+    /**
      * Configures all [Photo] from database
      */
     private fun configurePhotosFomDatabase() {
@@ -383,6 +406,119 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
                 photos -> this@EditFragment.mAdapter.updateData(photos)
                 // todo: 08/04/2020 - Add action
             })
+        }
+    }
+
+    // -- UI --
+
+    /**
+     * Configures UI
+     * @param realEstateWithPhotos a [RealEstateWithPhotos]
+     */
+    private fun configureUI(realEstateWithPhotos: RealEstateWithPhotos?) {
+        realEstateWithPhotos?.let {
+            // Photos
+            it.mPhotos?.let { photos ->
+                this.mAdapter.updateData(photos)
+            }
+
+            // Real estate
+            it.mRealEstate?.let { realEstate ->
+                // Type
+                this.mRootView.fragment_edit_type.editText?.text?.let { type ->
+                    type.clear()
+                    type.append(realEstate.mType ?: this.getString(R.string.edit_no_type))
+                }
+
+                // Price
+                this.mRootView.fragment_edit_price.editText?.text?.let { price ->
+                    price.clear()
+                    price.append(
+                        realEstate.mPrice?.toString() ?:
+                        this.getString(R.string.edit_no_price)
+                    )
+                }
+
+                // Surface
+                this.mRootView.fragment_edit_surface.editText?.text?.let { surface ->
+                    surface.clear()
+                    surface.append(realEstate.mSurface?.toString() ?: "0.0")
+                }
+
+                // Number of room
+                this.mRootView.fragment_edit_number_of_room.editText?.text?.let { nbRoom ->
+                    nbRoom.clear()
+                    nbRoom.append(realEstate.mNumberOfRoom?.toString() ?: "0")
+                }
+
+                // Description
+                this.mRootView.fragment_edit_description.editText?.text?.let { description ->
+                    description.clear()
+                    description.append(
+                        realEstate.mDescription ?:
+                        this.getString(R.string.details_no_description)
+                    )
+                }
+
+                // Address
+                realEstate.mAddress?.let { address ->
+                    // Street
+                    this.mRootView.fragment_edit_address.editText?.text?.let { street ->
+                        street.clear()
+                        street.append(
+                            address.mStreet ?:
+                            this.getString(R.string.details_no_street)
+                        )
+                    }
+
+                    // City
+                    this.mRootView.fragment_edit_city.editText?.text?.let { city ->
+                        city.clear()
+                        city.append(address.mCity ?: this.getString(R.string.details_no_city))
+                    }
+
+                    // Post code
+                    this.mRootView.fragment_edit_post_code.editText?.text?.let { postCode ->
+                        postCode.clear()
+                        postCode.append(
+                            address.mPostCode?.toString() ?:
+                            this.getString(R.string.details_no_post_code)
+                        )
+                    }
+
+                    // Country
+                    this.mRootView.fragment_edit_country.editText?.text?.let { country ->
+                        country.clear()
+                        country.append(
+                            address.mCountry ?:
+                            this.getString(R.string.details_no_country)
+                        )
+                    }
+
+                    // Google Maps
+                    this.showPointOfInterest(
+                        LatLng(
+                            address.mLatitude ?: 0.0,
+                            address.mLongitude ?: 0.0
+                        )
+                    )
+                }
+
+                // Enable
+                this.mRootView.fragment_edit_enable.isEnabled = realEstate.mIsEnable ?: false
+
+                // Effective date
+                this.mRootView.fragment_edit_effective_date.editText?.text?.let { effectiveDate ->
+                    effectiveDate.clear()
+
+                    val date = realEstate.mEffectiveDate?.run {
+                        val dateFormat = SimpleDateFormat("dd/MM/yyyy")
+                        dateFormat.format(this)
+                    } ?: "00/00/0000"
+
+                    effectiveDate.append(date)
+                }
+            }
         }
     }
 

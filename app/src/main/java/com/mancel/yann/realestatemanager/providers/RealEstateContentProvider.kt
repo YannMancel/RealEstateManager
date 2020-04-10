@@ -9,6 +9,7 @@ import android.net.Uri
 import com.mancel.yann.realestatemanager.databases.AppDatabase
 import com.mancel.yann.realestatemanager.models.User
 import kotlinx.coroutines.*
+import org.koin.android.ext.android.inject
 import java.lang.IllegalArgumentException
 
 /**
@@ -39,6 +40,8 @@ class RealEstateContentProvider : ContentProvider() {
         val TABLE_USER = "content://$AUTHORITY/${Table.USER.mName}"
     }
 
+    private val mDatabase: AppDatabase by inject()
+
     // METHODS -------------------------------------------------------------------------------------
 
     // -- ContentProvider --
@@ -54,9 +57,9 @@ class RealEstateContentProvider : ContentProvider() {
                 this@RealEstateContentProvider.context?.let {
                     val user = this@RealEstateContentProvider.getUserFromContentValues(values)
 
-                    val userId: Long = AppDatabase.getDatabase(it)
-                                                  .userDAO()
-                                                  .insertUser(user)
+                    val userId: Long = this@RealEstateContentProvider.mDatabase
+                                                                     .userDAO()
+                                                                     .insertUser(user)
 
                     if (userId != 0L) {
                         it.contentResolver.notifyChange(uri, null)
@@ -81,11 +84,11 @@ class RealEstateContentProvider : ContentProvider() {
         sortOrder: String?
     ): Cursor? {
         when (this.mUriMatch.match(uri)) {
-            Table.USER.ordinal -> { /* Do nothing */
+            Table.USER.ordinal -> {
                 this.context?.let {
-                    val cursor: Cursor = AppDatabase.getDatabase(it)
-                                                    .userDAO()
-                                                    .getAllUsersWithCursor()
+                    val cursor: Cursor = this.mDatabase
+                                             .userDAO()
+                                             .getAllUsersWithCursor()
 
                     cursor.setNotificationUri(it.contentResolver, uri)
 
@@ -97,9 +100,9 @@ class RealEstateContentProvider : ContentProvider() {
                 this.context?.let {
                     val userId = ContentUris.parseId(uri)
 
-                    val cursor: Cursor = AppDatabase.getDatabase(it)
-                                                    .userDAO()
-                                                    .getUserByIdWithCursor(userId)
+                    val cursor: Cursor = this.mDatabase
+                                             .userDAO()
+                                             .getUserByIdWithCursor(userId)
 
                     cursor.setNotificationUri(it.contentResolver, uri)
 
@@ -125,9 +128,9 @@ class RealEstateContentProvider : ContentProvider() {
                 this@RealEstateContentProvider.context?.let {
                     val user = this@RealEstateContentProvider.getUserFromContentValues(values)
 
-                    val count: Int = AppDatabase.getDatabase(it)
-                                                .userDAO()
-                                                .updateUser(user)
+                    val count: Int = this@RealEstateContentProvider.mDatabase
+                                                                   .userDAO()
+                                                                   .updateUser(user)
 
                     it.contentResolver.notifyChange(uri, null)
 
@@ -151,9 +154,9 @@ class RealEstateContentProvider : ContentProvider() {
 
             Table.USER_ID.ordinal -> {
                 this@RealEstateContentProvider.context?.let {
-                    val count: Int = AppDatabase.getDatabase(it)
-                                                .userDAO()
-                                                .deleteUserById(ContentUris.parseId(uri))
+                    val count: Int = this@RealEstateContentProvider.mDatabase
+                                                                   .userDAO()
+                                                                   .deleteUserById(ContentUris.parseId(uri))
 
                     it.contentResolver.notifyChange(uri, null)
 

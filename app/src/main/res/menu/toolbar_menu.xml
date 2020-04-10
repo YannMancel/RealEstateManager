@@ -13,7 +13,7 @@
 
     <!-- Edit -->
     <item
-        android:id="@id/navigation_editFragment"
+        android:id="@+id/toolbar_menu_edit"
         android:icon="@drawable/ic_edit"
         android:title="@string/edit_real_estate_toolbar"
         app:showAsAction="ifRoom"/>

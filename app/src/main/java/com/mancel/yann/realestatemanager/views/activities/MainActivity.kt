@@ -1,14 +1,12 @@
 package com.mancel.yann.realestatemanager.views.activities
 
 import android.content.Intent
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
-import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.onNavDestinationSelected
@@ -16,6 +14,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.mancel.yann.realestatemanager.R
 import com.mancel.yann.realestatemanager.utils.MessageTools
 import com.mancel.yann.realestatemanager.views.fragments.DetailsFragmentArgs
+import com.mancel.yann.realestatemanager.views.fragments.EditFragmentArgs
 import com.mancel.yann.realestatemanager.views.fragments.FragmentListener
 import com.mancel.yann.realestatemanager.views.fragments.ListFragmentDirections
 import kotlinx.android.synthetic.main.activity_main.*
@@ -36,7 +35,11 @@ class MainActivity : BaseActivity(), FragmentListener {
 
     // FIELDS --------------------------------------------------------------------------------------
 
-    private val mNavController by lazy {this.findNavController(R.id.activity_main_NavHostFragment)}
+    private val mNavController by lazy {
+        this.findNavController(R.id.activity_main_NavHostFragment)
+    }
+
+    private var mItemId: Long = 0L
 
     // METHODS -------------------------------------------------------------------------------------
 
@@ -54,13 +57,6 @@ class MainActivity : BaseActivity(), FragmentListener {
         // Mode
         this.checkMode()
 
-        // Test
-        this.mViewModel.getCountOfRealEstatesByUserId(1L).observe(this@MainActivity, Observer {
-            count -> Log.w(this@MainActivity::class.simpleName, "COUNT = $count")
-
-            //this.mViewModel.getCountOfRealEstatesByUserId(1L).removeObserver(this)
-        })
-
         // Navigation
         this.configureFragmentNavigation()
     }
@@ -74,6 +70,17 @@ class MainActivity : BaseActivity(), FragmentListener {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        // Edit fragment (Need to pass data to start fragment)
+        item?.itemId.let {
+            if (it == R.id.toolbar_menu_edit) {
+                // By destination (Safe Args)
+                val bundle = EditFragmentArgs(this.mItemId).toBundle()
+                this.mNavController.navigate(R.id.navigation_editFragment, bundle)
+
+                return true
+            }
+        }
+
         return item!!.onNavDestinationSelected(this.mNavController) || super.onOptionsItemSelected(item)
     }
 
@@ -108,19 +115,19 @@ class MainActivity : BaseActivity(), FragmentListener {
 
     override fun navigateToDetailsFragment(v: View?) {
         // Tag
-        val itemId = v?.tag as Long
+        this.mItemId = v?.tag as Long
 
         // According to the device type
         when (this.mMode) {
             Mode.PHONE_MODE -> {
                 // By action (Safe Args)
-                val action = ListFragmentDirections.actionListFragmentToDetailsFragment(itemId = itemId)
+                val action = ListFragmentDirections.actionListFragmentToDetailsFragment(this.mItemId)
                 this.mNavController.navigate(action)
             }
 
             Mode.TABLET_MODE -> {
                 // By destination (Safe Args)
-                val bundle = DetailsFragmentArgs(itemId = itemId).toBundle()
+                val bundle = DetailsFragmentArgs(this.mItemId).toBundle()
                 this.mNavController.navigate(R.id.navigation_detailsFragment, bundle)
             }
         }
@@ -145,21 +152,24 @@ class MainActivity : BaseActivity(), FragmentListener {
      * Configures the fragment navigation
      */
     private fun configureFragmentNavigation() {
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        val homeFragments = when (this.mMode) {
-                                Mode.PHONE_MODE -> {
-                                    setOf(R.id.navigation_listFragment)
-                                }
+        // AppBarConfiguration (According to the device type)
+        val appBarConfiguration = when (this.mMode) {
+            Mode.PHONE_MODE -> {
+                AppBarConfiguration(
+                    this.mNavController.graph,
+                    this.activity_main_drawer_layout
+                )
+            }
 
-                                Mode.TABLET_MODE -> {
-                                    setOf(R.id.navigation_detailsFragment)
-                                }
-                            }
-
-        // AppBarConfiguration
-        val appBarConfiguration = AppBarConfiguration(homeFragments,
-                                                      this.activity_main_drawer_layout)
+            Mode.TABLET_MODE -> {
+                // Passing each menu ID as a set of Ids because each
+                // menu should be considered as top level destinations.
+                AppBarConfiguration(
+                    setOf(R.id.navigation_detailsFragment),
+                    this.activity_main_drawer_layout
+                )
+            }
+        }
 
         // Toolbar
         this.activity_main_Toolbar.setupWithNavController(this.mNavController,
@@ -182,7 +192,7 @@ class MainActivity : BaseActivity(), FragmentListener {
 
             val editItem = this.getToolBar()!!
                                .menu!!
-                               .findItem(R.id.navigation_editFragment)
+                               .findItem(R.id.toolbar_menu_edit)
 
             val searchItem = this.getToolBar()!!
                                  .menu!!

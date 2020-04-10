@@ -127,7 +127,8 @@ class DetailsFragment : BaseFragment(), AdapterListener, OnMapReadyCallback {
     private fun configureRealEstateLiveData() {
         this.mViewModel.getRealEstateWithPhotosById(realEstateId = this.mItemId)
                        .observe(this.viewLifecycleOwner,
-                                Observer { this.configureUI(it) })
+                           Observer { this.configureUI(it) }
+                       )
     }
 
     // -- UI --
@@ -169,10 +170,12 @@ class DetailsFragment : BaseFragment(), AdapterListener, OnMapReadyCallback {
                     this.mRootView.fragment_details_address.text = fullAddress
 
                     // Google Maps
-                    this.showPointOfInterest(LatLng(
-                        address.mLatitude ?: 0.0,
-                        address.mLongitude ?: 0.0
-                    ))
+                    this.showPointOfInterest(
+                        LatLng(
+                            address.mLatitude ?: 0.0,
+                            address.mLongitude ?: 0.0
+                        )
+                    )
                 }
             }
         }

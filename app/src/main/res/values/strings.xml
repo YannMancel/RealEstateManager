@@ -31,6 +31,11 @@
     <string name="details_no_post_code">[Post code: No data]</string>
     <string name="details_no_country">[Country: No data]</string>
 
+    <!-- EditFragment.kt -->
+    <string name="edit_no_type">No type</string>
+    <string name="edit_no_price">No price</string>
+    <string name="edit_impossible">Edit impossible</string>
+
     <!-- SettingsDialogFragment.kt -->
     <string name="title_settings_dialog_fragment">Settings</string>
 
