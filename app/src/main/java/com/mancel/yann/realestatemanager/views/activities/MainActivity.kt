@@ -7,6 +7,7 @@ import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
+import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.onNavDestinationSelected
@@ -186,46 +187,89 @@ class MainActivity : BaseActivity(), FragmentListener {
      */
     private fun configureBehaviorOfToolBar() {
         this.mNavController.addOnDestinationChangedListener { _, destination, _ ->
-            val addItem = this.getToolBar()!!
-                              .menu!!
-                              .findItem(R.id.navigation_creatorFragment)
-
-            val editItem = this.getToolBar()!!
-                               .menu!!
-                               .findItem(R.id.toolbar_menu_edit)
-
-            val searchItem = this.getToolBar()!!
-                                 .menu!!
-                                 .findItem(R.id.navigation_locationFragment)
-
-            when (destination.id) {
-                R.id.navigation_listFragment -> {
-                    addItem.isVisible = true
-                    editItem.isVisible = false
-                    searchItem.isVisible = true
-                }
-
-                R.id.navigation_detailsFragment -> {
-                    addItem.isVisible = true
-                    editItem.isVisible = true
-                    searchItem.isVisible = false
-                }
-
-                R.id.navigation_locationFragment -> {
-                    addItem.isVisible = false
-                    editItem.isVisible = false
-                    searchItem.isVisible = false
-                }
-
-                R.id.navigation_creatorFragment,
-                R.id.navigation_editFragment -> {
-                    addItem.isVisible = true
-                    editItem.isVisible = false
-                    searchItem.isVisible = false
-                }
-
-                else -> { /* Ignore all other ids */ }
+            when (this.mMode) {
+                Mode.PHONE_MODE -> this.getBehaviorOfToolbarForPhoneMode(destination)
+                Mode.TABLET_MODE -> this.getBehaviorOfToolbarForTabletMode(destination)
             }
+        }
+    }
+
+    /**
+     * Gets the behavior of the [Toolbar] for [Mode.PHONE_MODE]
+     */
+    private fun getBehaviorOfToolbarForPhoneMode(destination: NavDestination) {
+        val addItem = this.getToolBar()!!
+            .menu!!
+            .findItem(R.id.navigation_creatorFragment)
+
+        val editItem = this.getToolBar()!!
+            .menu!!
+            .findItem(R.id.toolbar_menu_edit)
+
+        val searchItem = this.getToolBar()!!
+            .menu!!
+            .findItem(R.id.navigation_locationFragment)
+
+        when (destination.id) {
+            R.id.navigation_listFragment -> {
+                addItem.isVisible = true
+                editItem.isVisible = false
+                searchItem.isVisible = true
+            }
+
+            R.id.navigation_detailsFragment -> {
+                addItem.isVisible = true
+                editItem.isVisible = true
+                searchItem.isVisible = false
+            }
+
+            R.id.navigation_locationFragment -> {
+                addItem.isVisible = false
+                editItem.isVisible = false
+                searchItem.isVisible = false
+            }
+
+            R.id.navigation_creatorFragment,
+            R.id.navigation_editFragment -> {
+                addItem.isVisible = true
+                editItem.isVisible = false
+                searchItem.isVisible = false
+            }
+
+            else -> { /* Ignore all other ids */ }
+        }
+    }
+
+    /**
+     * Gets the behavior of the [Toolbar] for [Mode.TABLET_MODE]
+     */
+    private fun getBehaviorOfToolbarForTabletMode(destination: NavDestination) {
+        val editItem = this.getToolBar()!!
+            .menu!!
+            .findItem(R.id.toolbar_menu_edit)
+
+        val searchItem = this.getToolBar()!!
+            .menu!!
+            .findItem(R.id.navigation_locationFragment)
+
+        when (destination.id) {
+            R.id.navigation_detailsFragment -> {
+                editItem.isVisible = true
+                searchItem.isVisible = true
+            }
+
+            R.id.navigation_locationFragment -> {
+                editItem.isVisible = false
+                searchItem.isVisible = false
+            }
+
+            R.id.navigation_creatorFragment,
+            R.id.navigation_editFragment -> {
+                editItem.isVisible = false
+                searchItem.isVisible = true
+            }
+
+            else -> { /* Ignore all other ids */ }
         }
     }
 }

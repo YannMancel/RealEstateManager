@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/navigation_creatorFragment">
+
+    <!-- fragment: DetailsFragment -->
+    <fragment
+        android:id="@+id/navigation_detailsFragment"
+        android:name="com.mancel.yann.realestatemanager.views.fragments.DetailsFragment"
+        android:label="@string/navigation_details_name"
+        tools:layout="@layout/fragment_details">
+
+        <argument
+            android:name="itemId"
+            app:argType="long"
+            android:defaultValue="0L"/>
+
+    </fragment>
+
+    <!-- fragment: LocationFragment -->
+    <fragment
+        android:id="@+id/navigation_locationFragment"
+        android:name="com.mancel.yann.realestatemanager.views.fragments.LocationFragment"
+        android:label="@string/navigation_location_name"
+        tools:layout="@layout/fragment_location"/>
+
+    <!-- fragment: CreatorFragment -->
+    <fragment
+        android:id="@+id/navigation_creatorFragment"
+        android:name="com.mancel.yann.realestatemanager.views.fragments.CreatorFragment"
+        android:label="@string/navigation_creator_name"
+        tools:layout="@layout/fragment_creator"/>
+
+    <!-- fragment: EditFragment -->
+    <fragment
+        android:id="@+id/navigation_editFragment"
+        android:name="com.mancel.yann.realestatemanager.views.fragments.EditFragment"
+        android:label="@string/navigation_edit_name"
+        tools:layout="@layout/fragment_edit">
+
+        <argument
+            android:name="itemId"
+            app:argType="long"
+            android:defaultValue="0L" />
+
+    </fragment>
+
+    <!-- dialog: settingsDialogFragment -->
+    <dialog
+        android:id="@+id/navigation_settingsDialogFragment"
+        android:name="com.mancel.yann.realestatemanager.views.dialogs.SettingsDialogFragment"
+        android:label="@string/title_settings_dialog_fragment"
+        tools:layout="@layout/dialog_fragment_settings" />
+
+</navigation>
