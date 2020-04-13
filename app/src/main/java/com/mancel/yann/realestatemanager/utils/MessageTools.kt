@@ -15,7 +15,7 @@ object MessageTools {
      * @param view      a [View] that will display the message
      * @param message   a [String] that contains the message to display
      */
-    fun showMassageWithSnackbar(view: View, message: String) {
+    fun showMessageWithSnackbar(view: View, message: String) {
         Snackbar.make(view, message, Snackbar.LENGTH_SHORT)
                 .show()
     }

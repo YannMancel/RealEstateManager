@@ -40,7 +40,6 @@ class RealEstateViewModel(
     private var mRealEstatesWithPhotos: LiveData<List<RealEstateWithPhotos>>? = null
     private var mRealEstateWithPhotos: LiveData<RealEstateWithPhotos>? = null
 
-    private var mPhotosByRealEstateId: LiveData<List<Photo>>? = null
     private var mPhotos: LiveData<List<Photo>>? = null
     private var mPhotoCreator: PhotoCreatorLiveData? = null
 
@@ -205,18 +204,6 @@ class RealEstateViewModel(
     // -- Photo --
 
     /**
-     * Gets all [Photo] with the same real estate id
-     * @param realEstateId a [Long] that corresponds to the real estate id
-     * @return a [LiveData] of [List] of [Photo]
-     */
-    fun getPhotosByRealEstateId(realEstateId: Long): LiveData<List<Photo>> {
-        if (this.mPhotosByRealEstateId == null) {
-            this.mPhotosByRealEstateId = this.mPhotoRepository.getPhotoByRealEstateId(realEstateId)
-        }
-        return this.mPhotosByRealEstateId!!
-    }
-
-    /**
      * Gets all [Photo]
      * @return a [LiveData] of [List] of [Photo]
      */
@@ -237,4 +224,22 @@ class RealEstateViewModel(
         }
         return this.mPhotoCreator!!
     }
+
+    /**
+     * Add a [Photo] into [PhotoCreatorLiveData]
+     * @param photo a [Photo]
+     */
+    fun addPhotoToPhotoCreator(photo: Photo) = this.mPhotoCreator?.addPhoto(photo)
+
+    /**
+     * Updates a [Photo] into [PhotoCreatorLiveData]
+     * @param photo a [Photo]
+     */
+    fun updatePhotoToPhotoCreator(photo: Photo) = this.mPhotoCreator?.updatePhoto(photo)
+
+    /**
+     * Deletes a [Photo] into [PhotoCreatorLiveData]
+     * @param photo a [Photo]
+     */
+    fun deletePhotoToPhotoCreator(photo: Photo) = this.mPhotoCreator?.deletePhoto(photo)
 }

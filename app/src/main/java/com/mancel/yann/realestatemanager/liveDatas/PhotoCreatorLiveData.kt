@@ -45,10 +45,10 @@ class PhotoCreatorLiveData: LiveData<List<Photo>>() {
     }
 
     /**
-     * Removes a [Photo]
+     * Deletes a [Photo]
      * @param photo a [Photo]
      */
-    fun removePhoto(photo: Photo) {
+    fun deletePhoto(photo: Photo) {
         this.mPhotos.remove(photo)
 
         // Notify

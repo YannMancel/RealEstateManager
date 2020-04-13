@@ -21,20 +21,20 @@
 
 
 ## Wiki
-* [Android Architecture Components](https://developer.android.com/topic/libraries/architecture/)
+* [Android Jetpack](https://developer.android.com/jetpack)
+  * [Architecture Components](https://developer.android.com/topic/libraries/architecture/)
     * [LiveData](https://developer.android.com/topic/libraries/architecture/livedata)
     * [ViewModel](https://developer.android.com/topic/libraries/architecture/viewmodel)
     * [Navigation](https://developer.android.com/guide/navigation/)
     * [Room](https://developer.android.com/topic/libraries/architecture/room)
-
-* [Google Maps](https://cloud.google.com/maps-platform/)
-    * [Maps](https://developers.google.com/maps/documentation/android-sdk/intro)
-    * [Places](https://developers.google.com/places/web-service/intro)
-
-* [Library Glide](https://github.com/bumptech/glide)
-
+  * [Foundation Multidex](https://developer.android.com/studio/build/multidex.html)
+* [Kotlin Coroutines](https://github.com/Kotlin/kotlinx.coroutines)
 * [Library Koin](https://github.com/InsertKoinIO/koin)
-
+* [Library Material Components](https://github.com/material-components/material-components-android)
+* [Google Maps](https://cloud.google.com/maps-platform/)
+  * [Maps](https://developers.google.com/maps/documentation/android-sdk/intro)
+  * [Places](https://developers.google.com/places/web-service/intro)
+* [Library Glide](https://github.com/bumptech/glide)
 * [Library Mockito](https://github.com/mockito/mockito)
 * [Library Mockito-kotlin](https://github.com/nhaarman/mockito-kotlin)
 

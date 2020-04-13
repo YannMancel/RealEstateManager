@@ -10,7 +10,6 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import androidx.annotation.LayoutRes
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -60,8 +59,11 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
     }
 
     private lateinit var mAdapter: PhotoAdapter
-    private lateinit var mPhotosFromDatabase: LiveData<List<Photo>>
-    private lateinit var mPhotoCreatorLiveData: PhotoCreatorLiveData
+
+    private var mPhotosOfCurrentRealEstate: List<Photo>? = null
+    private var mAllPhotosFromDatabase: List<Photo>? = null
+    private var mAllPhotosFromCreator: List<Photo>? = null
+
     private var mGoogleMap: GoogleMap? = null
 
     companion object {
@@ -122,7 +124,7 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
     override fun onClick(v: View?) {
         when (v?.id) {
             // Button: DELETE
-            R.id.item_photo_delete_media -> this.mPhotoCreatorLiveData.removePhoto(v.tag as Photo)
+            R.id.item_photo_delete_media -> this.mViewModel.deletePhotoToPhotoCreator(v.tag as Photo)
 
             // Button: EDIT
             R.id.item_photo_edit_media -> {
@@ -146,10 +148,10 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
     ) {
         when (mode) {
             // ADD
-            PhotoDialogFragment.PhotoDialogMode.ADD -> this.mPhotoCreatorLiveData.addPhoto(photo)
+            PhotoDialogFragment.PhotoDialogMode.ADD -> this.mViewModel.addPhotoToPhotoCreator(photo)
 
             // UPDATE
-            PhotoDialogFragment.PhotoDialogMode.UPDATE -> this.mPhotoCreatorLiveData.updatePhoto(photo)
+            PhotoDialogFragment.PhotoDialogMode.UPDATE -> this.mViewModel.updatePhotoToPhotoCreator(photo)
         }
     }
 
@@ -379,9 +381,13 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
      * Configures the LiveData thanks to a simple format
      */
     private fun configureRealEstateLiveData() {
-        this.mViewModel.getRealEstateWithPhotosById(realEstateId = this.mItemId)
-            .observe(this.viewLifecycleOwner,
-                Observer { this.configureUI(it) }
+        this.mViewModel
+            .getRealEstateWithPhotosById(realEstateId = this.mItemId)
+            .observe(
+                this.viewLifecycleOwner,
+                Observer {
+                    this.mPhotosOfCurrentRealEstate = it.mPhotos
+                    this.configureUI(it) }
             )
     }
 
@@ -389,24 +395,38 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
      * Configures all [Photo] from database
      */
     private fun configurePhotosFomDatabase() {
-        this.mPhotosFromDatabase =  this.mViewModel.getPhotos().apply {
-            observe(this@EditFragment.viewLifecycleOwner, Observer {
-                /* Do nothing */
-                // todo: 08/04/2020 - Add action
-            })
-        }
+        this.mViewModel
+            .getPhotos()
+            .observe(
+                this.viewLifecycleOwner,
+                Observer { this.mAllPhotosFromDatabase = it }
+            )
     }
 
     /**
      * Configures the [PhotoCreatorLiveData]
      */
     private fun configurePhotoCreatorLiveData() {
-        this.mPhotoCreatorLiveData =  this.mViewModel.getPhotoCreator().apply {
-            observe(this@EditFragment.viewLifecycleOwner, Observer {
-                photos -> this@EditFragment.mAdapter.updateData(photos)
-                // todo: 08/04/2020 - Add action
-            })
-        }
+        this.mViewModel
+            .getPhotoCreator()
+            .observe(
+                this.viewLifecycleOwner,
+                Observer {
+                    this.mAllPhotosFromCreator = it
+
+                    val newPhotos = mutableListOf<Photo>().apply {
+                        // Database
+                        if (!this@EditFragment.mPhotosOfCurrentRealEstate.isNullOrEmpty()) {
+                            addAll(this@EditFragment.mPhotosOfCurrentRealEstate!!)
+                        }
+
+                        // Adding during edit mode
+                        addAll(it)
+                    }
+
+                    this.mAdapter.updateData(newPhotos)
+                }
+            )
     }
 
     // -- UI --
@@ -609,12 +629,12 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
         if (resultCode == RESULT_OK) {
             data?.data?.let { uri ->
                 // Database: Search if is already present into the database
-                val isAlreadyPresentIntoDatabase = this.mPhotosFromDatabase.value?.any {
+                val isAlreadyPresentIntoDatabase = this.mAllPhotosFromDatabase?.any {
                     it.mUrlPicture == uri.toString()
                 } ?: false
 
                 // CreatorLiveData: Search if is already present into the LiveData
-                val isAlreadyPresentIntoCreator = this.mPhotoCreatorLiveData.value?.any {
+                val isAlreadyPresentIntoCreator = this.mAllPhotosFromCreator?.any {
                     it.mUrlPicture == uri.toString()
                 } ?: false
 

@@ -107,7 +107,7 @@ class MainActivity : BaseActivity(), FragmentListener {
     // -- FragmentListener interface --
 
     override fun showMessage(message: String) {
-        MessageTools.showMassageWithSnackbar(
+        MessageTools.showMessageWithSnackbar(
             this.activity_main_CoordinatorLayout,
             message
         )
