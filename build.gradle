@@ -12,6 +12,7 @@ buildscript {
     ext.koin_version = '2.1.4'
     ext.google_maps_version = '17.0.0'
     ext.autocomplete_google_maps_version = '2.2.0'
+    ext.timber_version = '4.7.1'
     ext.mockito_version = '3.3.1'
     ext.mockito_kotlin_version = '2.2.0'
 

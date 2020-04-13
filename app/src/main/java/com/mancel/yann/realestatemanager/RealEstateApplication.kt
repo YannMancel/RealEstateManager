@@ -5,6 +5,7 @@ import com.mancel.yann.realestatemanager.koin.appModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
+import timber.log.Timber
 
 /**
  * Created by Yann MANCEL on 26/02/2020.
@@ -22,7 +23,10 @@ class RealEstateApplication : MultiDexApplication() {
     override fun onCreate() {
         super.onCreate()
 
-        // KOIN: Dependency injection framework
+        // Timber: Logger
+        Timber.plant(Timber.DebugTree())
+
+        // Koin: Dependency injection framework
         startKoin {
             androidLogger()
             androidContext(this@RealEstateApplication)

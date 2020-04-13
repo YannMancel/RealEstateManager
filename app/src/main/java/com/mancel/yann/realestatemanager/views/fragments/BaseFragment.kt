@@ -120,8 +120,10 @@ abstract class BaseFragment : Fragment() {
      * Checks the permission: READ_EXTERNAL_STORAGE
      */
     protected fun checkReadExternalStoragePermission(): Boolean {
-        val permissionResult = ContextCompat.checkSelfPermission(this.requireContext(),
-                                                                 Manifest.permission.READ_EXTERNAL_STORAGE)
+        val permissionResult = ContextCompat.checkSelfPermission(
+            this.requireContext(),
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        )
 
         return when (permissionResult) {
             PackageManager.PERMISSION_GRANTED -> true
@@ -141,8 +143,10 @@ abstract class BaseFragment : Fragment() {
      * Checks the permission: ACCESS_FINE_LOCATION
      */
     private fun checkAccessFineLocationPermission(): Boolean {
-        val permissionResult = ContextCompat.checkSelfPermission(this.requireContext(),
-                                                                 Manifest.permission.ACCESS_FINE_LOCATION)
+        val permissionResult = ContextCompat.checkSelfPermission(
+            this.requireContext(),
+            Manifest.permission.ACCESS_FINE_LOCATION
+        )
 
         return when (permissionResult) {
             PackageManager.PERMISSION_GRANTED -> true

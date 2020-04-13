@@ -1,6 +1,5 @@
 package com.mancel.yann.realestatemanager.views.adapters
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -61,8 +60,6 @@ class RealEstateAdapter(
             // Starts the callback
             holder.mCallback.get()?.onClick(it)
         }
-
-        Log.w("RealEstate", "${realEstate.mPhotos}")
 
         // Image
         realEstate.mPhotos?.let {

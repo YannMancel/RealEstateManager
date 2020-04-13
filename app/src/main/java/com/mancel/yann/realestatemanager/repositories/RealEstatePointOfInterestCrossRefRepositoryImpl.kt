@@ -23,12 +23,12 @@ class RealEstatePointOfInterestCrossRefRepositoryImpl(
     override suspend fun insertCrossRef(
         crossRef: RealEstatePointOfInterestCrossRef
     ): Long = withContext(Dispatchers.IO) {
-        this@RealEstatePointOfInterestCrossRefRepositoryImpl.insertCrossRef(crossRef)
+        this@RealEstatePointOfInterestCrossRefRepositoryImpl.mCrossRefDAO.insertCrossRef(crossRef)
     }
 
     override suspend fun insertSeveralCrossRef(
         vararg severalCrossRef: RealEstatePointOfInterestCrossRef
     ): List<Long> = withContext(Dispatchers.IO) {
-        this@RealEstatePointOfInterestCrossRefRepositoryImpl.insertSeveralCrossRef(*severalCrossRef)
+        this@RealEstatePointOfInterestCrossRefRepositoryImpl.mCrossRefDAO.insertSeveralCrossRef(*severalCrossRef)
     }
 }

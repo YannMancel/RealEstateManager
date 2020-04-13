@@ -181,8 +181,10 @@ class PhotoDialogFragment : DialogFragment() {
         }
 
         // Photo
-        val photo = Photo(mUrlPicture = this.mUrlPhoto,
-                          mDescription = this.mRootView.dialog_selected_photo_description.editText!!.text.toString())
+        val photo = Photo(
+            mUrlPicture = this.mUrlPhoto,
+            mDescription = this.mRootView.dialog_selected_photo_description.editText!!.text.toString()
+        )
 
         // Callback
         this.mCallback?.get()?.getSelectedPhotoFromDialog(photo, this.mMode)

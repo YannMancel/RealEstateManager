@@ -2,7 +2,6 @@ package com.mancel.yann.realestatemanager.viewModels
 
 import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,10 +11,8 @@ import com.mancel.yann.realestatemanager.models.*
 import com.mancel.yann.realestatemanager.repositories.PhotoRepository
 import com.mancel.yann.realestatemanager.repositories.RealEstateRepository
 import com.mancel.yann.realestatemanager.repositories.UserRepository
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import timber.log.Timber
 
 /**
  * Created by Yann MANCEL on 09/03/2020.
@@ -46,7 +43,7 @@ class RealEstateViewModel(
     // CONSTRUCTORS --------------------------------------------------------------------------------
 
     init {
-        Log.d(this::class.java.simpleName, "RealEstateViewModel: INIT")
+        Timber.d("RealEstateViewModel: INIT")
     }
 
     // METHODS -------------------------------------------------------------------------------------
@@ -55,7 +52,7 @@ class RealEstateViewModel(
 
     override fun onCleared() {
         super.onCleared()
-        Log.d(this::class.java.simpleName, "RealEstateViewModel: onCleared")
+        Timber.d("RealEstateViewModel: onCleared")
     }
 
     // -- Location --
@@ -87,11 +84,11 @@ class RealEstateViewModel(
         try {
             // Fetch the new rowId for the inserted item
             val userId: Long = this@RealEstateViewModel.mUserRepository.insertUser(user)
-            Log.i(this@RealEstateViewModel::class.java.simpleName, "insertUser: id=$userId")
+            Timber.d("insertUser: Id = $userId")
         }
         catch (e: SQLiteConstraintException) {
             // UNIQUE constraint failed
-            Log.e(this@RealEstateViewModel::class.java.simpleName, "insertUser: ${e.message}")
+            Timber.e("insertUser: ${e.message}")
         }
     }
 
@@ -108,74 +105,6 @@ class RealEstateViewModel(
     }
 
     // -- Real Estate --
-
-    /**
-     * Inserts the new [RealEstate] in argument
-     * @param realEstate        a [RealEstate]
-     * @param photos            a [List] of [Photo]
-     * @param pointsOfInterest  a [List] of [PointOfInterest]
-     */
-    fun insertRealEstate(
-        realEstate: RealEstate,
-        photos: List<Photo>? = null,
-        pointsOfInterest: List<PointOfInterest>? = null
-    ) = viewModelScope.launch(Dispatchers.IO) {
-        val realEstateId: Long
-
-        // REAL ESTATE
-        try {
-            // Fetch the new rowId for the inserted item
-            realEstateId = this@RealEstateViewModel.mRealEstateRepository.insertRealEstate(realEstate)
-            Log.w(this@RealEstateViewModel::class.java.simpleName, "insertRealEstate: id=$realEstateId")
-        }
-        catch (e: SQLiteConstraintException) {
-            // UNIQUE constraint failed
-            Log.e(this@RealEstateViewModel::class.java.simpleName, "insertRealEstate: ${e.message}")
-            return@launch
-        }
-
-        // PHOTOS
-        photos?.let { photos ->
-            // Change the [real_estate_id] of each photo
-            photos.forEach { photo ->
-                photo.mRealEstateId = realEstateId
-            }
-
-            val deferred: Deferred<List<Long>> = async {
-                try {
-                    this@RealEstateViewModel.mPhotoRepository.insertPhotos(*photos.toTypedArray())
-                }
-                catch (e: SQLiteConstraintException) {
-                    // UNIQUE constraint failed
-                    Log.e(this@RealEstateViewModel::class.java.simpleName, "insertPhotos: ${e.message}")
-                    emptyList<Long>()
-                }
-            }
-
-            deferred.await().let {
-                if (it.isNotEmpty()) {
-                    Log.w(this@RealEstateViewModel::class.java.simpleName, "insertPhotos: ids=$it")
-                }
-            }
-        }
-
-        // POINTS OF INTEREST
-        pointsOfInterest?.let {
-            // todo - 05/04/2020 - add the points of interest
-        }
-    }
-
-    /**
-     * Gets the count of row where user Id is validated
-     * @param userId a [Long] that contains the user Id
-     * @return a [LiveData] of [Int]
-     */
-    fun getCountOfRealEstatesByUserId(userId: Long): LiveData<Int> {
-        if (this.mCountOfRealEstateByUserId == null) {
-            this.mCountOfRealEstateByUserId = this.mRealEstateRepository.getCountOfRealEstatesByUserId(userId)
-        }
-        return this.mCountOfRealEstateByUserId!!
-    }
 
     /**
      * Gets all [RealEstateWithPhotos] for an [User]
@@ -199,6 +128,83 @@ class RealEstateViewModel(
             this.mRealEstateWithPhotos = this.mRealEstateRepository.getRealEstateWithPhotosById(realEstateId)
         }
         return this.mRealEstateWithPhotos!!
+    }
+
+    /**
+     * Inserts the new [RealEstate] in argument
+     * @param realEstate        a [RealEstate]
+     * @param photos            a [List] of [Photo]
+     * @param pointsOfInterest  a [List] of [PointOfInterest]
+     */
+    fun insertRealEstate(
+        realEstate: RealEstate,
+        photos: List<Photo>? = null,
+        pointsOfInterest: List<PointOfInterest>? = null
+    ) = viewModelScope.launch(Dispatchers.IO) {
+        val realEstateId: Long
+
+        // REAL ESTATE
+        try {
+            // Fetch the new rowId for the inserted item
+            realEstateId = this@RealEstateViewModel.mRealEstateRepository.insertRealEstate(realEstate)
+            Timber.d("insertRealEstate: Id = $realEstateId")
+        }
+        catch (e: SQLiteConstraintException) {
+            // UNIQUE constraint failed
+            Timber.e("insertRealEstate: ${e.message}")
+            return@launch
+        }
+
+        // PHOTOS
+        this@RealEstateViewModel.insertPhotosWithRealEstateId(
+            photos,
+            realEstateId
+        )
+
+        // POINTS OF INTEREST
+        pointsOfInterest?.let {
+            // todo - 05/04/2020 - add the points of interest
+        }
+    }
+
+    /**
+     * Updates a [RealEstate] in argument
+     * @param realEstate        a [RealEstate]
+     * @param photos            a [List] of [Photo]
+     * @param pointsOfInterest  a [List] of [PointOfInterest]
+     */
+    fun updateRealEstate(
+        realEstate: RealEstate,
+        photos: List<Photo>? = null,
+        pointsOfInterest: List<PointOfInterest>? = null
+    ) = viewModelScope.launch(Dispatchers.IO) {
+        // REAL ESTATE
+        try {
+            // Fetch the number of updated row
+            val  numberOfUpdatedRow = this@RealEstateViewModel.mRealEstateRepository.updateRealEstate(realEstate)
+            Timber.d("updateRealEstate: Number of update row = $numberOfUpdatedRow")
+
+            // Update impossible
+            if (numberOfUpdatedRow == 0) {
+                return@launch
+            }
+        }
+        catch (e: SQLiteConstraintException) {
+            // UNIQUE constraint failed
+            Timber.e("updateRealEstate: ${e.message}")
+            return@launch
+        }
+
+        // PHOTOS
+        this@RealEstateViewModel.insertPhotosWithRealEstateId(
+            photos,
+            realEstate.mId
+        )
+
+        // POINTS OF INTEREST
+        pointsOfInterest?.let {
+            // todo - 13/04/2020 - add the points of interest
+        }
     }
 
     // -- Photo --
@@ -242,4 +248,39 @@ class RealEstateViewModel(
      * @param photo a [Photo]
      */
     fun deletePhotoToPhotoCreator(photo: Photo) = this.mPhotoCreator?.deletePhoto(photo)
+
+    /**
+     * Inserts several [Photo] into database
+     * @param photos        a [List] of [Photo]
+     * @param realEstateId  a [Long] that contains the real estate Id
+     */
+    private suspend fun insertPhotosWithRealEstateId(
+        photos: List<Photo>?,
+        realEstateId: Long
+    ) = withContext(Dispatchers.IO) {
+        // PHOTOS
+        photos?.let { photos ->
+            // Change the [real_estate_id] of each photo
+            photos.forEach { photo ->
+                photo.mRealEstateId = realEstateId
+            }
+
+            val deferred: Deferred<List<Long>> = async {
+                try {
+                    this@RealEstateViewModel.mPhotoRepository.insertPhotos(*photos.toTypedArray())
+                }
+                catch (e: SQLiteConstraintException) {
+                    // UNIQUE constraint failed
+                    Timber.e("insertPhotos: ${e.message}")
+                    emptyList<Long>()
+                }
+            }
+
+            deferred.await().let {
+                if (it.isNotEmpty()) {
+                    Timber.d("insertPhotos: Ids = $it")
+                }
+            }
+        }
+    }
 }

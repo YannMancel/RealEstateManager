@@ -5,7 +5,6 @@ import android.content.Intent
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
@@ -38,6 +37,7 @@ import com.mancel.yann.realestatemanager.views.dialogs.DialogListener
 import com.mancel.yann.realestatemanager.views.dialogs.PhotoDialogFragment
 import kotlinx.android.synthetic.main.fragment_creator.*
 import kotlinx.android.synthetic.main.fragment_creator.view.*
+import timber.log.Timber
 import java.text.SimpleDateFormat
 
 /**
@@ -119,8 +119,12 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
                                         callback = this@CreatorFragment,
                                         urlPhoto = (v.tag as Photo).mUrlPicture,
                                         description = (v.tag as Photo).mDescription,
-                                        mode = PhotoDialogFragment.PhotoDialogMode.UPDATE)
-                                   .show(this.requireActivity().supportFragmentManager, "DIALOG PHOTO")
+                                        mode = PhotoDialogFragment.PhotoDialogMode.UPDATE
+                                   )
+                                   .show(
+                                       this.requireActivity().supportFragmentManager,
+                                       "DIALOG PHOTO"
+                                   )
             }
 
             else -> { /* Ignore all other ids */ }
@@ -447,7 +451,7 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
 
             AutocompleteActivity.RESULT_ERROR -> {
                 val status = Autocomplete.getStatusFromIntent(data!!)
-                Log.e(this::class.simpleName, "${status.statusMessage} [Place API]")
+                Timber.e("${status.statusMessage} [Place API]")
             }
 
             else -> {
@@ -494,7 +498,8 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
                 if (!isAlreadyPresentIntoDatabase && !isAlreadyPresentIntoCreator) {
                     PhotoDialogFragment.newInstance(
                                             callback = this@CreatorFragment,
-                                            urlPhoto = uri.toString())
+                                            urlPhoto = uri.toString()
+                                       )
                                        .show(
                                            this.requireActivity().supportFragmentManager,
                                            "DIALOG PHOTO"

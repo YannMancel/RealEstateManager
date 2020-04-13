@@ -34,6 +34,7 @@
 * [Google Maps](https://cloud.google.com/maps-platform/)
   * [Maps](https://developers.google.com/maps/documentation/android-sdk/intro)
   * [Places](https://developers.google.com/places/web-service/intro)
+* [Library Timber](https://github.com/JakeWharton/timber)
 * [Library Glide](https://github.com/bumptech/glide)
 * [Library Mockito](https://github.com/mockito/mockito)
 * [Library Mockito-kotlin](https://github.com/nhaarman/mockito-kotlin)

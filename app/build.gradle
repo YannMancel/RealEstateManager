@@ -84,6 +84,9 @@ dependencies {
     // Autocomplete of Google Maps
     implementation "com.google.android.libraries.places:places:$autocomplete_google_maps_version"
 
+    // Timber
+    implementation "com.jakewharton.timber:timber:$timber_version"
+
     // TESTS ---------------------------------------------------------------------------------------
 
     testImplementation 'junit:junit:4.12'

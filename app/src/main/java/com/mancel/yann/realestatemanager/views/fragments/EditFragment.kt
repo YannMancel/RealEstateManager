@@ -5,7 +5,6 @@ import android.content.Intent
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
@@ -40,6 +39,7 @@ import com.mancel.yann.realestatemanager.views.dialogs.DialogListener
 import com.mancel.yann.realestatemanager.views.dialogs.PhotoDialogFragment
 import kotlinx.android.synthetic.main.fragment_edit.*
 import kotlinx.android.synthetic.main.fragment_edit.view.*
+import timber.log.Timber
 import java.text.SimpleDateFormat
 
 /**
@@ -132,8 +132,12 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
                                         callback = this@EditFragment,
                                         urlPhoto = (v.tag as Photo).mUrlPicture,
                                         description = (v.tag as Photo).mDescription,
-                                        mode = PhotoDialogFragment.PhotoDialogMode.UPDATE)
-                                   .show(this.requireActivity().supportFragmentManager, "DIALOG PHOTO")
+                                        mode = PhotoDialogFragment.PhotoDialogMode.UPDATE
+                                   )
+                                   .show(
+                                       this.requireActivity().supportFragmentManager,
+                                       "DIALOG PHOTO"
+                                   )
             }
 
             else -> { /* Ignore all other ids */ }
@@ -594,7 +598,7 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
 
             AutocompleteActivity.RESULT_ERROR -> {
                 val status = Autocomplete.getStatusFromIntent(data!!)
-                Log.e(this::class.simpleName, "${status.statusMessage} [Place API]")
+                Timber.e("${status.statusMessage} [Place API]")
             }
 
             else -> {
@@ -641,7 +645,8 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
                 if (!isAlreadyPresentIntoDatabase && !isAlreadyPresentIntoCreator) {
                     PhotoDialogFragment.newInstance(
                                             callback = this@EditFragment,
-                                            urlPhoto = uri.toString())
+                                            urlPhoto = uri.toString()
+                                       )
                                        .show(
                                            this.requireActivity().supportFragmentManager,
                                            "DIALOG PHOTO"
@@ -688,6 +693,7 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
 
         // todo - 06/04/2020 - Next feature: Add user's authentication instead of 1L
         val realEstate = RealEstate(
+            mId = this.mItemId,
             mType = this.fragment_edit_type.editText?.text?.toString(),
             mPrice = this.fragment_edit_price.editText?.text?.toString()?.toDouble(),
             mSurface = this.mRootView.fragment_edit_surface.editText?.text?.toString()?.toDouble(),
@@ -707,10 +713,10 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
             )
         )
 
-//        this.mViewModel.insertRealEstate(
-//            realEstate,
-//            this.mPhotoCreatorLiveData.value,
-//            null
-//        )
+        this.mViewModel.updateRealEstate(
+            realEstate,
+            this.mAllPhotosFromCreator,
+            null
+        )
     }
 }
