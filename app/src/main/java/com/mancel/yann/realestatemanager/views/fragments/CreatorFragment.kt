@@ -312,6 +312,11 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
             this.actionToAddPhoto()
         }
 
+        // Button: Add points of interest
+        this.mRootView.fragment_creator_search_poi.setOnClickListener {
+            this.actionToAddPOIs()
+        }
+
         // FAB
         this.mRootView.fragment_creator_fab.setOnClickListener {
             this.actionToAddRealEstate()
@@ -517,6 +522,47 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
                 this.getString(R.string.creation_photo_cancel)
             )
         }
+    }
+
+    // -- Points of interest --
+
+    /**
+     * Action to add a [PointOfInterest]
+     */
+    private fun actionToAddPOIs() {
+        val rawTypes = mutableListOf<String>().apply {
+            // SCHOOL
+            if (this@CreatorFragment.mRootView.fragment_creator_Chip_school.isChecked) {
+                this.add("school")
+            }
+
+            // RESTAURANT
+            if (this@CreatorFragment.mRootView.fragment_creator_Chip_restaurant.isChecked) {
+                this.add("restaurant")
+            }
+
+            // DOCTOR
+            if (this@CreatorFragment.mRootView.fragment_creator_Chip_doctor.isChecked) {
+                this.add("doctor")
+            }
+
+            // HOSPITAL
+            if (this@CreatorFragment.mRootView.fragment_creator_Chip_hospital.isChecked) {
+                this.add("hospital")
+            }
+        }
+
+        // For Google Maps request
+        val types = StringBuilder().run {
+            rawTypes.forEachIndexed { index, value ->
+                if (index != 0) this.append(",")
+                this.append(value)
+            }
+
+            this.toString()
+        }
+
+        this.mCallback?.showMessage(types)
     }
 
     // -- Real Estate --

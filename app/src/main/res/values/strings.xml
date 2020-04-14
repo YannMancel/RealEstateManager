@@ -68,13 +68,24 @@
     <string name="hint_post_code">Post code</string>
     <string name="hint_country">Country</string>
     <string name="hint_date">Effective date</string>
+    <string name="hint_distance">Search radius (meter)</string>
+    <string name="distance_poi">200</string>
     <string name="creator_enable">Is enable</string>
     <string name="creator_real_estate_lack_information">Lack of information</string>
+    <string name="search_poi_button">Search</string>
     <string-array name="creator_types">
         <item>Flat</item>
         <item>House</item>
+        <item>Duplex</item>
+        <item>Loft</item>
+        <item>Penthouse</item>
+        <item>Manor</item>
         <item>Other</item>
     </string-array>
+    <string name="chip_school">School</string>
+    <string name="chip_restaurant">Restaurant</string>
+    <string name="chip_doctor">Doctor</string>
+    <string name="chip_hospital">Hospital</string>
 
     <!-- fragment_details.xml -->
     <string name="title_media_details">Media</string>
