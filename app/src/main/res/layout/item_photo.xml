@@ -66,6 +66,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:src="@drawable/ic_clear"
+            android:tint="@android:color/white"
             android:contentDescription="@null"
             android:background="@color/colorAccent"/>
 
@@ -79,7 +80,6 @@
             app:layout_constraintBottom_toBottomOf="@id/item_photo_description"
             app:layout_constraintEnd_toEndOf="parent"
             android:src="@drawable/ic_edit"
-            android:tint="@android:color/black"
             android:contentDescription="@null"
             android:background="@color/colorAccent"/>
 

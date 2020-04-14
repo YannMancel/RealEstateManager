@@ -262,7 +262,6 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintVertical_bias="0"
                         android:src="@drawable/ic_add"
-                        android:tint="@android:color/black"
                         android:contentDescription="@null"
                         android:background="@color/colorAccent"/>
 
@@ -507,7 +506,6 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintVertical_bias="0"
                         android:src="@drawable/ic_add"
-                        android:tint="@android:color/black"
                         android:contentDescription="@null"
                         android:background="@color/colorAccent"/>
 
@@ -541,7 +539,6 @@
         android:layout_margin="@dimen/margin_normal"
         android:layout_gravity="bottom|end"
         android:src="@drawable/ic_add"
-        android:tint="@android:color/black"
         style="@style/Widget.MaterialComponents.FloatingActionButton"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

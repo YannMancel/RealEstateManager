@@ -93,15 +93,21 @@ class RealEstateAdapter(
 
         // Background color
         realEstate.mRealEstate?.mIsSelected?.let { isSelected ->
-            if (isSelected) {
-                // CardView
-                holder.itemView.item_real_estate_CardView.setCardBackgroundColor(
+            // CardView
+            holder.itemView.item_real_estate_CardView.setCardBackgroundColor(
+                if (isSelected)
                     ContextCompat.getColor(holder.itemView.context, R.color.colorAccent)
-                )
+                else
+                    Color.WHITE
+            )
 
-                // TextView
-                holder.itemView.item_real_estate_price.setTextColor(Color.WHITE)
-            }
+            // TextView
+            holder.itemView.item_real_estate_price.setTextColor(
+                if (isSelected)
+                    Color.WHITE
+                else
+                    ContextCompat.getColor(holder.itemView.context, R.color.colorAccent)
+            )
         }
     }
 
