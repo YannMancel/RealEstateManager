@@ -1,5 +1,6 @@
 package com.mancel.yann.realestatemanager.views.fragments
 
+import android.location.Location
 import androidx.annotation.LayoutRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
@@ -7,11 +8,10 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.*
 import com.mancel.yann.realestatemanager.R
 import com.mancel.yann.realestatemanager.models.LocationData
+import com.mancel.yann.realestatemanager.models.RealEstateWithPhotos
 import kotlinx.android.synthetic.main.fragment_location.view.*
 
 /**
@@ -31,7 +31,8 @@ class LocationFragment : BaseFragment(),
 
     // FIELDS --------------------------------------------------------------------------------------
 
-    private lateinit var mCurrentLocation: LiveData<LocationData>
+    private var mRealEstatesWithPhotos: List<RealEstateWithPhotos>? = null
+    private var mCurrentLocation: Location? = null
 
     private var mGoogleMap: GoogleMap? = null
 
@@ -55,6 +56,7 @@ class LocationFragment : BaseFragment(),
         this.configureListenerOfFAB()
 
         // LiveData
+        this.configureRealEstateLiveData()
         this.configureLocationLiveData()
     }
 
@@ -100,18 +102,14 @@ class LocationFragment : BaseFragment(),
         when (reason) {
             // The user gestured on the map (ex: Zoom or Rotation)
             GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE -> {
-                // No data in liveData
-                if (this.mCurrentLocation.value == null ||
-                    this.mCurrentLocation.value?.mLocation == null) {
+                // No current location
+                if (this.mCurrentLocation == null) {
                     return
                 }
 
-                // Location
-                val location = this.mCurrentLocation.value?.mLocation
-
                 // Projection's Center (visible region) = current location of user (ex: zoom or rotation)
-                if (this.mGoogleMap?.projection?.visibleRegion?.latLngBounds?.center?.latitude == location?.latitude &&
-                    this.mGoogleMap?.projection?.visibleRegion?.latLngBounds?.center?.longitude == location?.longitude) {
+                if (this.mGoogleMap?.projection?.visibleRegion?.latLngBounds?.center?.latitude == this.mCurrentLocation!!.latitude &&
+                    this.mGoogleMap?.projection?.visibleRegion?.latLngBounds?.center?.longitude == this.mCurrentLocation!!.longitude) {
                     // Do nothing because same center
                 }
                 else {
@@ -135,7 +133,7 @@ class LocationFragment : BaseFragment(),
 
     override fun onCameraIdle() {
         // When the camera has stopped moving
-        // TODO: 07/04/2020 - Add POIs
+        // Do nothing
     }
 
     // -- Child Fragment --
@@ -178,15 +176,31 @@ class LocationFragment : BaseFragment(),
     // -- LiveData --
 
     /**
+     * Configures the LiveData thanks to a simple format
+     */
+    private fun configureRealEstateLiveData() {
+        // todo - 14/04/2020 - Next feature: Add user's authentication instead of 1L
+        this.mViewModel
+            .getRealEstatesWithPhotosByUserId(userId = 1L)
+            .observe(
+                this.viewLifecycleOwner,
+                Observer {
+                    this.mRealEstatesWithPhotos = it
+                    this.addPointsOfInterest(it)
+                }
+            )
+    }
+
+    /**
      * Configures the [LiveData] of [LocationData]
      */
     private fun configureLocationLiveData() {
-        this.mCurrentLocation = this.mViewModel.getLocation(this.requireContext()).apply {
-            observe(
+        this.mViewModel
+            .getLocation(this.requireContext())
+            .observe(
                 this@LocationFragment.viewLifecycleOwner,
                 Observer { this@LocationFragment.onChangedLocationData(it) }
             )
-        }
     }
 
     // -- LocationData --
@@ -211,6 +225,9 @@ class LocationFragment : BaseFragment(),
             return
         }
 
+        // Update current location
+        this.mCurrentLocation = locationData.mLocation
+
         // Focus on the current location of user
         if (this.mIsLocatedOnUser) {
             // First Location
@@ -228,8 +245,40 @@ class LocationFragment : BaseFragment(),
                 this.animateCamera()
             }
 
-            // Fetches POIs
-            // todo: 07/04/2020 - Add POIs
+            // Add the points of interest
+            this.mRealEstatesWithPhotos?.let {
+                this.addPointsOfInterest(it)
+            }
+        }
+    }
+
+    // -- POIs --
+
+    /**
+     * Adds the points of interest
+     */
+    private fun addPointsOfInterest(realEstateWithPhotos: List<RealEstateWithPhotos>) {
+        // To avoid the NullPointerException during the rotation screen for example
+        this.mGoogleMap?.let {
+            // Remove Markers
+            it.clear()
+
+            // Adds Markers
+            realEstateWithPhotos.forEach { poi ->
+                val location = LatLng(
+                    poi.mRealEstate?.mAddress?.mLatitude!!,
+                    poi.mRealEstate?.mAddress?.mLongitude!!
+                )
+
+                it.addMarker(
+                    MarkerOptions()
+                        .position(location)
+                        .title("${poi.mRealEstate?.mType}")
+                        .icon(BitmapDescriptorFactory.defaultMarker(
+                            BitmapDescriptorFactory.HUE_BLUE)
+                        )
+                )
+            }
         }
     }
 
@@ -270,19 +319,15 @@ class LocationFragment : BaseFragment(),
      * Configures the camera of [GoogleMap]
      */
     private fun configureCamera() {
-        // No data in liveData
-        if (this.mCurrentLocation.value == null ||
-            this.mCurrentLocation.value?.mLocation == null) {
+        // No current location
+        if (this.mCurrentLocation == null) {
             return
         }
 
-        // Location
-        val location = this.mCurrentLocation.value?.mLocation
-
         // Location to LatLng -> Target
         val target = LatLng(
-            location?.latitude!!,
-            location.longitude
+            this.mCurrentLocation!!.latitude,
+            this.mCurrentLocation!!.longitude
         )
 
         // Camera
@@ -298,19 +343,15 @@ class LocationFragment : BaseFragment(),
      * Animates the camera of [GoogleMap]
      */
     private fun animateCamera() {
-        // No data in liveData
-        if (this.mCurrentLocation.value == null ||
-            this.mCurrentLocation.value?.mLocation == null) {
+        // No current location
+        if (this.mCurrentLocation == null) {
             return
         }
 
-        // Location
-        val location = this.mCurrentLocation.value?.mLocation
-
         // Location to LatLng -> Target
         val target = LatLng(
-            location?.latitude!!,
-            location.longitude
+            this.mCurrentLocation!!.latitude,
+            this.mCurrentLocation!!.longitude
         )
 
         // CameraPosition
@@ -320,6 +361,10 @@ class LocationFragment : BaseFragment(),
                                            .build()
 
         // Camera
-        this.mGoogleMap?.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+        this.mGoogleMap?.animateCamera(
+            CameraUpdateFactory.newCameraPosition(
+                cameraPosition
+            )
+        )
     }
 }
