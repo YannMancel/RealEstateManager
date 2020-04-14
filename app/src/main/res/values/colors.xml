@@ -5,8 +5,6 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryLight">#757DE8</color>
     <color name="colorPrimaryDark">#002984</color>
-    <color name="colorAccent">#76FF03</color>
-
-    <color name="colorPrice">#9C27B0</color>
+    <color name="colorAccent">#9C27B0</color>
 
 </resources>

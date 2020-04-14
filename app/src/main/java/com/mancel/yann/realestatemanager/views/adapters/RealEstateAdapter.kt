@@ -1,8 +1,10 @@
 package com.mancel.yann.realestatemanager.views.adapters
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -54,6 +56,9 @@ class RealEstateAdapter(
     private fun configureDesign(holder: RealEstateViewHolder, realEstate: RealEstateWithPhotos) {
         // CardView
         holder.itemView.item_real_estate_CardView.setOnClickListener {
+            // Background of item
+            this.configureBackgroundItem(realEstate)
+
             // Tag -> Data's Id
             it.tag = realEstate.mRealEstate?.mId
 
@@ -85,6 +90,44 @@ class RealEstateAdapter(
 
         // Price
         realEstate.mRealEstate?.mPrice?.let { holder.itemView.item_real_estate_price.text = it.toString() }
+
+        // Background color
+        realEstate.mRealEstate?.mIsSelected?.let { isSelected ->
+            if (isSelected) {
+                // CardView
+                holder.itemView.item_real_estate_CardView.setCardBackgroundColor(
+                    ContextCompat.getColor(holder.itemView.context, R.color.colorAccent)
+                )
+
+                // TextView
+                holder.itemView.item_real_estate_price.setTextColor(Color.WHITE)
+            }
+        }
+    }
+
+    /**
+     * Configures the background of item
+     * @param realEstate a [RealEstateWithPhotos]
+     */
+    private fun configureBackgroundItem(realEstate: RealEstateWithPhotos) {
+        realEstate.mRealEstate?.mId?.let { id ->
+            // Create a new List
+            val newRealEstates = mutableListOf<RealEstateWithPhotos>().apply {
+                // Add all items
+                this@RealEstateAdapter.mRealEstates.forEach {
+                    val item = it.mRealEstate?.copy()
+                    this.add(it.copy(mRealEstate = item))
+                }
+
+                // Reset on the previous item selected
+                forEach {
+                    it.mRealEstate?.mIsSelected = it.mRealEstate?.mId == id
+                }
+            }
+
+            // Update UI
+            this.updateData(newRealEstates)
+        }
     }
 
     // -- Real Estate --

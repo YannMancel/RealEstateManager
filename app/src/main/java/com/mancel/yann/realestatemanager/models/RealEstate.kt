@@ -57,5 +57,8 @@ data class RealEstate(
     var mEstateAgentId: Long? = null,
 
     @Embedded(prefix = "loc_")
-    var mAddress: Address? = null
+    var mAddress: Address? = null,
+
+    @Ignore
+    var mIsSelected: Boolean = false
 )

@@ -71,7 +71,7 @@
 
     <!-- TextView style (level 1, darker gray, normal) -->
     <style name="TextViewStyle3" parent="OneLineTextViewSubStyle">
-        <item name="android:textColor">@color/colorPrice</item>
+        <item name="android:textColor">@color/colorAccent</item>
         <item name="android:textSize">20sp</item>
         <item name="android:textStyle">normal</item>
     </style>
