@@ -470,6 +470,7 @@
 
             <!-- MaterialCardView: Photo -->
             <com.google.android.material.card.MaterialCardView
+                tools:visibility="gone"
                 android:id="@+id/cardview_photo"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -514,10 +515,13 @@
 
                     <!-- RecyclerView: List of photos -->
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/fragment_creator_RecyclerView"
+                        android:id="@+id/fragment_creator_RecyclerView_photo"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/margin_normal"
+                        android:layout_marginTop="@dimen/margin_normal"
+                        android:layout_marginBottom="@dimen/margin_normal"
+                        android:layout_marginStart="@dimen/margin_normal"
+                        android:layout_marginEnd="@dimen/margin_normal"
                         app:layout_constraintTop_toBottomOf="@id/fragment_creator_add_photo"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@id/icon_photo"
@@ -647,14 +651,32 @@
                         android:id="@+id/fragment_creator_search_poi"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/margin_little"
+                        android:layout_marginTop="@dimen/margin_little"
+                        android:layout_marginBottom="@dimen/margin_little"
                         app:layout_constraintTop_toBottomOf="@id/fragment_creator_distance_poi"
-                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintBottom_toTopOf="@id/fragment_creator_RecyclerView_poi"
                         app:layout_constraintStart_toEndOf="@id/icon_poi"
                         app:layout_constraintEnd_toEndOf="parent"
                         android:text="@string/search_poi_button"
                         android:background="@color/colorAccent"
                         style="@style/Widget.MaterialComponents.Button"/>
+
+                    <!-- RecyclerView: List of POIs -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/fragment_creator_RecyclerView_poi"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_little"
+                        android:layout_marginBottom="@dimen/margin_normal"
+                        android:layout_marginStart="@dimen/margin_normal"
+                        android:layout_marginEnd="@dimen/margin_normal"
+                        app:layout_constraintTop_toBottomOf="@id/fragment_creator_search_poi"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/icon_poi"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        tools:orientation="horizontal"
+                        tools:listitem="@layout/item_poi"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

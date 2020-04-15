@@ -77,10 +77,8 @@
     </style>
 
     <!-- TextView style (level 1, white, normal) -->
-    <style name="TextViewStyle4" parent="OneLineTextViewSubStyle">
+    <style name="TextViewStyle4" parent="@style/TextAppearance.MaterialComponents.Body2">
         <item name="android:textColor">@android:color/white</item>
-        <item name="android:textSize">15sp</item>
-        <item name="android:textStyle">normal</item>
         <item name="android:gravity">center</item>
     </style>
 

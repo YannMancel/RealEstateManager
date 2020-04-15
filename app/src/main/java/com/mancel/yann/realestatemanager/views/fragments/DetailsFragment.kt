@@ -79,16 +79,22 @@ class DetailsFragment : BaseFragment(), AdapterListener, OnMapReadyCallback {
      */
     private fun configureRecyclerView() {
         // Adapter
-        this.mAdapter = PhotoAdapter(mCallback = this@DetailsFragment)
+        this.mAdapter = PhotoAdapter(
+            mCallback = this@DetailsFragment
+        )
 
         // LayoutManager
-        val viewManager = LinearLayoutManager(this.requireContext(),
-                                              LinearLayoutManager.HORIZONTAL,
-                                             false)
+        val viewManager = LinearLayoutManager(
+            this.requireContext(),
+            LinearLayoutManager.HORIZONTAL,
+            false
+        )
 
         // Divider
-        val divider = DividerItemDecoration(this.requireContext(),
-                                            DividerItemDecoration.HORIZONTAL)
+        val divider = DividerItemDecoration(
+            this.requireContext(),
+            DividerItemDecoration.HORIZONTAL
+        )
 
         // RecyclerView
         with(this.mRootView.fragment_details_RecyclerView) {

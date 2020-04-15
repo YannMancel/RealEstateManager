@@ -337,17 +337,23 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
      */
     private fun configureRecyclerView() {
         // Adapter
-        this.mAdapter = PhotoAdapter(mCallback = this@EditFragment,
-                                     mButtonDisplayMode = PhotoAdapter.ButtonDisplayMode.EDIT_MODE)
+        this.mAdapter = PhotoAdapter(
+            mCallback = this@EditFragment,
+            mButtonDisplayMode = PhotoAdapter.ButtonDisplayMode.EDIT_MODE
+        )
 
         // LayoutManager
-        val viewManager = LinearLayoutManager(this.requireContext(),
-                                              LinearLayoutManager.HORIZONTAL,
-                                             false)
+        val viewManager = LinearLayoutManager(
+            this.requireContext(),
+            LinearLayoutManager.HORIZONTAL,
+            false
+        )
 
         // Divider
-        val divider = DividerItemDecoration(this.requireContext(),
-                                            DividerItemDecoration.HORIZONTAL)
+        val divider = DividerItemDecoration(
+            this.requireContext(),
+            DividerItemDecoration.HORIZONTAL
+        )
 
         // RecyclerView
         with(this.mRootView.fragment_edit_RecyclerView) {

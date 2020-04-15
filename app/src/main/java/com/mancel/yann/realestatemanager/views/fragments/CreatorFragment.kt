@@ -32,6 +32,7 @@ import com.mancel.yann.realestatemanager.models.Address
 import com.mancel.yann.realestatemanager.models.Photo
 import com.mancel.yann.realestatemanager.models.RealEstate
 import com.mancel.yann.realestatemanager.views.adapters.AdapterListener
+import com.mancel.yann.realestatemanager.views.adapters.POIsAdapter
 import com.mancel.yann.realestatemanager.views.adapters.PhotoAdapter
 import com.mancel.yann.realestatemanager.views.dialogs.DialogListener
 import com.mancel.yann.realestatemanager.views.dialogs.PhotoDialogFragment
@@ -52,7 +53,8 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
 
     // FIELDS --------------------------------------------------------------------------------------
 
-    private lateinit var mAdapter: PhotoAdapter
+    private lateinit var mPhotoAdapter: PhotoAdapter
+    private lateinit var mPOIsAdapter: POIsAdapter
     private var mAllPhotosFromDatabase: List<Photo>? = null
     private var mAllPhotosFromCreator: List<Photo>? = null
     private var mGoogleMap: GoogleMap? = null
@@ -73,7 +75,8 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
         // UI
         this.configureFieldsOfData()
         this.configureListenerOfEachButton()
-        this.configureRecyclerView()
+        this.configurePhotoRecyclerView()
+        this.configurePOIsRecyclerView()
         this.configureSupportMapFragment()
 
         // LiveData
@@ -103,10 +106,19 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
     // -- AdapterListener interface --
 
     override fun onDataChanged() {
-        this.mRootView.fragment_creator_RecyclerView.visibility = if (this.mAdapter.itemCount != 0)
-                                                                      View.VISIBLE
-                                                                  else
-                                                                      View.GONE
+        // Photos
+        this.mRootView.fragment_creator_RecyclerView_photo.visibility =
+            if (this.mPhotoAdapter.itemCount != 0)
+                View.VISIBLE
+            else
+                View.GONE
+
+        // POIs
+        this.mRootView.fragment_creator_RecyclerView_poi.visibility =
+            if (this.mPOIsAdapter.itemCount != 0)
+                View.VISIBLE
+            else
+                View.GONE
     }
 
     override fun onClick(v: View?) {
@@ -328,28 +340,66 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
     // -- RecyclerView --
 
     /**
-     * Configures the [RecyclerView]
+     * Configures the photo [RecyclerView]
      */
-    private fun configureRecyclerView() {
+    private fun configurePhotoRecyclerView() {
         // Adapter
-        this.mAdapter = PhotoAdapter(mCallback = this@CreatorFragment,
-                                     mButtonDisplayMode = PhotoAdapter.ButtonDisplayMode.EDIT_MODE)
+        this.mPhotoAdapter = PhotoAdapter(
+            mCallback = this@CreatorFragment,
+            mButtonDisplayMode = PhotoAdapter.ButtonDisplayMode.EDIT_MODE
+        )
 
         // LayoutManager
-        val viewManager = LinearLayoutManager(this.requireContext(),
-                                              LinearLayoutManager.HORIZONTAL,
-                                             false)
+        val viewManager = LinearLayoutManager(
+            this.requireContext(),
+            LinearLayoutManager.HORIZONTAL,
+            false
+        )
 
         // Divider
-        val divider = DividerItemDecoration(this.requireContext(),
-                                            DividerItemDecoration.HORIZONTAL)
+        val divider = DividerItemDecoration(
+            this.requireContext(),
+            DividerItemDecoration.HORIZONTAL
+        )
 
         // RecyclerView
-        with(this.mRootView.fragment_creator_RecyclerView) {
+        with(this.mRootView.fragment_creator_RecyclerView_photo) {
             setHasFixedSize(true)
             layoutManager = viewManager
             addItemDecoration(divider)
-            adapter = mAdapter
+            adapter = this@CreatorFragment.mPhotoAdapter
+            visibility = View.GONE
+        }
+    }
+
+    /**
+     * Configures the POIs [RecyclerView]
+     */
+    private fun configurePOIsRecyclerView() {
+        // Adapter
+        this.mPOIsAdapter = POIsAdapter(
+            mCallback = this@CreatorFragment
+        )
+
+        // LayoutManager
+        val viewManager = LinearLayoutManager(
+            this.requireContext(),
+            LinearLayoutManager.HORIZONTAL,
+            false
+        )
+
+        // Divider
+        val divider = DividerItemDecoration(
+            this.requireContext(),
+            DividerItemDecoration.HORIZONTAL
+        )
+
+        // RecyclerView
+        with(this.mRootView.fragment_creator_RecyclerView_poi) {
+            setHasFixedSize(true)
+            layoutManager = viewManager
+            addItemDecoration(divider)
+            adapter = this@CreatorFragment.mPOIsAdapter
             visibility = View.GONE
         }
     }
@@ -401,7 +451,7 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
                 this.viewLifecycleOwner,
                 Observer {
                     this.mAllPhotosFromCreator = it
-                    this.mAdapter.updateData(it)
+                    this.mPhotoAdapter.updateData(it)
                 }
             )
     }
@@ -415,7 +465,13 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
             .observe(
                 this.viewLifecycleOwner,
                 Observer {
-                    this.mCallback?.showMessage("${it.size}")
+                    if (it.isEmpty()) {
+                        this.mCallback?.showMessage(
+                            this.getString(R.string.no_pois_search)
+                        )
+                    }
+
+                    this.mPOIsAdapter.updateData(it)
                 }
             )
     }

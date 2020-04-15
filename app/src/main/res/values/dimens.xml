@@ -13,6 +13,7 @@
     <dimen name="card_item_photo_width">150dp</dimen>
     <dimen name="card_item_photo_height">180dp</dimen>
     <dimen name="card_item_real_estate_height">80dp</dimen>
+    <dimen name="card_item_poi_size">150dp</dimen>
 
     <!-- ImageView Size -->
     <dimen name="image_view_item_real_estate_width">@dimen/card_item_real_estate_height</dimen>

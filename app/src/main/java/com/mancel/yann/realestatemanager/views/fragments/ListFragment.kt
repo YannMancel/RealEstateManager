@@ -60,14 +60,20 @@ class ListFragment : BaseFragment(), AdapterListener {
      */
     private fun configureRecyclerView() {
         // Adapter
-        this.mAdapter = RealEstateAdapter(mCallback = this@ListFragment)
+        this.mAdapter = RealEstateAdapter(
+            mCallback = this@ListFragment
+        )
 
         // LayoutManager
-        val viewManager = LinearLayoutManager(this.requireContext())
+        val viewManager = LinearLayoutManager(
+            this.requireContext()
+        )
 
         // Divider
-        val divider = DividerItemDecoration(this.requireContext(),
-                                            DividerItemDecoration.VERTICAL)
+        val divider = DividerItemDecoration(
+            this.requireContext(),
+            DividerItemDecoration.VERTICAL
+        )
 
         // RecyclerView
         with(this.mRootView.fragment_list_RecyclerView) {
