@@ -25,5 +25,8 @@ data class PointOfInterest(
     var mName: String? = null,
 
     @Embedded(prefix = "loc_")
-    var mAddress: Address? = null
+    var mAddress: Address? = null,
+
+    @Ignore
+    var mIsSelected: Boolean = false
 )

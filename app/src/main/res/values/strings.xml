@@ -92,5 +92,8 @@
     <string name="title_description_details">Description</string>
     <string name="title_description_characteristics">Characteristics</string>
     <string name="title_description_address">Address</string>
+    <string name="no_pois">No point of interest has been selected</string>
+    <string name="no_distance">No distance to search point of interest</string>
+    <string name="no_address">No address</string>
 
 </resources>

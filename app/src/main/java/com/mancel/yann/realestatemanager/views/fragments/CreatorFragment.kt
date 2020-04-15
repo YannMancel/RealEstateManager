@@ -79,6 +79,7 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
         // LiveData
         this.configurePhotosFomDatabase()
         this.configurePhotoCreatorLiveData()
+        this.configurePOIsSearch()
     }
 
     override fun actionAfterPermission() = this.actionToAddPhoto()
@@ -167,7 +168,8 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
             this.mRootView.fragment_creator_surface,
             this.mRootView.fragment_creator_number_of_room,
             this.mRootView.fragment_creator_description,
-            this.mRootView.fragment_creator_effective_date
+            this.mRootView.fragment_creator_effective_date,
+            this.mRootView.fragment_creator_distance_poi
         )
 
         // Hides field for address
@@ -404,6 +406,20 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
             )
     }
 
+    /**
+     * Configures the POIs search
+     */
+    private fun configurePOIsSearch() {
+        this.mViewModel
+            .getPOIsSearch()
+            .observe(
+                this.viewLifecycleOwner,
+                Observer {
+                    this.mCallback?.showMessage("${it.size}")
+                }
+            )
+    }
+
     // -- Google Maps --
 
     /**
@@ -527,9 +543,10 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
     // -- Points of interest --
 
     /**
-     * Action to add a [PointOfInterest]
+     * Action to add POIs
      */
     private fun actionToAddPOIs() {
+        // Raw POIs
         val rawTypes = mutableListOf<String>().apply {
             // SCHOOL
             if (this@CreatorFragment.mRootView.fragment_creator_Chip_school.isChecked) {
@@ -552,17 +569,56 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
             }
         }
 
-        // For Google Maps request
-        val types = StringBuilder().run {
-            rawTypes.forEachIndexed { index, value ->
-                if (index != 0) this.append(",")
-                this.append(value)
-            }
-
-            this.toString()
+        // No POI
+        if (rawTypes.isEmpty()) {
+            this.mCallback?.showMessage(
+                this.getString(R.string.no_pois)
+            )
+            return
         }
 
-        this.mCallback?.showMessage(types)
+        // No distance for search POI
+        val isCanceled = this.configureErrorOfFields(
+            this.mRootView.fragment_creator_distance_poi
+        )
+
+        if (isCanceled) {
+            this.mCallback?.showMessage(
+                this.getString(R.string.no_distance)
+            )
+            return
+        }
+
+        this.mGoogleMap?.let {
+            // No address
+            if (it.projection.visibleRegion.latLngBounds.center.latitude == 0.0 &&
+                it.projection.visibleRegion.latLngBounds.center.longitude == 0.0
+            ) {
+                this.mCallback?.showMessage(
+                    this.getString(R.string.no_address)
+                )
+                return
+            }
+
+            // For Google Maps request
+            val types = StringBuilder().run {
+                rawTypes.forEachIndexed { index, value ->
+                    if (index != 0) this.append(",")
+                    this.append(value)
+                }
+
+                this.toString()
+            }
+
+            // Fetch POIsSearch
+            this.mViewModel.fetchPOIsSearch(
+                context = this.requireContext(),
+                latitude = it.projection.visibleRegion.latLngBounds.center.latitude,
+                longitude = it.projection.visibleRegion.latLngBounds.center.longitude,
+                radius = this.mRootView.fragment_creator_distance_poi.editText?.text.toString().toDouble(),
+                types = types
+            )
+        }
     }
 
     // -- Real Estate --
@@ -588,33 +644,43 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
             return
         }
 
-        // todo - 06/04/2020 - Add test on address
+        this.mGoogleMap?.let {
+            // No address
+            if (it.projection.visibleRegion.latLngBounds.center.latitude == 0.0 &&
+                it.projection.visibleRegion.latLngBounds.center.longitude == 0.0
+            ) {
+                this.mCallback?.showMessage(
+                    this.getString(R.string.no_address)
+                )
+                return
+            }
 
-        // todo - 06/04/2020 - Next feature: Add user's authentication instead of 1L
-        val realEstate = RealEstate(
-            mType = this.fragment_creator_type.editText?.text?.toString(),
-            mPrice = this.fragment_creator_price.editText?.text?.toString()?.toDouble(),
-            mSurface = this.mRootView.fragment_creator_surface.editText?.text?.toString()?.toDouble(),
-            mNumberOfRoom = this.mRootView.fragment_creator_number_of_room.editText?.text?.toString()?.toInt(),
-            mDescription = this.mRootView.fragment_creator_description.editText?.text?.toString(),
-            mIsEnable = this.mRootView.fragment_creator_enable.isChecked,
-            mEffectiveDate = SimpleDateFormat("dd/MM/yyyy").parse(this.mRootView.fragment_creator_effective_date.editText?.text?.toString()),
-            mSaleDate = null,
-            mEstateAgentId = 1L,
-            mAddress = Address(
-                mStreet = this.fragment_creator_address.editText?.text?.toString(),
-                mCity = this.fragment_creator_city.editText?.text?.toString(),
-                mPostCode = this.fragment_creator_post_code.editText?.text?.toString()?.toInt(),
-                mCountry = this.fragment_creator_country.editText?.text?.toString(),
-                mLatitude = this.mGoogleMap?.projection?.visibleRegion?.latLngBounds?.center?.latitude,
-                mLongitude = this.mGoogleMap?.projection?.visibleRegion?.latLngBounds?.center?.longitude
+            // todo - 06/04/2020 - Next feature: Add user's authentication instead of 1L
+            val realEstate = RealEstate(
+                mType = this.fragment_creator_type.editText?.text?.toString(),
+                mPrice = this.fragment_creator_price.editText?.text?.toString()?.toDouble(),
+                mSurface = this.mRootView.fragment_creator_surface.editText?.text?.toString()?.toDouble(),
+                mNumberOfRoom = this.mRootView.fragment_creator_number_of_room.editText?.text?.toString()?.toInt(),
+                mDescription = this.mRootView.fragment_creator_description.editText?.text?.toString(),
+                mIsEnable = this.mRootView.fragment_creator_enable.isChecked,
+                mEffectiveDate = SimpleDateFormat("dd/MM/yyyy").parse(this.mRootView.fragment_creator_effective_date.editText?.text?.toString()),
+                mSaleDate = null,
+                mEstateAgentId = 1L,
+                mAddress = Address(
+                    mStreet = this.fragment_creator_address.editText?.text?.toString(),
+                    mCity = this.fragment_creator_city.editText?.text?.toString(),
+                    mPostCode = this.fragment_creator_post_code.editText?.text?.toString()?.toInt(),
+                    mCountry = this.fragment_creator_country.editText?.text?.toString(),
+                    mLatitude = this.mGoogleMap?.projection?.visibleRegion?.latLngBounds?.center?.latitude,
+                    mLongitude = this.mGoogleMap?.projection?.visibleRegion?.latLngBounds?.center?.longitude
+                )
             )
-        )
 
-        this.mViewModel.insertRealEstate(
-            realEstate,
-            this.mAllPhotosFromCreator,
-            null
-        )
+            this.mViewModel.insertRealEstate(
+                realEstate,
+                this.mAllPhotosFromCreator,
+                null
+            )
+        }
     }
 }

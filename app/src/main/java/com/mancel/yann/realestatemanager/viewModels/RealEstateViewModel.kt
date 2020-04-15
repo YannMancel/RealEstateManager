@@ -5,10 +5,13 @@ import android.database.sqlite.SQLiteConstraintException
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mancel.yann.realestatemanager.R
 import com.mancel.yann.realestatemanager.liveDatas.LocationLiveData
+import com.mancel.yann.realestatemanager.liveDatas.POIsSearchLiveData
 import com.mancel.yann.realestatemanager.liveDatas.PhotoCreatorLiveData
 import com.mancel.yann.realestatemanager.models.*
 import com.mancel.yann.realestatemanager.repositories.PhotoRepository
+import com.mancel.yann.realestatemanager.repositories.PlaceRepository
 import com.mancel.yann.realestatemanager.repositories.RealEstateRepository
 import com.mancel.yann.realestatemanager.repositories.UserRepository
 import kotlinx.coroutines.*
@@ -22,6 +25,7 @@ import timber.log.Timber
  * A [ViewModel] subclass.
  */
 class RealEstateViewModel(
+    private val mPlaceRepository: PlaceRepository,
     private val mUserRepository: UserRepository,
     private val mRealEstateRepository: RealEstateRepository,
     private val mPhotoRepository: PhotoRepository
@@ -33,12 +37,13 @@ class RealEstateViewModel(
 
     private var mUser: LiveData<User>? = null
 
-    private var mCountOfRealEstateByUserId: LiveData<Int>? = null
     private var mRealEstatesWithPhotos: LiveData<List<RealEstateWithPhotos>>? = null
     private var mRealEstateWithPhotos: LiveData<RealEstateWithPhotos>? = null
 
     private var mPhotos: LiveData<List<Photo>>? = null
     private var mPhotoCreator: PhotoCreatorLiveData? = null
+
+    private var mPOIsSearch: POIsSearchLiveData? = null
 
     // CONSTRUCTORS --------------------------------------------------------------------------------
 
@@ -282,5 +287,62 @@ class RealEstateViewModel(
                 }
             }
         }
+    }
+
+    // -- Points of interest --
+
+    /**
+     * Gets the [LiveData] of [List] of [PointOfInterest]
+     * @param context   a [Context]
+     * @param latitude  a [Double] that contains the latitude value
+     * @param longitude a [Double] that contains the longitude value
+     * @param radius    a [Double] that contains the radius value
+     * @param types     a [String] that contains the types
+     * @return a [LiveData] of [List] of [PointOfInterest]
+     */
+    fun getPOIsSearch(
+        context: Context? = null,
+        latitude: Double? = null,
+        longitude: Double? = null,
+        radius: Double? = null,
+        types: String? = null
+    ): LiveData<List<PointOfInterest>> {
+        if (this.mPOIsSearch == null) {
+            this.mPOIsSearch = POIsSearchLiveData()
+        }
+
+        // Fetch the data
+        context?.let {
+            this.fetchPOIsSearch(context, latitude!!, longitude!!, radius!!, types!!)
+        }
+
+        return this.mPOIsSearch!!
+    }
+
+    /**
+     * Fetches a [List] of [PointOfInterest]
+     * @param context   a [Context]
+     * @param latitude  a [Double] that contains the latitude value
+     * @param longitude a [Double] that contains the longitude value
+     * @param radius    a [Double] that contains the radius value
+     * @param types     a [String] that contains the types
+     */
+    fun fetchPOIsSearch(
+        context: Context,
+        latitude: Double,
+        longitude: Double,
+        radius: Double,
+        types: String
+    ) {
+        // Observable
+        val observable = this.mPlaceRepository.getStreamToFetchPointsOfInterest(
+            location = "$latitude,$longitude",
+            radius = radius,
+            types = types,
+            key = context.resources.getString(R.string.google_maps_key)
+        )
+
+        // Updates LiveData
+        this.mPOIsSearch?.getPOIsSearchWithObservable(observable)
     }
 }

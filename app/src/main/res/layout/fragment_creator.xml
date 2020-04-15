@@ -626,6 +626,7 @@
                         app:layout_constraintStart_toEndOf="@id/icon_poi"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:hintEnabled="true"
+                        app:errorEnabled="true"
                         app:background="@null"
                         app:endIconMode="clear_text"
                         app:boxBackgroundColor="@android:color/transparent"

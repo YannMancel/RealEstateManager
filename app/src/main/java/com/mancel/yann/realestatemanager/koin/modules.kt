@@ -25,6 +25,7 @@ val appModule = module {
     single { get<AppDatabase>().realEstatePointOfInterestCrossRefDAO() }
 
     // Repository
+    single<PlaceRepository> { PlaceRepositoryImpl() }
     single<UserRepository> { UserRepositoryImpl(get()) }
     single<RealEstateRepository> { RealEstateRepositoryImpl(get()) }
     single<PhotoRepository> { PhotoRepositoryImpl(get()) }
@@ -32,5 +33,5 @@ val appModule = module {
     single<RealEstatePointOfInterestCrossRefRepository> { RealEstatePointOfInterestCrossRefRepositoryImpl(get()) }
 
     // ViewModel
-    viewModel { RealEstateViewModel(get(), get(), get()) }
+    viewModel { RealEstateViewModel(get(), get(), get(), get()) }
 }
