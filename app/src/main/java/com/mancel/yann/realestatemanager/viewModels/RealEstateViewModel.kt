@@ -10,6 +10,7 @@ import com.mancel.yann.realestatemanager.liveDatas.LocationLiveData
 import com.mancel.yann.realestatemanager.liveDatas.POIsSearchLiveData
 import com.mancel.yann.realestatemanager.liveDatas.PhotoCreatorLiveData
 import com.mancel.yann.realestatemanager.models.*
+import com.mancel.yann.realestatemanager.notifications.RealEstateNotification
 import com.mancel.yann.realestatemanager.repositories.PhotoRepository
 import com.mancel.yann.realestatemanager.repositories.PlaceRepository
 import com.mancel.yann.realestatemanager.repositories.RealEstateRepository
@@ -137,11 +138,13 @@ class RealEstateViewModel(
 
     /**
      * Inserts the new [RealEstate] in argument
+     * @param context           a [Context]
      * @param realEstate        a [RealEstate]
      * @param photos            a [List] of [Photo]
      * @param pointsOfInterest  a [List] of [PointOfInterest]
      */
     fun insertRealEstate(
+        context: Context,
         realEstate: RealEstate,
         photos: List<Photo>? = null,
         pointsOfInterest: List<PointOfInterest>? = null
@@ -152,7 +155,15 @@ class RealEstateViewModel(
         try {
             // Fetch the new rowId for the inserted item
             realEstateId = this@RealEstateViewModel.mRealEstateRepository.insertRealEstate(realEstate)
-            Timber.d("insertRealEstate: Id = $realEstateId")
+
+            // NOTIFICATION
+            RealEstateNotification.sendVisualNotification(
+                context,
+                context.getString(
+                    R.string.notification_message,
+                    realEstate.mType, realEstate.mPrice
+                )
+            )
         }
         catch (e: SQLiteConstraintException) {
             // UNIQUE constraint failed
@@ -167,9 +178,10 @@ class RealEstateViewModel(
         )
 
         // POINTS OF INTEREST
-        pointsOfInterest?.let {
-            // todo - 05/04/2020 - add the points of interest
-        }
+        this@RealEstateViewModel.insertPOIsWithRealEstateId(
+            pointsOfInterest,
+            realEstateId
+        )
     }
 
     /**
@@ -263,7 +275,6 @@ class RealEstateViewModel(
         photos: List<Photo>?,
         realEstateId: Long
     ) = withContext(Dispatchers.IO) {
-        // PHOTOS
         photos?.let { photos ->
             // Change the [real_estate_id] of each photo
             photos.forEach { photo ->
@@ -356,4 +367,47 @@ class RealEstateViewModel(
      * Gets all selected [PointOfInterest]
      */
     fun getSelectedPOIs() =  this.mPOIsSearch?.getSelectedPOIs()
+
+    /**
+     * Inserts several [PointOfInterest] into database
+     * @param pointsOfInterest  a [List] of [PointOfInterest]
+     * @param realEstateId      a [Long] that contains the real estate Id
+     */
+    private suspend fun insertPOIsWithRealEstateId(
+        pointsOfInterest: List<PointOfInterest>?,
+        realEstateId: Long
+    ) = withContext(Dispatchers.IO) {
+        pointsOfInterest?.let { poiList ->
+
+
+
+
+
+
+
+
+
+//            // Change the [real_estate_id] of each photo
+//            photos.forEach { photo ->
+//                photo.mRealEstateId = realEstateId
+//            }
+//
+//            val deferred: Deferred<List<Long>> = async {
+//                try {
+//                    this@RealEstateViewModel.mPhotoRepository.insertPhotos(*photos.toTypedArray())
+//                }
+//                catch (e: SQLiteConstraintException) {
+//                    // UNIQUE constraint failed
+//                    Timber.e("insertPhotos: ${e.message}")
+//                    emptyList<Long>()
+//                }
+//            }
+//
+//            deferred.await().let {
+//                if (it.isNotEmpty()) {
+//                    Timber.d("insertPhotos: Ids = $it")
+//                }
+//            }
+        }
+    }
 }

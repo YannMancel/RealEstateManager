@@ -169,7 +169,7 @@ class DetailsFragment : BaseFragment(), AdapterListener, OnMapReadyCallback {
                     val fullAddress = """
                         ${address.mStreet ?: this.getString(R.string.details_no_street)}
                         ${address.mCity ?: this.getString(R.string.details_no_city)}
-                        ${address.mPostCode ?: this.getString(R.string.details_no_post_code)}
+                        ${address.mPostCode ?: "0"}
                         ${address.mCountry ?: this.getString(R.string.details_no_country)}
                     """.trimIndent()
 

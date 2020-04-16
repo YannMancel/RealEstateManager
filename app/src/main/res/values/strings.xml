@@ -32,7 +32,6 @@
     <string name="details_no_street_number">[Street Number: No data]</string>
     <string name="details_no_street">[Street: No data]</string>
     <string name="details_no_city">[City: No data]</string>
-    <string name="details_no_post_code">[Post code: No data]</string>
     <string name="details_no_country">[Country: No data]</string>
 
     <!-- EditFragment.kt -->
@@ -45,6 +44,12 @@
 
     <!-- PhotoDialogFragment.kt -->
     <string name="title_photo_dialog_fragment">Photo selected</string>
+
+    <!-- RealEstateNotification.kt & RealEstateViewModel.kt -->
+    <string name="notification_title">Notification Real Estate Manager</string>
+    <string name="notification_channel_name">Notification for Real Estate Manager</string>
+    <string name="notification_channel_description">This channel is the channel for Real Estate Manager.</string>
+    <string name="notification_message">Creation of RealEstate\n\ttype: %1$s\n\tPrice: %2$.2f\$</string>
 
     <!-- activity_main_menu_drawer.xml -->
     <string name="menu_drawer_settings">SETTINGS</string>
@@ -90,6 +95,7 @@
     <string name="chip_restaurant">Restaurant</string>
     <string name="chip_doctor">Doctor</string>
     <string name="chip_hospital">Hospital</string>
+    <string name="chip_airport">airport</string>
 
     <!-- fragment_details.xml -->
     <string name="title_media_details">Media</string>

@@ -98,12 +98,12 @@
                         app:boxBackgroundColor="@android:color/transparent"
                         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox">
 
-                        <!-- TextInputEditText: Type -->
+                        <!-- TextInputEditText: Price -->
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:hint="@string/hint_price"
-                            android:inputType="number"/>
+                            android:inputType="numberDecimal"/>
 
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -470,7 +470,6 @@
 
             <!-- MaterialCardView: Photo -->
             <com.google.android.material.card.MaterialCardView
-                tools:visibility="gone"
                 android:id="@+id/cardview_photo"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -521,7 +520,6 @@
                         android:layout_marginTop="@dimen/margin_normal"
                         android:layout_marginBottom="@dimen/margin_normal"
                         android:layout_marginStart="@dimen/margin_normal"
-                        android:layout_marginEnd="@dimen/margin_normal"
                         app:layout_constraintTop_toBottomOf="@id/fragment_creator_add_photo"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@id/icon_photo"
@@ -613,6 +611,14 @@
                                 android:text="@string/chip_hospital"
                                 style="@style/Widget.MaterialComponents.Chip.Filter"/>
 
+                            <!-- Chip: Airport -->
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/fragment_creator_Chip_airport"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/chip_airport"
+                                style="@style/Widget.MaterialComponents.Chip.Filter"/>
+
                         </com.google.android.material.chip.ChipGroup>
 
                     </HorizontalScrollView>
@@ -669,7 +675,6 @@
                         android:layout_marginTop="@dimen/margin_little"
                         android:layout_marginBottom="@dimen/margin_normal"
                         android:layout_marginStart="@dimen/margin_normal"
-                        android:layout_marginEnd="@dimen/margin_normal"
                         app:layout_constraintTop_toBottomOf="@id/fragment_creator_search_poi"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@id/icon_poi"

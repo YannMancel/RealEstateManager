@@ -298,7 +298,12 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
         // Post code
         this.mRootView.fragment_edit_post_code.editText?.text?.let {
             it.clear()
-            it.append(postalCode ?: this.getString(R.string.details_no_post_code))
+            it.append(
+                if (postalCode.isNullOrEmpty())
+                    "0"
+                else
+                    postalCode
+            )
         }
 
         // Country
@@ -511,8 +516,7 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
                     this.mRootView.fragment_edit_post_code.editText?.text?.let { postCode ->
                         postCode.clear()
                         postCode.append(
-                            address.mPostCode?.toString() ?:
-                            this.getString(R.string.details_no_post_code)
+                            address.mPostCode?.toString() ?: "0"
                         )
                     }
 
@@ -695,34 +699,46 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
             return
         }
 
-        // todo - 06/04/2020 - Add test on address
+        this.mGoogleMap?.let {
+            // No address
+            if (it.projection.visibleRegion.latLngBounds.center.latitude == 0.0 &&
+                it.projection.visibleRegion.latLngBounds.center.longitude == 0.0
+            ) {
+                this.mCallback?.showMessage(
+                    this.getString(R.string.no_address)
+                )
+                return
+            }
 
-        // todo - 06/04/2020 - Next feature: Add user's authentication instead of 1L
-        val realEstate = RealEstate(
-            mId = this.mItemId,
-            mType = this.fragment_edit_type.editText?.text?.toString(),
-            mPrice = this.fragment_edit_price.editText?.text?.toString()?.toDouble(),
-            mSurface = this.mRootView.fragment_edit_surface.editText?.text?.toString()?.toDouble(),
-            mNumberOfRoom = this.mRootView.fragment_edit_number_of_room.editText?.text?.toString()?.toInt(),
-            mDescription = this.mRootView.fragment_edit_description.editText?.text?.toString(),
-            mIsEnable = this.mRootView.fragment_edit_enable.isChecked,
-            mEffectiveDate = SimpleDateFormat("dd/MM/yyyy").parse(this.mRootView.fragment_edit_effective_date.editText?.text?.toString()),
-            mSaleDate = null,
-            mEstateAgentId = 1L,
-            mAddress = Address(
-                mStreet = this.fragment_edit_address.editText?.text?.toString(),
-                mCity = this.fragment_edit_city.editText?.text?.toString(),
-                mPostCode = this.fragment_edit_post_code.editText?.text?.toString()?.toInt(),
-                mCountry = this.fragment_edit_country.editText?.text?.toString(),
-                mLatitude = this.mGoogleMap?.projection?.visibleRegion?.latLngBounds?.center?.latitude,
-                mLongitude = this.mGoogleMap?.projection?.visibleRegion?.latLngBounds?.center?.longitude
+            // todo - 06/04/2020 - Add test on address
+
+            // todo - 06/04/2020 - Next feature: Add user's authentication instead of 1L
+            val realEstate = RealEstate(
+                mId = this.mItemId,
+                mType = this.fragment_edit_type.editText?.text?.toString(),
+                mPrice = this.fragment_edit_price.editText?.text?.toString()?.toDouble(),
+                mSurface = this.mRootView.fragment_edit_surface.editText?.text?.toString()?.toDouble(),
+                mNumberOfRoom = this.mRootView.fragment_edit_number_of_room.editText?.text?.toString()?.toInt(),
+                mDescription = this.mRootView.fragment_edit_description.editText?.text?.toString(),
+                mIsEnable = this.mRootView.fragment_edit_enable.isChecked,
+                mEffectiveDate = SimpleDateFormat("dd/MM/yyyy").parse(this.mRootView.fragment_edit_effective_date.editText?.text?.toString()),
+                mSaleDate = null,
+                mEstateAgentId = 1L,
+                mAddress = Address(
+                    mStreet = this.fragment_edit_address.editText?.text?.toString(),
+                    mCity = this.fragment_edit_city.editText?.text?.toString(),
+                    mPostCode = this.fragment_edit_post_code.editText?.text?.toString()?.toInt(),
+                    mCountry = this.fragment_edit_country.editText?.text?.toString(),
+                    mLatitude = this.mGoogleMap?.projection?.visibleRegion?.latLngBounds?.center?.latitude,
+                    mLongitude = this.mGoogleMap?.projection?.visibleRegion?.latLngBounds?.center?.longitude
+                )
             )
-        )
 
-        this.mViewModel.updateRealEstate(
-            realEstate,
-            this.mAllPhotosFromCreator,
-            null
-        )
+            this.mViewModel.updateRealEstate(
+                realEstate,
+                this.mAllPhotosFromCreator,
+                null
+            )
+        }
     }
 }

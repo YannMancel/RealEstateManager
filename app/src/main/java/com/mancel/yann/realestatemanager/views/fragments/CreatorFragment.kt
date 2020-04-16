@@ -304,7 +304,12 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
         // Post code
         this.mRootView.fragment_creator_post_code.editText?.text?.let {
             it.clear()
-            it.append(postalCode ?: this.getString(R.string.details_no_post_code))
+            it.append(
+                if (postalCode.isNullOrEmpty())
+                    "0"
+                else
+                    postalCode
+            )
         }
 
         // Country
@@ -737,9 +742,10 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
             )
 
             this.mViewModel.insertRealEstate(
+                this.requireContext(),
                 realEstate,
                 this.mAllPhotosFromCreator,
-                null
+                this.mViewModel.getSelectedPOIs()
             )
         }
     }
