@@ -30,6 +30,7 @@ import com.mancel.yann.realestatemanager.R
 import com.mancel.yann.realestatemanager.liveDatas.PhotoCreatorLiveData
 import com.mancel.yann.realestatemanager.models.Address
 import com.mancel.yann.realestatemanager.models.Photo
+import com.mancel.yann.realestatemanager.models.PointOfInterest
 import com.mancel.yann.realestatemanager.models.RealEstate
 import com.mancel.yann.realestatemanager.views.adapters.AdapterListener
 import com.mancel.yann.realestatemanager.views.adapters.POIsAdapter
@@ -139,6 +140,9 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
                                        "DIALOG PHOTO"
                                    )
             }
+
+            // CheckBox
+            R.id.item_poi_is_selected -> this.mViewModel.checkPOI(v.tag as PointOfInterest)
 
             else -> { /* Ignore all other ids */ }
         }

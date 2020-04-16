@@ -26,6 +26,19 @@ interface GoogleMapsService {
                                          .addConverterFactory(MoshiConverterFactory.create())
                                          .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                                          .build()
+
+        /**
+         * Gets a photo request URL
+         * @param photoReference    a [String] that contains a string identifier that uniquely identifies a photo
+         * @param maxWidth          an [Int] that specifies the maximum desired width, in pixels, of the image
+         * @param key               a [String] that contains your application's API key
+         * @return a [String] that contains the photo request URL
+         */
+        fun getPhoto(
+            photoReference: String,
+            maxWidth: Int,
+            key: String
+        ) = "${BASE_URL}place/photo?photoreference=${photoReference}&maxwidth=${maxWidth}&key=${key}"
     }
 
     // METHODS -------------------------------------------------------------------------------------

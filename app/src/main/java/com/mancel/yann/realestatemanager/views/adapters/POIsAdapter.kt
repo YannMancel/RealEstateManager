@@ -5,7 +5,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.mancel.yann.realestatemanager.R
+import com.mancel.yann.realestatemanager.api.GoogleMapsService
 import com.mancel.yann.realestatemanager.models.PointOfInterest
 import com.mancel.yann.realestatemanager.utils.POIsDiffCallback
 import kotlinx.android.synthetic.main.item_poi.view.*
@@ -50,11 +52,37 @@ class POIsAdapter(
      * @param poi       a [PointOfInterest]
      */
     private fun configureDesign(holder: POIsViewHolder, poi: PointOfInterest) {
+        // Image
+        poi.mUrlPicture?.let {
+            val urlRequest = GoogleMapsService.getPhoto(
+                photoReference = it,
+                maxWidth = 400,
+                key = holder.itemView.context.getString(R.string.google_maps_key)
+            )
+
+            Glide.with(holder.itemView)
+                .load(urlRequest)
+                .centerCrop()
+                .placeholder(R.drawable.placeholder_image)
+                .fallback(R.drawable.ic_add_location)
+                .error(R.drawable.ic_clear)
+                .into(holder.itemView.item_poi_image)
+        }
+
         // Name
         poi.mName?.let { holder.itemView.item_poi_name.text = it }
 
         // Is selected
         holder.itemView.item_poi_is_selected.isChecked = poi.mIsSelected
+
+        // CheckBox
+        holder.itemView.item_poi_is_selected.setOnClickListener {
+            // Tag -> POI
+            it.tag = poi
+
+            // Starts the callback
+            holder.mCallback.get()?.onClick(it)
+        }
     }
 
     // -- Point of interest --

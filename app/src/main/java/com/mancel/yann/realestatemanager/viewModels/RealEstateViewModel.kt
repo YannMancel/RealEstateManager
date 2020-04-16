@@ -345,4 +345,15 @@ class RealEstateViewModel(
         // Updates LiveData
         this.mPOIsSearch?.getPOIsSearchWithObservable(observable)
     }
+
+    /**
+     * Checks if the [PointOfInterest] is selected
+     * @param poi a [PointOfInterest]
+     */
+    fun checkPOI(poi: PointOfInterest) = this.mPOIsSearch?.checkPOI(poi)
+
+    /**
+     * Gets all selected [PointOfInterest]
+     */
+    fun getSelectedPOIs() =  this.mPOIsSearch?.getSelectedPOIs()
 }

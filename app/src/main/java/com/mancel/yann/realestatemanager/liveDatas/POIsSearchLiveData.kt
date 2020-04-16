@@ -19,6 +19,7 @@ class POIsSearchLiveData : LiveData<List<PointOfInterest>>() {
     // FIELDS --------------------------------------------------------------------------------------
 
     private var mDisposable: Disposable? = null
+    private val mPOIs: MutableList<PointOfInterest> = mutableListOf()
 
     // METHODS -------------------------------------------------------------------------------------
 
@@ -46,6 +47,11 @@ class POIsSearchLiveData : LiveData<List<PointOfInterest>>() {
         this.mDisposable = observable.subscribeWith(object : DisposableObserver<List<PointOfInterest>>() {
 
             override fun onNext(result: List<PointOfInterest>) {
+                with(this@POIsSearchLiveData.mPOIs) {
+                    clear()
+                    addAll(result)
+                }
+
                 // Notify
                 this@POIsSearchLiveData.value = result
             }
@@ -57,4 +63,24 @@ class POIsSearchLiveData : LiveData<List<PointOfInterest>>() {
             override fun onComplete() { /* Do nothing */ }
         })
     }
+
+    /**
+     * Checks if the [PointOfInterest] is selected
+     * @param poi a [PointOfInterest]
+     */
+    fun checkPOI(poi: PointOfInterest) {
+        this.mPOIs.forEach {
+            if (it == poi) {
+                it.mIsSelected = !poi.mIsSelected
+            }
+        }
+
+        // Notify
+        this.value = this.mPOIs
+    }
+
+    /**
+     * Gets all selected [PointOfInterest]
+     */
+    fun getSelectedPOIs() =  this.mPOIs.filter { it.mIsSelected }
 }

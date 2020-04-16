@@ -28,5 +28,8 @@ data class PointOfInterest(
     var mAddress: Address? = null,
 
     @Ignore
-    var mIsSelected: Boolean = false
+    var mIsSelected: Boolean = false,
+
+    @Ignore
+    var mUrlPicture: String? = null
 )

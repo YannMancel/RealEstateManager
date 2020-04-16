@@ -25,7 +25,8 @@ object MapperTools {
                         mAddress = Address(
                             mLatitude = it.geometry?.location?.lat ?: 0.0,
                             mLongitude = it.geometry?.location?.lng ?: 0.0
-                        )
+                        ),
+                        mUrlPicture = it.photos?.get(0)?.photoReference
                     )
                 )
             }
