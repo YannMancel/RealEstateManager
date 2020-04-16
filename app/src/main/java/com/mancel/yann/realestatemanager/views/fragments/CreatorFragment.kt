@@ -483,6 +483,14 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
                     this.mPOIsAdapter.updateData(it)
                 }
             )
+
+        // Useful just for Coroutine calls
+        this.mViewModel
+            .getPOIs()
+            .observe(
+                this.viewLifecycleOwner,
+                Observer { /* Do nothing */ }
+            )
     }
 
     // -- Google Maps --

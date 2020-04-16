@@ -2,19 +2,14 @@ package com.mancel.yann.realestatemanager.viewModels
 
 import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.mancel.yann.realestatemanager.R
 import com.mancel.yann.realestatemanager.liveDatas.LocationLiveData
 import com.mancel.yann.realestatemanager.liveDatas.POIsSearchLiveData
 import com.mancel.yann.realestatemanager.liveDatas.PhotoCreatorLiveData
 import com.mancel.yann.realestatemanager.models.*
 import com.mancel.yann.realestatemanager.notifications.RealEstateNotification
-import com.mancel.yann.realestatemanager.repositories.PhotoRepository
-import com.mancel.yann.realestatemanager.repositories.PlaceRepository
-import com.mancel.yann.realestatemanager.repositories.RealEstateRepository
-import com.mancel.yann.realestatemanager.repositories.UserRepository
+import com.mancel.yann.realestatemanager.repositories.*
 import kotlinx.coroutines.*
 import timber.log.Timber
 
@@ -29,7 +24,9 @@ class RealEstateViewModel(
     private val mPlaceRepository: PlaceRepository,
     private val mUserRepository: UserRepository,
     private val mRealEstateRepository: RealEstateRepository,
-    private val mPhotoRepository: PhotoRepository
+    private val mPhotoRepository: PhotoRepository,
+    private val mPointOfInterestRepository: PointOfInterestRepository,
+    private val mRealEstatePointOfInterestCrossRefRepository: RealEstatePointOfInterestCrossRefRepository
 ) : ViewModel() {
 
     // FIELDS --------------------------------------------------------------------------------------
@@ -44,22 +41,10 @@ class RealEstateViewModel(
     private var mPhotos: LiveData<List<Photo>>? = null
     private var mPhotoCreator: PhotoCreatorLiveData? = null
 
+    private var mPOIs: LiveData<List<PointOfInterest>>? = null
     private var mPOIsSearch: POIsSearchLiveData? = null
 
-    // CONSTRUCTORS --------------------------------------------------------------------------------
-
-    init {
-        Timber.d("RealEstateViewModel: INIT")
-    }
-
     // METHODS -------------------------------------------------------------------------------------
-
-    // -- ViewModel --
-
-    override fun onCleared() {
-        super.onCleared()
-        Timber.d("RealEstateViewModel: onCleared")
-    }
 
     // -- Location --
 
@@ -151,7 +136,7 @@ class RealEstateViewModel(
     ) = viewModelScope.launch(Dispatchers.IO) {
         val realEstateId: Long
 
-        // REAL ESTATE
+        // INSERT: Real Estate
         try {
             // Fetch the new rowId for the inserted item
             realEstateId = this@RealEstateViewModel.mRealEstateRepository.insertRealEstate(realEstate)
@@ -171,13 +156,13 @@ class RealEstateViewModel(
             return@launch
         }
 
-        // PHOTOS
+        // INSERT: Photos
         this@RealEstateViewModel.insertPhotosWithRealEstateId(
             photos,
             realEstateId
         )
 
-        // POINTS OF INTEREST
+        // INSERT: Points Of Interest
         this@RealEstateViewModel.insertPOIsWithRealEstateId(
             pointsOfInterest,
             realEstateId
@@ -281,7 +266,8 @@ class RealEstateViewModel(
                 photo.mRealEstateId = realEstateId
             }
 
-            val deferred: Deferred<List<Long>> = async {
+            // INSERT: Photos
+            val deferred: Deferred<List<Long>> = async(start = CoroutineStart.LAZY) {
                 try {
                     this@RealEstateViewModel.mPhotoRepository.insertPhotos(*photos.toTypedArray())
                 }
@@ -292,15 +278,23 @@ class RealEstateViewModel(
                 }
             }
 
-            deferred.await().let {
-                if (it.isNotEmpty()) {
-                    Timber.d("insertPhotos: Ids = $it")
-                }
-            }
+            // Lazily started async
+            deferred.start()
         }
     }
 
     // -- Points of interest --
+
+    /**
+     * Gets all [PointOfInterest]
+     * @return a [LiveData] of [List] of [PointOfInterest]
+     */
+    fun getPOIs(): LiveData<List<PointOfInterest>> {
+        if (this.mPOIs == null) {
+            this.mPOIs = this.mPointOfInterestRepository.getAllPointsOfInterest()
+        }
+        return this.mPOIs!!
+    }
 
     /**
      * Gets the [LiveData] of [List] of [PointOfInterest]
@@ -377,37 +371,89 @@ class RealEstateViewModel(
         pointsOfInterest: List<PointOfInterest>?,
         realEstateId: Long
     ) = withContext(Dispatchers.IO) {
-        pointsOfInterest?.let { poiList ->
+        pointsOfInterest?.let {
+            // FETCH: All Points Of Interest
+            // [Warning] To fetch LiveData's value, the current Fragment must observe this LiveData
+            val allPOIsFromDB = this@RealEstateViewModel.mPOIs?.value ?: emptyList()
 
+            // Action on each POI from argument
+            pointsOfInterest.forEach { poi ->
+                // INSERT: Point Of Interest
+                val deferred: Deferred<Long> = async {
+                    try {
+                        this@RealEstateViewModel
+                            .mPointOfInterestRepository
+                            .insertPointOfInterest(poi)
+                    } catch (e: SQLiteConstraintException) {
+                        // UNIQUE constraint failed
+                        Timber.e("insertPointOfInterest: ${e.message}")
+                        0L
+                    }
+                }
 
+                deferred.await().let { poiId ->
+                    // Insert impossible
+                    if (poiId == 0L) {
+                        // Only one POI so filteredPOIs.size == 1
+                        val filteredPOIs = allPOIsFromDB.filter {
+                            it.mName == poi.mName &&
+                                    it.mAddress!!.mLatitude == poi.mAddress!!.mLatitude &&
+                                    it.mAddress!!.mLongitude == poi.mAddress!!.mLongitude
+                        }
 
-
-
-
-
-
-
-//            // Change the [real_estate_id] of each photo
-//            photos.forEach { photo ->
-//                photo.mRealEstateId = realEstateId
-//            }
-//
-//            val deferred: Deferred<List<Long>> = async {
-//                try {
-//                    this@RealEstateViewModel.mPhotoRepository.insertPhotos(*photos.toTypedArray())
-//                }
-//                catch (e: SQLiteConstraintException) {
-//                    // UNIQUE constraint failed
-//                    Timber.e("insertPhotos: ${e.message}")
-//                    emptyList<Long>()
-//                }
-//            }
-//
-//            deferred.await().let {
-//                if (it.isNotEmpty()) {
-//                    Timber.d("insertPhotos: Ids = $it")
-//                }
-//            }
+                        if (!filteredPOIs.isNullOrEmpty() && filteredPOIs.size == 1) {
+                            // INSERT: Cross Ref
+                            this@RealEstateViewModel.insertRealEstatePointOfInterestCrossRef(
+                                realEstateId,
+                                filteredPOIs[0].mId
+                            )
+                        }
+                        else {
+                            Timber.e("Error: Unique indices")
+                        }
+                    }
+                    else {
+                        // INSERT: Cross Ref
+                        this@RealEstateViewModel.insertRealEstatePointOfInterestCrossRef(
+                            realEstateId,
+                            poiId
+                        )
+                    }
+                }
+            }
         }
+    }
+
+    // -- RealEstatePointOfInterestCrossRef --
+
+    /**
+     * Inserts a [insertRealEstatePointOfInterestCrossRef] into database
+     * @param realEstateId      a [Long] that contains the [RealEstate] Id
+     * @param PointOfInterestId a [Long] that contains the [PointOfInterest] Id
+     */
+    private suspend fun insertRealEstatePointOfInterestCrossRef(
+        realEstateId: Long,
+        PointOfInterestId: Long
+    ) = withContext(Dispatchers.IO) {
+        // INSERT: Cross Ref
+        val deferred: Deferred<Long> = async(start = CoroutineStart.LAZY) {
+            try {
+                this@RealEstateViewModel
+                    .mRealEstatePointOfInterestCrossRefRepository
+                    .insertCrossRef(
+                        RealEstatePointOfInterestCrossRef(
+                            mRealEstateId = realEstateId,
+                            mPointOfInterestId = PointOfInterestId
+                        )
+                    )
+            }
+            catch (e: SQLiteConstraintException) {
+                // UNIQUE constraint failed
+                Timber.e("insertCrossRef: ${e.message}")
+                0L
+            }
+        }
+        // Lazily started async
+        deferred.start()
     }
 }

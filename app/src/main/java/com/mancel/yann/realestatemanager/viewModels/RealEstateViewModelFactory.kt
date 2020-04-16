@@ -2,10 +2,7 @@ package com.mancel.yann.realestatemanager.viewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.mancel.yann.realestatemanager.repositories.PhotoRepository
-import com.mancel.yann.realestatemanager.repositories.PlaceRepository
-import com.mancel.yann.realestatemanager.repositories.RealEstateRepository
-import com.mancel.yann.realestatemanager.repositories.UserRepository
+import com.mancel.yann.realestatemanager.repositories.*
 
 /**
  * Created by Yann MANCEL on 09/03/2020.
@@ -18,7 +15,9 @@ class RealEstateViewModelFactory(
     private val mPlaceRepository: PlaceRepository,
     private val mUserRepository: UserRepository,
     private val mRealEstateRepository: RealEstateRepository,
-    private val mPhotoRepository: PhotoRepository
+    private val mPhotoRepository: PhotoRepository,
+    private val mPointOfInterestRepository: PointOfInterestRepository,
+    private val mRealEstatePointOfInterestCrossRefRepository: RealEstatePointOfInterestCrossRefRepository
 ) : ViewModelProvider.Factory {
 
     // METHODS -------------------------------------------------------------------------------------
@@ -30,7 +29,9 @@ class RealEstateViewModelFactory(
                 this.mPlaceRepository,
                 this.mUserRepository,
                 this.mRealEstateRepository,
-                this.mPhotoRepository) as T
+                this.mPhotoRepository,
+                this.mPointOfInterestRepository,
+                this.mRealEstatePointOfInterestCrossRefRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: $modelClass")
     }

@@ -82,5 +82,5 @@ class POIsSearchLiveData : LiveData<List<PointOfInterest>>() {
     /**
      * Gets all selected [PointOfInterest]
      */
-    fun getSelectedPOIs() =  this.mPOIs.filter { it.mIsSelected }
+    fun getSelectedPOIs(): List<PointOfInterest> = this.mPOIs.filter { it.mIsSelected }
 }
