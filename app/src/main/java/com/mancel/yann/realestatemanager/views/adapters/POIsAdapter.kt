@@ -21,8 +21,13 @@ import java.lang.ref.WeakReference
  * A [RecyclerView.Adapter] subclass.
  */
 class POIsAdapter(
-    private val mCallback: AdapterListener? = null
+    private val mCallback: AdapterListener? = null,
+    private val mMode: CheckBoxDisplayMode = CheckBoxDisplayMode.NORMAL_MODE
 ) : RecyclerView.Adapter<POIsAdapter.POIsViewHolder>() {
+
+    // ENUMS ---------------------------------------------------------------------------------------
+
+    enum class CheckBoxDisplayMode {NORMAL_MODE, SELECT_MODE}
 
     // FIELDS --------------------------------------------------------------------------------------
 
@@ -72,16 +77,24 @@ class POIsAdapter(
         // Name
         poi.mName?.let { holder.itemView.item_poi_name.text = it }
 
-        // Is selected
-        holder.itemView.item_poi_is_selected.isChecked = poi.mIsSelected
-
         // CheckBox
-        holder.itemView.item_poi_is_selected.setOnClickListener {
-            // Tag -> POI
-            it.tag = poi
+        when (this.mMode) {
+            CheckBoxDisplayMode.NORMAL_MODE -> {
+                holder.itemView.item_poi_is_selected.visibility = View.GONE
+            }
 
-            // Starts the callback
-            holder.mCallback.get()?.onClick(it)
+            CheckBoxDisplayMode.SELECT_MODE -> {
+                // Is selected
+                holder.itemView.item_poi_is_selected.isChecked = poi.mIsSelected
+
+                holder.itemView.item_poi_is_selected.setOnClickListener {
+                    // Tag -> POI
+                    it.tag = poi
+
+                    // Starts the callback
+                    holder.mCallback.get()?.onClick(it)
+                }
+            }
         }
     }
 

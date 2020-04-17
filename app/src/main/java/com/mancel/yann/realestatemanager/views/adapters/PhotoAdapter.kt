@@ -43,8 +43,7 @@ class PhotoAdapter(
     }
 
     override fun onBindViewHolder(holder: PhotoViewHolder, position: Int) {
-        val photo = this.mPhotos[position]
-        this.configureDesign(holder, photo)
+        this.configureDesign(holder, this.mPhotos[position])
     }
 
     override fun getItemCount(): Int = this.mPhotos.size

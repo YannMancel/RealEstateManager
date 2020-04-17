@@ -102,5 +102,6 @@
     <string name="title_description_details">Description</string>
     <string name="title_description_characteristics">Characteristics</string>
     <string name="title_description_address">Address</string>
+    <string name="title_description_poi">Points of interest</string>
 
 </resources>

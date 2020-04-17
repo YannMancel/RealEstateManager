@@ -134,6 +134,21 @@ interface RealEstateDAO {
         realEstateId: Long
     ): LiveData<RealEstateWithPhotos>
 
+    /**
+     * Usage:
+     * dao.getRealEstateWithPointsOfInterestById(realEstateId)
+     *    .observe(this, Observer { realEstateWithPointsOfInterest -> ... })
+     */
+    @Transaction
+    @Query("""
+        SELECT * 
+        FROM real_estate 
+        WHERE id_real_estate = :realEstateId
+        """)
+    fun getRealEstateWithPointsOfInterestById(
+        realEstateId: Long
+    ): LiveData<RealEstateWithPointsOfInterest>
+
     // -- Update --
 
     /**

@@ -19,16 +19,18 @@
         <!-- ConstraintLayout -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="@dimen/padding_normal">
+            android:layout_height="match_parent">
 
             <!-- MaterialTextView: Title media -->
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/title_media"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_normal"
+                android:layout_marginStart="@dimen/margin_normal"
+                android:layout_marginEnd="@dimen/margin_normal"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/fragment_details_RecyclerView"
+                app:layout_constraintBottom_toTopOf="@id/fragment_details_RecyclerView_photo"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -37,10 +39,11 @@
 
             <!-- RecyclerView: List of photos -->
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/fragment_details_RecyclerView"
+                android:id="@+id/fragment_details_RecyclerView_photo"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_little"
+                android:layout_marginStart="@dimen/margin_normal"
                 app:layout_constraintTop_toBottomOf="@id/title_media"
                 app:layout_constraintBottom_toTopOf="@id/title_description"
                 app:layout_constraintStart_toStartOf="parent"
@@ -49,9 +52,9 @@
                 tools:orientation="horizontal"
                 tools:listitem="@layout/item_photo"/>
 
-            <!-- MaterialTextView: No data -->
+            <!-- MaterialTextView: No data Photo -->
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/fragment_details_no_data"
+                android:id="@+id/fragment_details_no_data_photo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_little"
@@ -68,7 +71,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_normal"
-                app:layout_constraintTop_toBottomOf="@id/fragment_details_RecyclerView"
+                android:layout_marginStart="@dimen/margin_normal"
+                android:layout_marginEnd="@dimen/margin_normal"
+                app:layout_constraintTop_toBottomOf="@id/fragment_details_RecyclerView_photo"
                 app:layout_constraintBottom_toTopOf="@id/fragment_details_description"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -82,6 +87,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_little"
+                android:layout_marginStart="@dimen/margin_normal"
+                android:layout_marginEnd="@dimen/margin_normal"
                 app:layout_constraintTop_toBottomOf="@id/title_description"
                 app:layout_constraintBottom_toTopOf="@id/title_characteristics"
                 app:layout_constraintStart_toStartOf="parent"
@@ -95,6 +102,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_normal"
+                android:layout_marginStart="@dimen/margin_normal"
+                android:layout_marginEnd="@dimen/margin_normal"
                 app:layout_constraintTop_toBottomOf="@id/fragment_details_description"
                 app:layout_constraintBottom_toTopOf="@id/fragment_details_surface"
                 app:layout_constraintStart_toStartOf="parent"
@@ -109,6 +118,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_little"
+                android:layout_marginStart="@dimen/margin_normal"
+                android:layout_marginEnd="@dimen/margin_normal"
                 app:layout_constraintTop_toBottomOf="@id/title_characteristics"
                 app:layout_constraintBottom_toTopOf="@id/title_address"
                 app:layout_constraintStart_toStartOf="parent"
@@ -122,6 +133,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_normal"
+                android:layout_marginStart="@dimen/margin_normal"
+                android:layout_marginEnd="@dimen/margin_normal"
                 app:layout_constraintTop_toBottomOf="@id/fragment_details_surface"
                 app:layout_constraintBottom_toTopOf="@id/fragment_details_address"
                 app:layout_constraintStart_toStartOf="parent"
@@ -136,6 +149,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_little"
+                android:layout_marginStart="@dimen/margin_normal"
+                android:layout_marginEnd="@dimen/margin_normal"
                 app:layout_constraintTop_toBottomOf="@id/title_address"
                 app:layout_constraintBottom_toTopOf="@id/fragment_details_map_lite_mode"
                 app:layout_constraintStart_toStartOf="parent"
@@ -150,14 +165,62 @@
                 android:layout_height="0dp"
                 app:layout_constraintDimensionRatio="1:1"
                 android:layout_marginTop="@dimen/margin_little"
+                android:layout_marginStart="@dimen/margin_normal"
+                android:layout_marginEnd="@dimen/margin_normal"
                 app:layout_constraintTop_toBottomOf="@id/fragment_details_address"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/title_poi"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:name="com.google.android.gms.maps.SupportMapFragment"
                 map:cameraZoom="17"
                 map:mapType="normal"
                 map:liteMode="true"/>
+
+            <!-- MaterialTextView: Title point of interest -->
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/title_poi"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_normal"
+                android:layout_marginStart="@dimen/margin_normal"
+                android:layout_marginEnd="@dimen/margin_normal"
+                app:layout_constraintTop_toBottomOf="@id/fragment_details_map_lite_mode"
+                app:layout_constraintBottom_toTopOf="@id/fragment_details_RecyclerView_poi"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                android:text="@string/title_description_poi"
+                style="@style/TextAppearance.MaterialComponents.Headline6"/>
+
+            <!-- RecyclerView: List of point of interest -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/fragment_details_RecyclerView_poi"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_little"
+                android:layout_marginBottom="@dimen/margin_normal"
+                android:layout_marginStart="@dimen/margin_normal"
+                app:layout_constraintTop_toBottomOf="@id/title_poi"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:orientation="horizontal"
+                tools:listitem="@layout/item_poi"/>
+
+            <!-- MaterialTextView: No data POI -->
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/fragment_details_no_data_poi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_little"
+                android:layout_marginBottom="@dimen/margin_normal"
+                app:layout_constraintTop_toBottomOf="@id/title_poi"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                style="@style/TextViewStyle1"
+                android:text="@string/no_data"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

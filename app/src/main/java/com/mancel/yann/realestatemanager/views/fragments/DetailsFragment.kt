@@ -15,6 +15,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.mancel.yann.realestatemanager.R
 import com.mancel.yann.realestatemanager.models.RealEstateWithPhotos
 import com.mancel.yann.realestatemanager.views.adapters.AdapterListener
+import com.mancel.yann.realestatemanager.views.adapters.POIsAdapter
 import com.mancel.yann.realestatemanager.views.adapters.PhotoAdapter
 import kotlinx.android.synthetic.main.fragment_details.view.*
 
@@ -33,7 +34,8 @@ class DetailsFragment : BaseFragment(), AdapterListener, OnMapReadyCallback {
         DetailsFragmentArgs.fromBundle(this.requireArguments()).itemId
     }
 
-    private lateinit var mAdapter: PhotoAdapter
+    private lateinit var mPhotoAdapter: PhotoAdapter
+    private lateinit var mPOIsAdapter: POIsAdapter
     private var mGoogleMap: GoogleMap? = null
 
     // METHODS -------------------------------------------------------------------------------------
@@ -45,20 +47,31 @@ class DetailsFragment : BaseFragment(), AdapterListener, OnMapReadyCallback {
 
     override fun configureDesign() {
         // UI
-        this.configureRecyclerView()
+        this.configurePhotoRecyclerView()
+        this.configurePOIsRecyclerView()
         this.configureSupportMapFragment()
 
         // LiveData
         this.configureRealEstateLiveData()
+        this.configurePOIsLiveData()
     }
 
     // -- AdapterListener interface --
 
     override fun onDataChanged() {
-        this.mRootView.fragment_details_no_data.visibility = if (this.mAdapter.itemCount == 0)
-                                                                 View.VISIBLE
-                                                             else
-                                                                 View.GONE
+        // Photos
+        this.mRootView.fragment_details_no_data_photo.visibility =
+            if (this.mPhotoAdapter.itemCount == 0)
+                View.VISIBLE
+            else
+                View.GONE
+
+        // POIs
+        this.mRootView.fragment_details_no_data_poi.visibility =
+            if (this.mPOIsAdapter.itemCount == 0)
+                View.VISIBLE
+            else
+                View.GONE
     }
 
     override fun onClick(v: View?) { /* Do nothing */ }
@@ -77,9 +90,9 @@ class DetailsFragment : BaseFragment(), AdapterListener, OnMapReadyCallback {
     /**
      * Configures the [RecyclerView]
      */
-    private fun configureRecyclerView() {
+    private fun configurePhotoRecyclerView() {
         // Adapter
-        this.mAdapter = PhotoAdapter(
+        this.mPhotoAdapter = PhotoAdapter(
             mCallback = this@DetailsFragment
         )
 
@@ -97,11 +110,42 @@ class DetailsFragment : BaseFragment(), AdapterListener, OnMapReadyCallback {
         )
 
         // RecyclerView
-        with(this.mRootView.fragment_details_RecyclerView) {
+        with(this.mRootView.fragment_details_RecyclerView_photo) {
             setHasFixedSize(true)
             layoutManager = viewManager
             addItemDecoration(divider)
-            adapter = mAdapter
+            adapter = this@DetailsFragment.mPhotoAdapter
+        }
+    }
+
+    /**
+     * Configures the POIs [RecyclerView]
+     */
+    private fun configurePOIsRecyclerView() {
+        // Adapter
+        this.mPOIsAdapter = POIsAdapter(
+            mCallback = this@DetailsFragment
+        )
+
+        // LayoutManager
+        val viewManager = LinearLayoutManager(
+            this.requireContext(),
+            LinearLayoutManager.HORIZONTAL,
+            false
+        )
+
+        // Divider
+        val divider = DividerItemDecoration(
+            this.requireContext(),
+            DividerItemDecoration.HORIZONTAL
+        )
+
+        // RecyclerView
+        with(this.mRootView.fragment_details_RecyclerView_poi) {
+            setHasFixedSize(true)
+            layoutManager = viewManager
+            addItemDecoration(divider)
+            adapter = this@DetailsFragment.mPOIsAdapter
         }
     }
 
@@ -137,6 +181,20 @@ class DetailsFragment : BaseFragment(), AdapterListener, OnMapReadyCallback {
                        )
     }
 
+    /**
+     * Configures the POIs with cross reference table
+     */
+    private fun configurePOIsLiveData() {
+        this.mViewModel
+            .getRealEstateWithPointsOfInterestById(realEstateId = this.mItemId)
+            .observe(
+                this.viewLifecycleOwner,
+                Observer {
+                    this.mPOIsAdapter.updateData(it.mPointsOfInterest!!)
+                }
+            )
+    }
+
     // -- UI --
 
     /**
@@ -147,7 +205,7 @@ class DetailsFragment : BaseFragment(), AdapterListener, OnMapReadyCallback {
         realEstateWithPhotos?.let {
             // Photos
             it.mPhotos?.let { photos ->
-                this.mAdapter.updateData(photos)
+                this.mPhotoAdapter.updateData(photos)
             }
 
             // Real estate

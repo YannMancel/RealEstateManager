@@ -37,6 +37,7 @@ class RealEstateViewModel(
 
     private var mRealEstatesWithPhotos: LiveData<List<RealEstateWithPhotos>>? = null
     private var mRealEstateWithPhotos: LiveData<RealEstateWithPhotos>? = null
+    private var mRealEstateWithPointsOfInterest: LiveData<RealEstateWithPointsOfInterest>? = null
 
     private var mPhotos: LiveData<List<Photo>>? = null
     private var mPhotoCreator: PhotoCreatorLiveData? = null
@@ -116,9 +117,25 @@ class RealEstateViewModel(
      */
     fun getRealEstateWithPhotosById(realEstateId: Long): LiveData<RealEstateWithPhotos> {
         if (this.mRealEstateWithPhotos == null) {
-            this.mRealEstateWithPhotos = this.mRealEstateRepository.getRealEstateWithPhotosById(realEstateId)
+            this.mRealEstateWithPhotos =
+                this.mRealEstateRepository.getRealEstateWithPhotosById(realEstateId)
         }
         return this.mRealEstateWithPhotos!!
+    }
+
+    /**
+     * Gets a [RealEstateWithPointsOfInterest] by its Id
+     * @param realEstateId a [Long] that contains the real estate Id
+     * @return a [LiveData] of [RealEstateWithPointsOfInterest]
+     */
+    fun getRealEstateWithPointsOfInterestById(
+        realEstateId: Long
+    ): LiveData<RealEstateWithPointsOfInterest> {
+        if (this.mRealEstateWithPointsOfInterest == null) {
+            this.mRealEstateWithPointsOfInterest =
+                this.mRealEstateRepository.getRealEstateWithPointsOfInterestById(realEstateId)
+        }
+        return this.mRealEstateWithPointsOfInterest!!
     }
 
     /**

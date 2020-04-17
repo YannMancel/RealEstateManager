@@ -40,8 +40,7 @@ class RealEstateAdapter(
     }
 
     override fun onBindViewHolder(holder: RealEstateViewHolder, position: Int) {
-        val realEstate = this.mRealEstates[position]
-        this.configureDesign(holder, realEstate)
+        this.configureDesign(holder, this.mRealEstates[position])
     }
 
     override fun getItemCount(): Int = this.mRealEstates.size

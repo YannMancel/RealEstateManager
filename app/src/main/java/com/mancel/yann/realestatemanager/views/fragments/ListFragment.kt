@@ -80,7 +80,7 @@ class ListFragment : BaseFragment(), AdapterListener {
             setHasFixedSize(true)
             layoutManager = viewManager
             addItemDecoration(divider)
-            adapter = mAdapter
+            adapter = this@ListFragment.mAdapter
         }
     }
 

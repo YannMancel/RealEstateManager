@@ -279,6 +279,34 @@ class RealEstateDAOTest {
         assertEquals("URL1", realEstateWithPhotos.mPhotos?.get(0)?.mUrlPicture)
     }
 
+    @Test
+    fun getRealEstateWithPointsOfInterestById_shouldBeSuccess() = runBlocking {
+        // BEFORE: Add real estates
+        mRealEstateDAO.insertRealEstates(mRealEstate1, mRealEstate2)
+
+        // THEN: Add points of interest to avoid the SQLiteConstraintException (FOREIGN KEY constraint)
+        mDatabase.pointOfInterestDAO().insertPointsOfInterest(
+            PointOfInterest(mName = "school"),
+            PointOfInterest(mName = "business")
+        )
+
+        // THEN: Add cross-reference between real estates and points of interest
+        mDatabase.realEstatePointOfInterestCrossRefDAO().insertSeveralCrossRef(
+            RealEstatePointOfInterestCrossRef(mRealEstateId = 1L, mPointOfInterestId = 1L),
+            RealEstatePointOfInterestCrossRef(mRealEstateId = 1L, mPointOfInterestId = 2L),
+            RealEstatePointOfInterestCrossRef(mRealEstateId = 2L, mPointOfInterestId = 1L)
+        )
+
+        // THEN: Retrieve real estate with its points of interest
+        val realEstateWithPointsOfInterest = LiveDataTestUtil.getValue(mRealEstateDAO.getRealEstateWithPointsOfInterestById(1L))
+
+        // TEST: real estate with its points of interest
+        assertEquals(mRealEstate1.mType, realEstateWithPointsOfInterest.mRealEstate?.mType)
+        assertEquals(2, realEstateWithPointsOfInterest.mPointsOfInterest?.size)
+        assertEquals("school", realEstateWithPointsOfInterest.mPointsOfInterest?.get(0)?.mName)
+        assertEquals("business", realEstateWithPointsOfInterest.mPointsOfInterest?.get(1)?.mName)
+    }
+
     // -- Update --
 
     @Test

@@ -365,7 +365,7 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
             setHasFixedSize(true)
             layoutManager = viewManager
             addItemDecoration(divider)
-            adapter = mAdapter
+            adapter = this@EditFragment.mAdapter
             visibility = View.GONE
         }
     }

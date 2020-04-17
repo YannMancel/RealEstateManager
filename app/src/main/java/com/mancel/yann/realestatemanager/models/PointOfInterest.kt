@@ -24,12 +24,12 @@ data class PointOfInterest(
     @ColumnInfo(name = "name")
     var mName: String? = null,
 
+    @ColumnInfo(name = "url_picture")
+    var mUrlPicture: String? = null,
+
     @Embedded(prefix = "loc_")
     var mAddress: Address? = null,
 
     @Ignore
-    var mIsSelected: Boolean = false,
-
-    @Ignore
-    var mUrlPicture: String? = null
+    var mIsSelected: Boolean = false
 )

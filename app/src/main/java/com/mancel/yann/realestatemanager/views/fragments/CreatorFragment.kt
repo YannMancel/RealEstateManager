@@ -387,7 +387,8 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
     private fun configurePOIsRecyclerView() {
         // Adapter
         this.mPOIsAdapter = POIsAdapter(
-            mCallback = this@CreatorFragment
+            mCallback = this@CreatorFragment,
+            mMode = POIsAdapter.CheckBoxDisplayMode.SELECT_MODE
         )
 
         // LayoutManager
