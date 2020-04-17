@@ -29,11 +29,9 @@ import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.textfield.TextInputLayout
 import com.mancel.yann.realestatemanager.R
 import com.mancel.yann.realestatemanager.liveDatas.PhotoCreatorLiveData
-import com.mancel.yann.realestatemanager.models.Address
-import com.mancel.yann.realestatemanager.models.Photo
-import com.mancel.yann.realestatemanager.models.RealEstate
-import com.mancel.yann.realestatemanager.models.RealEstateWithPhotos
+import com.mancel.yann.realestatemanager.models.*
 import com.mancel.yann.realestatemanager.views.adapters.AdapterListener
+import com.mancel.yann.realestatemanager.views.adapters.POIsAdapter
 import com.mancel.yann.realestatemanager.views.adapters.PhotoAdapter
 import com.mancel.yann.realestatemanager.views.dialogs.DialogListener
 import com.mancel.yann.realestatemanager.views.dialogs.PhotoDialogFragment
@@ -41,6 +39,7 @@ import kotlinx.android.synthetic.main.fragment_edit.*
 import kotlinx.android.synthetic.main.fragment_edit.view.*
 import timber.log.Timber
 import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * Created by Yann MANCEL on 20/02/2020.
@@ -58,8 +57,8 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
         EditFragmentArgs.fromBundle(this.requireArguments()).itemId
     }
 
-    private lateinit var mAdapter: PhotoAdapter
-
+    private lateinit var mPhotoAdapter: PhotoAdapter
+    private lateinit var mPOIsAdapter: POIsAdapter
     private var mPhotosOfCurrentRealEstate: List<Photo>? = null
     private var mAllPhotosFromDatabase: List<Photo>? = null
     private var mAllPhotosFromCreator: List<Photo>? = null
@@ -85,13 +84,16 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
         // UI
         this.configureFieldsOfData()
         this.configureListenerOfEachButton()
-        this.configureRecyclerView()
+        this.configurePhotoRecyclerView()
+        this.configurePOIsRecyclerView()
         this.configureSupportMapFragment()
 
         // LiveData
         this.configureRealEstateLiveData()
+        this.configurePOIsLiveData()
         this.configurePhotosFomDatabase()
         this.configurePhotoCreatorLiveData()
+        this.configurePOIsSearch()
     }
 
     override fun actionAfterPermission() = this.actionToAddPhoto()
@@ -115,10 +117,19 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
     // -- AdapterListener interface --
 
     override fun onDataChanged() {
-        this.mRootView.fragment_edit_RecyclerView.visibility = if (this.mAdapter.itemCount != 0)
-                                                                   View.VISIBLE
-                                                               else
-                                                                   View.GONE
+        // Photos
+        this.mRootView.fragment_edit_RecyclerView.visibility =
+            if (this.mPhotoAdapter.itemCount != 0)
+                View.VISIBLE
+            else
+                View.GONE
+
+        // POIs
+        this.mRootView.fragment_edit_RecyclerView_poi.visibility =
+            if (this.mPOIsAdapter.itemCount != 0)
+                View.VISIBLE
+            else
+                View.GONE
     }
 
     override fun onClick(v: View?) {
@@ -139,6 +150,9 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
                                        "DIALOG PHOTO"
                                    )
             }
+
+            // CheckBox
+            R.id.item_poi_is_selected -> this.mViewModel.checkPOI(v.tag as PointOfInterest)
 
             else -> { /* Ignore all other ids */ }
         }
@@ -329,20 +343,25 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
             this.actionToAddPhoto()
         }
 
+        // Button: Add points of interest
+        this.mRootView.fragment_edit_search_poi.setOnClickListener {
+            this.actionToAddPOIs()
+        }
+
         // FAB
         this.mRootView.fragment_edit_fab.setOnClickListener {
-            this.actionToAddRealEstate()
+            this.actionToUpdateRealEstate()
         }
     }
 
     // -- RecyclerView --
 
     /**
-     * Configures the [RecyclerView]
+     * Configures the photo [RecyclerView]
      */
-    private fun configureRecyclerView() {
+    private fun configurePhotoRecyclerView() {
         // Adapter
-        this.mAdapter = PhotoAdapter(
+        this.mPhotoAdapter = PhotoAdapter(
             mCallback = this@EditFragment,
             mButtonDisplayMode = PhotoAdapter.ButtonDisplayMode.EDIT_MODE
         )
@@ -365,7 +384,40 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
             setHasFixedSize(true)
             layoutManager = viewManager
             addItemDecoration(divider)
-            adapter = this@EditFragment.mAdapter
+            adapter = this@EditFragment.mPhotoAdapter
+            visibility = View.GONE
+        }
+    }
+
+    /**
+     * Configures the POIs [RecyclerView]
+     */
+    private fun configurePOIsRecyclerView() {
+        // Adapter
+        this.mPOIsAdapter = POIsAdapter(
+            mCallback = this@EditFragment,
+            mMode = POIsAdapter.CheckBoxDisplayMode.SELECT_MODE
+        )
+
+        // LayoutManager
+        val viewManager = LinearLayoutManager(
+            this.requireContext(),
+            LinearLayoutManager.HORIZONTAL,
+            false
+        )
+
+        // Divider
+        val divider = DividerItemDecoration(
+            this.requireContext(),
+            DividerItemDecoration.HORIZONTAL
+        )
+
+        // RecyclerView
+        with(this.mRootView.fragment_edit_RecyclerView_poi) {
+            setHasFixedSize(true)
+            layoutManager = viewManager
+            addItemDecoration(divider)
+            adapter = this@EditFragment.mPOIsAdapter
             visibility = View.GONE
         }
     }
@@ -407,6 +459,22 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
     }
 
     /**
+     * Configures the POIs with cross reference table
+     */
+    private fun configurePOIsLiveData() {
+        this.mViewModel
+            .getRealEstateWithPointsOfInterestById(realEstateId = this.mItemId)
+            .observe(
+                this.viewLifecycleOwner,
+                Observer {
+                    it.mPointsOfInterest?.let { poiList ->
+                        this.mViewModel.addCurrentPOIs(poiList)
+                    }
+                }
+            )
+    }
+
+    /**
      * Configures all [Photo] from database
      */
     private fun configurePhotosFomDatabase() {
@@ -439,8 +507,39 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
                         addAll(it)
                     }
 
-                    this.mAdapter.updateData(newPhotos)
+                    this.mPhotoAdapter.updateData(newPhotos)
                 }
+            )
+    }
+
+    /**
+     * Configures the POIs search
+     */
+    private fun configurePOIsSearch() {
+        this.mViewModel
+            .getPOIsSearch()
+            .observe(
+                this.viewLifecycleOwner,
+                Observer {
+                    if (it.isEmpty()) {
+                        this.mCallback?.showMessage(
+                            this.getString(R.string.no_pois_search)
+                        )
+                    }
+
+                    // Sorts the list on its name from A to Z
+                    Collections.sort(it, PointOfInterest.AZTitleComparator())
+
+                    this.mPOIsAdapter.updateData(it)
+                }
+            )
+
+        // Useful just for Coroutine calls
+        this.mViewModel
+            .getPOIs()
+            .observe(
+                this.viewLifecycleOwner,
+                Observer { /* Do nothing */ }
             )
     }
 
@@ -454,7 +553,7 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
         realEstateWithPhotos?.let {
             // Photos
             it.mPhotos?.let { photos ->
-                this.mAdapter.updateData(photos)
+                this.mPhotoAdapter.updateData(photos)
             }
 
             // Real estate
@@ -676,12 +775,98 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
         }
     }
 
+    // -- Points of interest --
+
+    /**
+     * Action to add POIs
+     */
+    private fun actionToAddPOIs() {
+        // Raw POIs
+        val rawTypes = mutableListOf<String>().apply {
+            // SCHOOL
+            if (this@EditFragment.mRootView.fragment_edit_Chip_school.isChecked) {
+                this.add("school")
+            }
+
+            // RESTAURANT
+            if (this@EditFragment.mRootView.fragment_edit_Chip_restaurant.isChecked) {
+                this.add("restaurant")
+            }
+
+            // DOCTOR
+            if (this@EditFragment.mRootView.fragment_edit_Chip_doctor.isChecked) {
+                this.add("doctor")
+            }
+
+            // HOSPITAL
+            if (this@EditFragment.mRootView.fragment_edit_Chip_hospital.isChecked) {
+                this.add("hospital")
+            }
+
+            // AIRPORT
+            if (this@EditFragment.mRootView.fragment_edit_Chip_airport.isChecked) {
+                this.add("airport")
+            }
+        }
+
+        // No POI
+        if (rawTypes.isEmpty()) {
+            this.mCallback?.showMessage(
+                this.getString(R.string.no_pois)
+            )
+            return
+        }
+
+        // No distance for search POI
+        val isCanceled = this.configureErrorOfFields(
+            this.mRootView.fragment_edit_distance_poi
+        )
+
+        if (isCanceled) {
+            this.mCallback?.showMessage(
+                this.getString(R.string.no_distance)
+            )
+            return
+        }
+
+        this.mGoogleMap?.let {
+            // No address
+            if (it.projection.visibleRegion.latLngBounds.center.latitude == 0.0 &&
+                it.projection.visibleRegion.latLngBounds.center.longitude == 0.0
+            ) {
+                this.mCallback?.showMessage(
+                    this.getString(R.string.no_address)
+                )
+                return
+            }
+
+            // For Google Maps request
+            val types = StringBuilder().run {
+                rawTypes.forEachIndexed { index, value ->
+                    if (index != 0) this.append(",")
+                    this.append(value)
+                }
+
+                this.toString()
+            }
+
+            // Fetch POIsSearch
+            this.mViewModel.fetchPOIsSearch(
+                context = this.requireContext(),
+                latitude = it.projection.visibleRegion.latLngBounds.center.latitude,
+                longitude = it.projection.visibleRegion.latLngBounds.center.longitude,
+                radius = this.mRootView.fragment_edit_distance_poi.editText?.text.toString().toDouble(),
+                types = types
+            )
+        }
+    }
+
     // -- Real Estate --
 
     /**
-     * Action to add a [RealEstate]
+     * Action to update a [RealEstate]
      */
-    private fun actionToAddRealEstate() {
+    private fun actionToUpdateRealEstate() {
         // Errors
         val isCanceled = this.configureErrorOfFields(
             this.mRootView.fragment_edit_type,
@@ -710,8 +895,6 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
                 return
             }
 
-            // todo - 06/04/2020 - Add test on address
-
             // todo - 06/04/2020 - Next feature: Add user's authentication instead of 1L
             val realEstate = RealEstate(
                 mId = this.mItemId,
@@ -737,7 +920,7 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
             this.mViewModel.updateRealEstate(
                 realEstate,
                 this.mAllPhotosFromCreator,
-                null
+                this.mViewModel.getJustNewSelectedPOIs()
             )
         }
     }

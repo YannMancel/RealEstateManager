@@ -20,6 +20,7 @@ class POIsSearchLiveData : LiveData<List<PointOfInterest>>() {
 
     private var mDisposable: Disposable? = null
     private val mPOIs: MutableList<PointOfInterest> = mutableListOf()
+    private val mAlreadySelectedPOIs: MutableList<PointOfInterest> = mutableListOf()
 
     // METHODS -------------------------------------------------------------------------------------
 
@@ -52,8 +53,27 @@ class POIsSearchLiveData : LiveData<List<PointOfInterest>>() {
                     addAll(result)
                 }
 
+                // Add current POIs if possible
+                if (this@POIsSearchLiveData.mAlreadySelectedPOIs.isNotEmpty()) {
+                    this@POIsSearchLiveData.mAlreadySelectedPOIs.forEach { poiFromDB ->
+                        // Search if already present
+                        val index = this@POIsSearchLiveData.mPOIs.indexOfFirst {
+                            it.mName == poiFromDB.mName &&
+                                    it.mAddress?.mLatitude == poiFromDB.mAddress?.mLatitude &&
+                                    it.mAddress?.mLongitude == poiFromDB.mAddress?.mLongitude
+                        }
+
+                        if (index != -1) {
+                            this@POIsSearchLiveData.mPOIs[index].mIsSelected = true
+                        }
+                        else {
+                            this@POIsSearchLiveData.mPOIs.add(poiFromDB)
+                        }
+                    }
+                }
+
                 // Notify
-                this@POIsSearchLiveData.value = result
+                this@POIsSearchLiveData.value = this@POIsSearchLiveData.mPOIs
             }
 
             override fun onError(e: Throwable) {
@@ -62,6 +82,38 @@ class POIsSearchLiveData : LiveData<List<PointOfInterest>>() {
 
             override fun onComplete() { /* Do nothing */ }
         })
+    }
+
+    /**
+     * Adds all current [PointOfInterest]
+     * @param poiList a [List] of [PointOfInterest]
+     */
+    fun addCurrentPOIs(poiList: List<PointOfInterest>) {
+        // MODE EDIT
+        with(this.mAlreadySelectedPOIs) {
+            clear()
+            addAll(poiList)
+        }
+
+        // Add POIs if possible
+        this.mAlreadySelectedPOIs.forEach { poiFromDB ->
+            // Search if already present
+            val index = this.mPOIs.indexOfFirst {
+                it.mName == poiFromDB.mName &&
+                it.mAddress?.mLatitude == poiFromDB.mAddress?.mLatitude &&
+                it.mAddress?.mLongitude == poiFromDB.mAddress?.mLongitude
+            }
+
+            if (index != -1) {
+                this.mPOIs[index].mIsSelected = true
+            }
+            else {
+                this.mPOIs.add(poiFromDB)
+            }
+        }
+
+        // Notify
+        this.value = this.mPOIs
     }
 
     /**
@@ -83,4 +135,11 @@ class POIsSearchLiveData : LiveData<List<PointOfInterest>>() {
      * Gets all selected [PointOfInterest]
      */
     fun getSelectedPOIs(): List<PointOfInterest> = this.mPOIs.filter { it.mIsSelected }
+
+    /**
+     * Gets just new selected [PointOfInterest]
+     */
+    // todo: 17/04/2020 - Remove it when the RealEstateViewModel#updateRealEstate method will be update
+    fun getJustNewSelectedPOIs(): List<PointOfInterest> =
+        this.mPOIs.filter { it.mIsSelected && it.mId == 0L}
 }

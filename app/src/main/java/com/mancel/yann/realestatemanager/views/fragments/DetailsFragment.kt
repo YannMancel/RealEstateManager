@@ -13,11 +13,13 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.mancel.yann.realestatemanager.R
+import com.mancel.yann.realestatemanager.models.PointOfInterest
 import com.mancel.yann.realestatemanager.models.RealEstateWithPhotos
 import com.mancel.yann.realestatemanager.views.adapters.AdapterListener
 import com.mancel.yann.realestatemanager.views.adapters.POIsAdapter
 import com.mancel.yann.realestatemanager.views.adapters.PhotoAdapter
 import kotlinx.android.synthetic.main.fragment_details.view.*
+import java.util.*
 
 /**
  * Created by Yann MANCEL on 20/02/2020.
@@ -175,10 +177,11 @@ class DetailsFragment : BaseFragment(), AdapterListener, OnMapReadyCallback {
      * Configures the LiveData thanks to a simple format
      */
     private fun configureRealEstateLiveData() {
-        this.mViewModel.getRealEstateWithPhotosById(realEstateId = this.mItemId)
-                       .observe(this.viewLifecycleOwner,
-                           Observer { this.configureUI(it) }
-                       )
+        this.mViewModel
+            .getRealEstateWithPhotosById(realEstateId = this.mItemId)
+            .observe(this.viewLifecycleOwner,
+                Observer { this.configureUI(it) }
+            )
     }
 
     /**
@@ -190,7 +193,12 @@ class DetailsFragment : BaseFragment(), AdapterListener, OnMapReadyCallback {
             .observe(
                 this.viewLifecycleOwner,
                 Observer {
-                    this.mPOIsAdapter.updateData(it.mPointsOfInterest!!)
+                    it.mPointsOfInterest?.let { poiList ->
+                        // Sorts the list on its name from A to Z
+                        Collections.sort(poiList, PointOfInterest.AZTitleComparator())
+
+                        this.mPOIsAdapter.updateData(poiList)
+                    }
                 }
             )
     }

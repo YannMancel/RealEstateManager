@@ -31,5 +31,20 @@ data class PointOfInterest(
     var mAddress: Address? = null,
 
     @Ignore
-    var mIsSelected: Boolean = false
-)
+    var mIsSelected: Boolean = true
+) {
+    // NESTED CLASSES ------------------------------------------------------------------------------
+
+    /**
+     * A [Comparator] of [PointOfInterest] subclass.
+     */
+    class AZTitleComparator : Comparator<PointOfInterest> {
+        override fun compare(left: PointOfInterest?, right: PointOfInterest?): Int {
+            // Comparison on the name
+            val titleLeft = left?.mName ?: ""
+            val titleRight = right?.mName ?: ""
+
+            return titleLeft.compareTo(titleRight, ignoreCase = true)
+        }
+    }
+}

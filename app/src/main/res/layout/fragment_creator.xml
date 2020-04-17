@@ -210,7 +210,7 @@
                         app:boxBackgroundColor="@android:color/transparent"
                         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox">
 
-                        <!-- TextInputEditText: Type -->
+                        <!-- TextInputEditText: Description -->
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
@@ -283,7 +283,7 @@
                         app:boxBackgroundColor="@android:color/transparent"
                         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox">
 
-                        <!-- TextInputEditText: Type -->
+                        <!-- TextInputEditText: Address -->
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"

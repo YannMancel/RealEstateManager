@@ -210,7 +210,7 @@
                         app:boxBackgroundColor="@android:color/transparent"
                         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox">
 
-                        <!-- TextInputEditText: Type -->
+                        <!-- TextInputEditText: Description -->
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
@@ -283,7 +283,7 @@
                         app:boxBackgroundColor="@android:color/transparent"
                         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox">
 
-                        <!-- TextInputEditText: Type -->
+                        <!-- TextInputEditText: Address -->
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
@@ -474,9 +474,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_normal"
-                android:layout_marginBottom="@dimen/margin_heavy"
                 app:layout_constraintTop_toBottomOf="@id/cardview_date"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/cardview_poi"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:cardElevation="@dimen/elevation_card"
@@ -528,6 +527,161 @@
                         tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         tools:orientation="horizontal"
                         tools:listitem="@layout/item_photo"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- MaterialCardView: Points of interest -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardview_poi"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_normal"
+                android:layout_marginBottom="@dimen/margin_heavy"
+                app:layout_constraintTop_toBottomOf="@id/cardview_photo"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:cardElevation="@dimen/elevation_card"
+                style="@style/Widget.MaterialComponents.CardView">
+
+                <!-- ConstraintLayout -->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <!-- ImageView: POI icon -->
+                    <ImageView
+                        android:id="@+id/icon_poi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/margin_normal"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:src="@drawable/ic_add_location"
+                        android:contentDescription="@null"/>
+
+                    <!-- HorizontalScrollView -->
+                    <HorizontalScrollView
+                        android:id="@+id/horizontalScrollView"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_normal"
+                        app:layout_constraintTop_toBottomOf="@id/icon_poi"
+                        app:layout_constraintBottom_toTopOf="@id/fragment_edit_distance_poi"
+                        app:layout_constraintStart_toEndOf="@id/icon_poi"
+                        app:layout_constraintEnd_toEndOf="parent">
+
+                        <!-- ChipGroup -->
+                        <com.google.android.material.chip.ChipGroup
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:singleLine="true">
+
+                            <!-- Chip: School -->
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/fragment_edit_Chip_school"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/chip_school"
+                                style="@style/Widget.MaterialComponents.Chip.Filter"/>
+
+                            <!-- Chip: Restaurant -->
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/fragment_edit_Chip_restaurant"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/chip_restaurant"
+                                style="@style/Widget.MaterialComponents.Chip.Filter"/>
+
+                            <!-- Chip: Doctor -->
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/fragment_edit_Chip_doctor"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/chip_doctor"
+                                style="@style/Widget.MaterialComponents.Chip.Filter"/>
+
+                            <!-- Chip: Hospital -->
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/fragment_edit_Chip_hospital"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/chip_hospital"
+                                style="@style/Widget.MaterialComponents.Chip.Filter"/>
+
+                            <!-- Chip: Airport -->
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/fragment_edit_Chip_airport"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/chip_airport"
+                                style="@style/Widget.MaterialComponents.Chip.Filter"/>
+
+                        </com.google.android.material.chip.ChipGroup>
+
+                    </HorizontalScrollView>
+
+                    <!-- TextInputLayout: Distance POI -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/fragment_edit_distance_poi"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_little"
+                        android:layout_marginStart="@dimen/margin_normal"
+                        android:layout_marginEnd="@dimen/margin_normal"
+                        app:layout_constraintTop_toBottomOf="@id/horizontalScrollView"
+                        app:layout_constraintBottom_toTopOf="@id/fragment_edit_search_poi"
+                        app:layout_constraintStart_toEndOf="@id/icon_poi"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:hintEnabled="true"
+                        app:errorEnabled="true"
+                        app:background="@null"
+                        app:endIconMode="clear_text"
+                        app:boxBackgroundColor="@android:color/transparent"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox">
+
+                        <!-- TextInputEditText: Distance POI -->
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:hint="@string/hint_distance"
+                            android:text="@string/distance_poi"
+                            android:inputType="number"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- MaterialButton: Search POIs -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/fragment_edit_search_poi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_little"
+                        android:layout_marginBottom="@dimen/margin_little"
+                        app:layout_constraintTop_toBottomOf="@id/fragment_edit_distance_poi"
+                        app:layout_constraintBottom_toTopOf="@id/fragment_edit_RecyclerView_poi"
+                        app:layout_constraintStart_toEndOf="@id/icon_poi"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:text="@string/search_poi_button"
+                        android:background="@color/colorAccent"
+                        style="@style/Widget.MaterialComponents.Button"/>
+
+                    <!-- RecyclerView: List of POIs -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/fragment_edit_RecyclerView_poi"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_little"
+                        android:layout_marginBottom="@dimen/margin_normal"
+                        android:layout_marginStart="@dimen/margin_normal"
+                        app:layout_constraintTop_toBottomOf="@id/fragment_edit_search_poi"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/icon_poi"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        tools:orientation="horizontal"
+                        tools:listitem="@layout/item_poi"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

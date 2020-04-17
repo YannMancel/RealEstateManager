@@ -197,7 +197,7 @@ class RealEstateViewModel(
         photos: List<Photo>? = null,
         pointsOfInterest: List<PointOfInterest>? = null
     ) = viewModelScope.launch(Dispatchers.IO) {
-        // REAL ESTATE
+        // UPDATE: Real Estate
         try {
             // Fetch the number of updated row
             val  numberOfUpdatedRow = this@RealEstateViewModel.mRealEstateRepository.updateRealEstate(realEstate)
@@ -205,6 +205,7 @@ class RealEstateViewModel(
 
             // Update impossible
             if (numberOfUpdatedRow == 0) {
+                Timber.e("updateRealEstate: Update impossible, Number of update row = $numberOfUpdatedRow")
                 return@launch
             }
         }
@@ -214,16 +215,19 @@ class RealEstateViewModel(
             return@launch
         }
 
-        // PHOTOS
-        this@RealEstateViewModel.insertPhotosWithRealEstateId(
-            photos,
+        // UPDATE: Photo
+//        this@RealEstateViewModel.updatePhotosWithRealEstateId(
+//            photos,
+//            realEstate.mId
+//        )
+
+        // NO UPDATE JUST INSERT: Points Of Interest
+        // todo: 17/04/2020 - Update with SQL request
+        Timber.w("updateRealEstate: pointsOfInterest=$pointsOfInterest")
+        this@RealEstateViewModel.insertPOIsWithRealEstateId(
+            pointsOfInterest,
             realEstate.mId
         )
-
-        // POINTS OF INTEREST
-        pointsOfInterest?.let {
-            // todo - 13/04/2020 - add the points of interest
-        }
     }
 
     // -- Photo --
@@ -369,6 +373,12 @@ class RealEstateViewModel(
     }
 
     /**
+     * Adds all current [PointOfInterest]
+     * @param poiList a [List] of [PointOfInterest]
+     */
+    fun addCurrentPOIs(poiList: List<PointOfInterest>) = this.mPOIsSearch?.addCurrentPOIs(poiList)
+
+    /**
      * Checks if the [PointOfInterest] is selected
      * @param poi a [PointOfInterest]
      */
@@ -380,6 +390,12 @@ class RealEstateViewModel(
     fun getSelectedPOIs() =  this.mPOIsSearch?.getSelectedPOIs()
 
     /**
+     * Gets just new selected [PointOfInterest]
+     */
+    // todo: 17/04/2020 - Remove it when the RealEstateViewModel#updateRealEstate method will be update
+    fun getJustNewSelectedPOIs() =  this.mPOIsSearch?.getJustNewSelectedPOIs()
+
+    /**
      * Inserts several [PointOfInterest] into database
      * @param pointsOfInterest  a [List] of [PointOfInterest]
      * @param realEstateId      a [Long] that contains the real estate Id
@@ -388,6 +404,23 @@ class RealEstateViewModel(
         pointsOfInterest: List<PointOfInterest>?,
         realEstateId: Long
     ) = withContext(Dispatchers.IO) {
+
+        /*
+            + -> Fetch all POIs from database (Data must fetch with Fragment)
+            |
+            + -> Loop on each POI of List in argument (User's choice)
+                 |
+                 + -> INSERT POI
+                      |
+                      + -> Yes (new poi Id) -> INSERT Cross Ref
+                      |
+                      + -> No (poiId == 0L) -> Search a POI that match with the same data
+                                               |
+                                               + -> Yes (poi Id) -> INSERT Cross Ref
+                                               |
+                                               + -> No -> Do nothing
+         */
+
         pointsOfInterest?.let {
             // FETCH: All Points Of Interest
             // [Warning] To fetch LiveData's value, the current Fragment must observe this LiveData

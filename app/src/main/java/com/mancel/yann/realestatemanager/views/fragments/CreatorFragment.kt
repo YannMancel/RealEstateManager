@@ -41,6 +41,7 @@ import kotlinx.android.synthetic.main.fragment_creator.*
 import kotlinx.android.synthetic.main.fragment_creator.view.*
 import timber.log.Timber
 import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * Created by Yann MANCEL on 20/02/2020.
@@ -481,6 +482,9 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
                         )
                     }
 
+                    // Sorts the list on its name from A to Z
+                    Collections.sort(it, PointOfInterest.AZTitleComparator())
+
                     this.mPOIsAdapter.updateData(it)
                 }
             )
@@ -640,6 +644,11 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
             // HOSPITAL
             if (this@CreatorFragment.mRootView.fragment_creator_Chip_hospital.isChecked) {
                 this.add("hospital")
+            }
+
+            // AIRPORT
+            if (this@CreatorFragment.mRootView.fragment_creator_Chip_airport.isChecked) {
+                this.add("airport")
             }
         }
 
