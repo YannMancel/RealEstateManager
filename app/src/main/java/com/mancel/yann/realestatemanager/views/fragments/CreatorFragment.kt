@@ -594,6 +594,22 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
                     it.mUrlPicture == uri.toString()
                 } ?: false
 
+                /*
+                    Present: True else False
+
+                    +----------+---------+
+                    | Database | Creator |
+                    +----------+---------+
+                    | False    | False   | -> OK
+                    +----------+---------+
+                    | False    | True    | -> NO
+                    +----------+---------+
+                    | True     | False   | -> NO
+                    +----------+---------+
+                    | True     | True    | -> NO
+                    +----------+---------+
+                 */
+
                 if (!isAlreadyPresentIntoDatabase && !isAlreadyPresentIntoCreator) {
                     PhotoDialogFragment.newInstance(
                                             callback = this@CreatorFragment,

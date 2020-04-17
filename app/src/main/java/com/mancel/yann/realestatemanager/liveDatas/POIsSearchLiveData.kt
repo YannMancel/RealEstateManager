@@ -19,8 +19,8 @@ class POIsSearchLiveData : LiveData<List<PointOfInterest>>() {
     // FIELDS --------------------------------------------------------------------------------------
 
     private var mDisposable: Disposable? = null
-    private val mPOIs: MutableList<PointOfInterest> = mutableListOf()
-    private val mAlreadySelectedPOIs: MutableList<PointOfInterest> = mutableListOf()
+    private val mPOIs = mutableListOf<PointOfInterest>()
+    private val mAlreadySelectedPOIs = mutableListOf<PointOfInterest>()
 
     // METHODS -------------------------------------------------------------------------------------
 

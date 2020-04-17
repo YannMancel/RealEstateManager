@@ -14,18 +14,54 @@ class PhotoCreatorLiveData: LiveData<List<Photo>>() {
 
     // FIELDS --------------------------------------------------------------------------------------
 
-    private val mPhotos: MutableList<Photo> = mutableListOf()
+    private val mPhotos = mutableListOf<Photo>()
+    private val mAlreadyPresentPhotos = mutableListOf<Photo>()
 
     // METHODS -------------------------------------------------------------------------------------
 
     // -- Photo --
 
     /**
+     * Adds all current [Photo]
+     * @param currentPhotos a [List] of [Photo]
+     */
+    fun addCurrentPhotos(currentPhotos: List<Photo>) {
+        // MODE EDIT
+        with(this.mAlreadyPresentPhotos) {
+            clear()
+            addAll(currentPhotos)
+        }
+
+        // Add photos if possible
+        this.mAlreadyPresentPhotos.forEach { photoFromDB ->
+            // Search if already present
+            val index = this.mPhotos.indexOfFirst {
+                it.mUrlPicture == photoFromDB.mUrlPicture
+            }
+
+            if (index == -1) {
+                this.mPhotos.add(photoFromDB)
+            }
+        }
+
+        // Notify
+        this.value = this.mPhotos
+    }
+
+    /**
      * Adds a [Photo]
      * @param photo a [Photo]
      */
     fun addPhoto(photo: Photo) {
-        this.mPhotos.add(photo)
+        val newPhoto = this.mAlreadyPresentPhotos.find {
+            it.mUrlPicture == photo.mUrlPicture
+        } ?: photo
+
+        if (newPhoto.mId != 0L) {
+            newPhoto.mDescription = photo.mDescription
+        }
+
+        this.mPhotos.add(newPhoto)
 
         // Notify
         this.value = this.mPhotos

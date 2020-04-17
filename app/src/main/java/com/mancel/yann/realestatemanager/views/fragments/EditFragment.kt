@@ -454,6 +454,11 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
                 this.viewLifecycleOwner,
                 Observer {
                     this.mPhotosOfCurrentRealEstate = it.mPhotos
+
+                    it.mPhotos?.let { currentPhotos ->
+                        this.mViewModel.addCurrentPhotos(currentPhotos)
+                    }
+
                     this.configureUI(it) }
             )
     }
@@ -496,18 +501,7 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
                 this.viewLifecycleOwner,
                 Observer {
                     this.mAllPhotosFromCreator = it
-
-                    val newPhotos = mutableListOf<Photo>().apply {
-                        // Database
-                        if (!this@EditFragment.mPhotosOfCurrentRealEstate.isNullOrEmpty()) {
-                            addAll(this@EditFragment.mPhotosOfCurrentRealEstate!!)
-                        }
-
-                        // Adding during edit mode
-                        addAll(it)
-                    }
-
-                    this.mPhotoAdapter.updateData(newPhotos)
+                    this.mPhotoAdapter.updateData(it)
                 }
             )
     }
@@ -551,11 +545,6 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
      */
     private fun configureUI(realEstateWithPhotos: RealEstateWithPhotos?) {
         realEstateWithPhotos?.let {
-            // Photos
-            it.mPhotos?.let { photos ->
-                this.mPhotoAdapter.updateData(photos)
-            }
-
             // Real estate
             it.mRealEstate?.let { realEstate ->
                 // Type
@@ -751,7 +740,37 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
                     it.mUrlPicture == uri.toString()
                 } ?: false
 
-                if (!isAlreadyPresentIntoDatabase && !isAlreadyPresentIntoCreator) {
+                // Current photos: Search if is already present into the LiveData
+                val isAlreadyPresentIntoCurrentPhotos = this.mPhotosOfCurrentRealEstate?.any {
+                    it.mUrlPicture == uri.toString()
+                } ?: false
+
+                /*
+                    Present: True else False
+
+                    +----------+---------+---------+
+                    | Database | Creator | Current |
+                    +----------+---------+---------+
+                    | False    | False   | False   | -> OK
+                    +----------+---------+---------+
+                    | False    | True    | False   | -> NO
+                    +----------+---------+---------+
+                    | True     | False   | True    | -> OK
+                    +----------+---------+---------+
+                    | True     | False   | False   | -> NO
+                    +----------+---------+---------+
+                    | False    | False   | True    | -> NO (Impossible)
+                    +----------+---------+---------+
+                    | False    | True    | True    | -> NO (Impossible)
+                    +----------+---------+---------+
+                    | True     | True    | True    | -> NO
+                    +----------+---------+---------+
+                    | True     | True    | False   | -> NO
+                    +----------+---------+---------+
+                 */
+
+                if ((!isAlreadyPresentIntoDatabase && !isAlreadyPresentIntoCreator && !isAlreadyPresentIntoCurrentPhotos) ||
+                    (isAlreadyPresentIntoDatabase && !isAlreadyPresentIntoCreator && isAlreadyPresentIntoCurrentPhotos) ) {
                     PhotoDialogFragment.newInstance(
                                             callback = this@EditFragment,
                                             urlPhoto = uri.toString()
@@ -919,6 +938,7 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
 
             this.mViewModel.updateRealEstate(
                 realEstate,
+                this.mPhotosOfCurrentRealEstate,
                 this.mAllPhotosFromCreator,
                 this.mViewModel.getJustNewSelectedPOIs()
             )

@@ -189,19 +189,20 @@ class RealEstateViewModel(
     /**
      * Updates a [RealEstate] in argument
      * @param realEstate        a [RealEstate]
-     * @param photos            a [List] of [Photo]
+     * @param oldPhotos         a [List] of [Photo]
+     * @param newPhotos         a [List] of [Photo]
      * @param pointsOfInterest  a [List] of [PointOfInterest]
      */
     fun updateRealEstate(
         realEstate: RealEstate,
-        photos: List<Photo>? = null,
+        oldPhotos: List<Photo>? = null,
+        newPhotos: List<Photo>? = null,
         pointsOfInterest: List<PointOfInterest>? = null
     ) = viewModelScope.launch(Dispatchers.IO) {
         // UPDATE: Real Estate
         try {
             // Fetch the number of updated row
             val  numberOfUpdatedRow = this@RealEstateViewModel.mRealEstateRepository.updateRealEstate(realEstate)
-            Timber.d("updateRealEstate: Number of update row = $numberOfUpdatedRow")
 
             // Update impossible
             if (numberOfUpdatedRow == 0) {
@@ -215,15 +216,15 @@ class RealEstateViewModel(
             return@launch
         }
 
-        // UPDATE: Photo
-//        this@RealEstateViewModel.updatePhotosWithRealEstateId(
-//            photos,
-//            realEstate.mId
-//        )
+        // UPDATE: Photos
+        this@RealEstateViewModel.updatePhotosWithRealEstateId(
+            oldPhotos,
+            newPhotos,
+            realEstate.mId
+        )
 
         // NO UPDATE JUST INSERT: Points Of Interest
         // todo: 17/04/2020 - Update with SQL request
-        Timber.w("updateRealEstate: pointsOfInterest=$pointsOfInterest")
         this@RealEstateViewModel.insertPOIsWithRealEstateId(
             pointsOfInterest,
             realEstate.mId
@@ -253,6 +254,12 @@ class RealEstateViewModel(
         }
         return this.mPhotoCreator!!
     }
+
+    /**
+     * Add a [List] of [Photo] into [PhotoCreatorLiveData]
+     * @param photos a [List] of [Photo]
+     */
+    fun addCurrentPhotos(photos: List<Photo>) = this.mPhotoCreator?.addCurrentPhotos(photos)
 
     /**
      * Add a [Photo] into [PhotoCreatorLiveData]
@@ -301,6 +308,80 @@ class RealEstateViewModel(
 
             // Lazily started async
             deferred.start()
+        }
+    }
+
+    /**
+     * Updates several [Photo] into database
+     * @param oldPhotos     a [List] of [Photo]
+     * @param newPhotos     a [List] of [Photo]
+     * @param realEstateId  a [Long] that contains the real estate Id
+     */
+    private suspend fun updatePhotosWithRealEstateId(
+        oldPhotos: List<Photo>? = null,
+        newPhotos: List<Photo>? = null,
+        realEstateId: Long
+    ) = withContext(Dispatchers.IO) {
+        newPhotos?.let { newPhotos ->
+            // INSERT: Photos
+            val photosToInsert = newPhotos.filter { it.mId == 0L }
+
+            if (!photosToInsert.isNullOrEmpty()) {
+                this@RealEstateViewModel.insertPhotosWithRealEstateId(
+                    photosToInsert,
+                    realEstateId
+                )
+            }
+
+            // UPDATE: Photos
+            val photosToUpdate = newPhotos.filter { it.mId != 0L }
+
+            if (!photosToUpdate.isNullOrEmpty()) {
+                photosToUpdate.forEach {
+                    // UPDATE: Photos
+                    val deferred: Deferred<Int> = async(start = CoroutineStart.LAZY) {
+                        try {
+                            this@RealEstateViewModel.mPhotoRepository.updatePhoto(it)
+                        }
+                        catch (e: SQLiteConstraintException) {
+                            // UNIQUE constraint failed
+                            Timber.e("updatePhotos: ${e.message}")
+                            0
+                        }
+                    }
+
+                    // Lazily started async
+                    deferred.start()
+                }
+            }
+
+            // DELETE: Photos
+            oldPhotos?.let { oldPhotos ->
+                val photosToDelete = oldPhotos.filterNot { oldPhoto ->
+                    newPhotos.any { newPhoto ->
+                        oldPhoto.mUrlPicture == newPhoto.mUrlPicture
+                    }
+                }
+
+                if (!photosToDelete.isNullOrEmpty()) {
+                    photosToDelete.forEach {
+                        // DELETE: Photos
+                        val deferred: Deferred<Int> = async(start = CoroutineStart.LAZY) {
+                            try {
+                                this@RealEstateViewModel.mPhotoRepository.deletePhoto(it)
+                            }
+                            catch (e: SQLiteConstraintException) {
+                                // UNIQUE constraint failed
+                                Timber.e("deletePhoto: ${e.message}")
+                                0
+                            }
+                        }
+
+                        // Lazily started async
+                        deferred.start()
+                    }
+                }
+            }
         }
     }
 
