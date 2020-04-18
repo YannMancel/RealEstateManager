@@ -30,7 +30,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:src="@drawable/ic_gps_fixed"
-        android:tint="@android:color/white"
-        style="@style/Widget.MaterialComponents.FloatingActionButton"/>
+        style="@style/FloatingActionButtonStyle"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -74,7 +74,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintVertical_chainStyle="packed"
             style="@style/TextViewStyle3"
-            tools:text="$17,254,635"/>
+            tools:text="17,254,635$"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

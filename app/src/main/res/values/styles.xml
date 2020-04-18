@@ -49,31 +49,19 @@
 
     <!-- *********************************** TextView ****************************************** -->
 
-    <!-- One line TextView sub-style -->
-    <style name="OneLineTextViewSubStyle" parent="AppTheme">
-        <item name="android:maxLines">@integer/one_line_text_view</item>
-        <item name="android:ellipsize">end</item>
-    </style>
-
     <!-- TextView style (level 1, black, normal) -->
-    <style name="TextViewStyle1" parent="OneLineTextViewSubStyle">
-        <item name="android:textColor">@android:color/black</item>
+    <style name="TextViewStyle1" parent="@style/TextAppearance.MaterialComponents.Headline6">
         <item name="android:textSize">15sp</item>
-        <item name="android:textStyle">normal</item>
     </style>
 
     <!-- TextView style (level 1, darker gray, normal) -->
-    <style name="TextViewStyle2" parent="OneLineTextViewSubStyle">
+    <style name="TextViewStyle2" parent="@style/TextAppearance.MaterialComponents.Body2">
         <item name="android:textColor">@android:color/darker_gray</item>
-        <item name="android:textSize">15sp</item>
-        <item name="android:textStyle">normal</item>
     </style>
 
     <!-- TextView style (level 1, darker gray, normal) -->
-    <style name="TextViewStyle3" parent="OneLineTextViewSubStyle">
+    <style name="TextViewStyle3" parent="@style/TextAppearance.MaterialComponents.Headline6">
         <item name="android:textColor">@color/colorAccent</item>
-        <item name="android:textSize">20sp</item>
-        <item name="android:textStyle">normal</item>
     </style>
 
     <!-- TextView style (level 1, white, normal) -->
@@ -86,7 +74,19 @@
 
     <!-- Borderless Button style -->
     <style name="BorderlessButtonStyle" parent="@style/Widget.MaterialComponents.Button.TextButton">
-        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+
+    <!-- Button style -->
+    <style name="ButtonStyle" parent="@style/Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@color/colorAccent</item>
+    </style>
+
+    <!-- *********************************** FloatingActionButton ****************************** -->
+
+    <!-- FloatingActionButton style -->
+    <style name="FloatingActionButtonStyle" parent="@style/Widget.MaterialComponents.FloatingActionButton">
+        <item name="backgroundTint">@color/colorAccent</item>
+        <item name="tint">@android:color/white</item>
     </style>
 
 </resources>

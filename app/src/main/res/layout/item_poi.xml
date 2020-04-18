@@ -68,6 +68,7 @@
             tools:checked="true"
             android:minWidth="0dp"
             android:minHeight="0dp"
+            android:background="@android:color/white"
             style="@style/Widget.MaterialComponents.CompoundButton.CheckBox"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

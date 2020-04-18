@@ -89,7 +89,7 @@ class POIsAdapter(
 
                 // To not interact with it in EditFragment
                 // todo: 17/04/2020 - Remove it when the RealEstateViewModel#updateRealEstate method will be update
-                if (poi.mIsSelected) {
+                if (poi.mIsSelected && poi.mId != 0L) {
                     holder.itemView.item_poi_is_selected.isEnabled = false
                 }
 

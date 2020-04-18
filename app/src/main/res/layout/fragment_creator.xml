@@ -50,7 +50,6 @@
                         app:layout_constraintEnd_toStartOf="@id/fragment_creator_type"
                         android:baselineAlignBottom="true"
                         android:src="@drawable/ic_home"
-                        android:tint="@android:color/black"
                         android:contentDescription="@null"/>
 
                     <!-- TextInputLayout: Type -->
@@ -140,7 +139,6 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/fragment_creator_surface"
                         android:src="@drawable/ic_settings"
-                        android:tint="@android:color/black"
                         android:contentDescription="@null"/>
 
                     <!-- TextInputLayout: Surface -->
@@ -421,7 +419,6 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/fragment_creator_enable"
                         android:src="@drawable/ic_date"
-                        android:tint="@android:color/black"
                         android:contentDescription="@null"/>
 
                     <!-- SwitchMaterial: Enable -->
@@ -730,8 +727,7 @@
                         app:layout_constraintStart_toEndOf="@id/icon_poi"
                         app:layout_constraintEnd_toEndOf="parent"
                         android:text="@string/search_poi_button"
-                        android:background="@color/colorAccent"
-                        style="@style/Widget.MaterialComponents.Button"/>
+                        style="@style/ButtonStyle"/>
 
                     <!-- RecyclerView: List of POIs -->
                     <androidx.recyclerview.widget.RecyclerView
@@ -765,6 +761,6 @@
         android:layout_margin="@dimen/margin_normal"
         android:layout_gravity="bottom|end"
         android:src="@drawable/ic_add"
-        style="@style/Widget.MaterialComponents.FloatingActionButton"/>
+        style="@style/FloatingActionButtonStyle"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
