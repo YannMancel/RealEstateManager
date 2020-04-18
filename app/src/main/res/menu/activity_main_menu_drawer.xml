@@ -19,6 +19,11 @@
             android:icon="@drawable/ic_settings"
             android:title="@string/menu_drawer_settings"/>
 
+        <item
+            android:id="@id/navigation_searchFragment"
+            android:icon="@drawable/ic_filter_list"
+            android:title="@string/menu_drawer_search"/>
+
     </group>
 
 </menu>

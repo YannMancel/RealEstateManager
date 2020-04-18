@@ -5,7 +5,6 @@ import androidx.annotation.LayoutRes
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -90,7 +89,7 @@ class DetailsFragment : BaseFragment(), AdapterListener, OnMapReadyCallback {
     // -- RecyclerView --
 
     /**
-     * Configures the [RecyclerView]
+     * Configures the RecyclerView
      */
     private fun configurePhotoRecyclerView() {
         // Adapter
@@ -121,7 +120,7 @@ class DetailsFragment : BaseFragment(), AdapterListener, OnMapReadyCallback {
     }
 
     /**
-     * Configures the POIs [RecyclerView]
+     * Configures the POIs RecyclerView
      */
     private fun configurePOIsRecyclerView() {
         // Adapter

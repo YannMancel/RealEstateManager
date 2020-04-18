@@ -105,9 +105,9 @@ class LocationFragment : BaseFragment(),
         val realEstateId = marker?.tag as? Long
 
         realEstateId?.let {
-            // By destination (Safe Args)
-            val bundle = DetailsFragmentArgs(it).toBundle()
-            this.findNavController().navigate(R.id.navigation_detailsFragment, bundle)
+            // By action (Safe Args)
+            val action = LocationFragmentDirections.actionLocationFragmentToDetailsFragment(it)
+            this.findNavController().navigate(action)
         }
 
         return false

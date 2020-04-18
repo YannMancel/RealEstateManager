@@ -27,7 +27,13 @@
         android:id="@+id/navigation_locationFragment"
         android:name="com.mancel.yann.realestatemanager.views.fragments.LocationFragment"
         android:label="@string/navigation_location_name"
-        tools:layout="@layout/fragment_location"/>
+        tools:layout="@layout/fragment_location">
+
+        <action
+            android:id="@+id/action_locationFragment_to_detailsFragment"
+            app:destination="@id/navigation_detailsFragment" />
+
+    </fragment>
 
     <!-- fragment: CreatorFragment -->
     <fragment
@@ -47,6 +53,19 @@
             android:name="itemId"
             app:argType="long"
             android:defaultValue="0L" />
+
+    </fragment>
+
+    <!-- SearchFragment: EditFragment -->
+    <fragment
+        android:id="@+id/navigation_searchFragment"
+        android:name="com.mancel.yann.realestatemanager.views.fragments.SearchFragment"
+        android:label="@string/navigation_search_name"
+        tools:layout="@layout/fragment_search" >
+
+        <action
+            android:id="@+id/action_searchFragment_to_detailsFragment"
+            app:destination="@id/navigation_detailsFragment" />
 
     </fragment>
 

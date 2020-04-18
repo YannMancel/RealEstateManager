@@ -57,6 +57,7 @@
     <!-- activity_main_menu_drawer.xml -->
     <string name="menu_drawer_settings">SETTINGS</string>
     <string name="menu_drawer_real_estates">REAL ESTATES</string>
+    <string name="menu_drawer_search">COMPLEX SEARCH</string>
 
     <!-- nav_graph.xml -->
     <string name="navigation_list_name">Real estate list</string>
@@ -65,6 +66,7 @@
     <string name="navigation_location_name">Location</string>
     <string name="navigation_creator_name">Creator</string>
     <string name="navigation_edit_name">Edit</string>
+    <string name="navigation_search_name">Search</string>
 
     <!-- item.photo.xml & item_real_estate.xml -->
     <string name="menu_drawer_details">DETAILS</string>
@@ -106,5 +108,10 @@
     <string name="title_description_characteristics">Characteristics</string>
     <string name="title_description_address">Address</string>
     <string name="title_description_poi">Points of interest</string>
+    <string name="select_price_range">Select price range</string>
+    <string name="select_price_min">Select min price</string>
+    <string name="select_price_max">Select max price</string>
+    <string name="select_min_surface">Select min surface</string>
+    <string name="select_max_surface">Select max surface</string>
 
 </resources>

@@ -13,7 +13,6 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -364,7 +363,7 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
     // -- RecyclerView --
 
     /**
-     * Configures the photo [RecyclerView]
+     * Configures the photo RecyclerView
      */
     private fun configurePhotoRecyclerView() {
         // Adapter
@@ -397,7 +396,7 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
     }
 
     /**
-     * Configures the POIs [RecyclerView]
+     * Configures the POIs RecyclerView
      */
     private fun configurePOIsRecyclerView() {
         // Adapter
