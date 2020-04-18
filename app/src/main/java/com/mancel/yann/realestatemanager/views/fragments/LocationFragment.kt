@@ -4,6 +4,7 @@ import android.location.Location
 import androidx.annotation.LayoutRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -93,6 +94,16 @@ class LocationFragment : BaseFragment(),
     override fun onMarkerClick(marker: Marker?): Boolean {
         // The default behavior (return false) for a marker click event is to show its info window (if available)
         // and move the camera such that the marker is centered on the map.
+
+        // Id from Tag
+        val realEstateId = marker?.tag as? Long
+
+        realEstateId?.let {
+            // By destination (Safe Args)
+            val bundle = DetailsFragmentArgs(it).toBundle()
+            this.findNavController().navigate(R.id.navigation_detailsFragment, bundle)
+        }
+
         return false
     }
 
@@ -263,14 +274,14 @@ class LocationFragment : BaseFragment(),
             // Remove Markers
             it.clear()
 
-            // Adds Markers
             realEstateWithPhotos.forEach { poi ->
                 val location = LatLng(
                     poi.mRealEstate?.mAddress?.mLatitude!!,
                     poi.mRealEstate?.mAddress?.mLongitude!!
                 )
 
-                it.addMarker(
+                // Adds Markers
+                val marker = it.addMarker(
                     MarkerOptions()
                         .position(location)
                         .title("${poi.mRealEstate?.mType}")
@@ -278,6 +289,9 @@ class LocationFragment : BaseFragment(),
                             BitmapDescriptorFactory.HUE_BLUE)
                         )
                 )
+
+                // Add tag -> Real Estate Id
+                marker?.tag = poi.mRealEstate?.mId
             }
         }
     }
