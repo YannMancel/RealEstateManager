@@ -475,7 +475,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_normal"
                 app:layout_constraintTop_toBottomOf="@id/cardview_date"
-                app:layout_constraintBottom_toTopOf="@id/cardview_poi"
+                app:layout_constraintBottom_toTopOf="@id/cardview_video"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:cardElevation="@dimen/elevation_card"
@@ -532,6 +532,72 @@
 
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- MaterialCardView: Video -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardview_video"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_normal"
+                app:layout_constraintTop_toBottomOf="@id/cardview_photo"
+                app:layout_constraintBottom_toTopOf="@id/cardview_poi"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:cardElevation="@dimen/elevation_card"
+                style="@style/Widget.MaterialComponents.CardView">
+
+                <!-- ConstraintLayout -->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <!-- ImageView: Video icon -->
+                    <ImageView
+                        android:id="@+id/icon_video"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/margin_normal"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:src="@drawable/ic_camera"
+                        android:contentDescription="@null"/>
+
+                    <!-- ImageButton: Add video -->
+                    <ImageButton
+                        android:id="@+id/fragment_creator_add_video"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/margin_normal"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintVertical_bias="0"
+                        android:src="@drawable/ic_add"
+                        android:contentDescription="@null"
+                        android:background="@color/colorAccent"/>
+
+                    <!-- FrameLayout: To fix the play bar -->
+                    <FrameLayout
+                        android:id="@+id/fragment_creator_video_container"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/margin_normal"
+                        app:layout_constraintTop_toBottomOf="@id/fragment_creator_add_video"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/icon_video"
+                        app:layout_constraintEnd_toEndOf="parent">
+
+                        <!-- VideoView -->
+                        <VideoView
+                            android:id="@+id/fragment_creator_video"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/video_height"/>
+
+                    </FrameLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
             <!-- MaterialCardView: Points of interest -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardview_poi"
@@ -539,7 +605,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_normal"
                 android:layout_marginBottom="@dimen/margin_heavy"
-                app:layout_constraintTop_toBottomOf="@id/cardview_photo"
+                app:layout_constraintTop_toBottomOf="@id/cardview_video"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

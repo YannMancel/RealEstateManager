@@ -26,6 +26,7 @@ import com.google.android.libraries.places.api.model.TypeFilter
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.AutocompleteActivity
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputLayout
 import com.mancel.yann.realestatemanager.R
 import com.mancel.yann.realestatemanager.liveDatas.PhotoCreatorLiveData
@@ -96,7 +97,13 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
         this.configurePOIsSearch()
     }
 
-    override fun actionAfterPermission() = this.actionToAddPhoto()
+    override fun actionAfterPermission(media: Media?) {
+        when (media) {
+            Media.PHOTO -> this.actionToAddPhoto()
+            Media.VIDEO -> { /* Do nothing */ }
+            null -> { /* Do nothing */ }
+        }
+    }
 
     // -- Fragment --
 
@@ -713,7 +720,7 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
      * Action to add a [Photo]
      */
     private fun actionToAddPhoto() {
-        if (this.checkReadExternalStoragePermission()) {
+        if (this.checkReadExternalStoragePermission(Media.PHOTO)) {
             // Goal: Retrieves a photo from external storage
             val intent = Intent(Intent.ACTION_PICK,
                                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
@@ -886,6 +893,9 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
      * Action to update a [RealEstate]
      */
     private fun actionToUpdateRealEstate() {
+        // Check if no update
+        // todo: 18/04/2020 - No update
+
         // Errors
         val isCanceled = this.configureErrorOfFields(
             this.mRootView.fragment_edit_type,
@@ -914,34 +924,43 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
                 return
             }
 
-            // todo - 06/04/2020 - Next feature: Add user's authentication instead of 1L
-            val realEstate = RealEstate(
-                mId = this.mItemId,
-                mType = this.fragment_edit_type.editText?.text?.toString(),
-                mPrice = this.fragment_edit_price.editText?.text?.toString()?.toDouble(),
-                mSurface = this.mRootView.fragment_edit_surface.editText?.text?.toString()?.toDouble(),
-                mNumberOfRoom = this.mRootView.fragment_edit_number_of_room.editText?.text?.toString()?.toInt(),
-                mDescription = this.mRootView.fragment_edit_description.editText?.text?.toString(),
-                mIsEnable = this.mRootView.fragment_edit_enable.isChecked,
-                mEffectiveDate = SimpleDateFormat("dd/MM/yyyy").parse(this.mRootView.fragment_edit_effective_date.editText?.text?.toString()),
-                mSaleDate = null,
-                mEstateAgentId = 1L,
-                mAddress = Address(
-                    mStreet = this.fragment_edit_address.editText?.text?.toString(),
-                    mCity = this.fragment_edit_city.editText?.text?.toString(),
-                    mPostCode = this.fragment_edit_post_code.editText?.text?.toString()?.toInt(),
-                    mCountry = this.fragment_edit_country.editText?.text?.toString(),
-                    mLatitude = this.mGoogleMap?.projection?.visibleRegion?.latLngBounds?.center?.latitude,
-                    mLongitude = this.mGoogleMap?.projection?.visibleRegion?.latLngBounds?.center?.longitude
-                )
-            )
+            // Show AlertDialog to validate the User's choice
+            MaterialAlertDialogBuilder(this.requireContext())
+                .setTitle(R.string.navigation_edit_name)
+                .setMessage(R.string.message_edit_user_choice)
+                .setPositiveButton(R.string.yes) { _, _ ->
+                    // todo - 06/04/2020 - Next feature: Add user's authentication instead of 1L
+                    val realEstate = RealEstate(
+                        mId = this.mItemId,
+                        mType = this.fragment_edit_type.editText?.text?.toString(),
+                        mPrice = this.fragment_edit_price.editText?.text?.toString()?.toDouble(),
+                        mSurface = this.mRootView.fragment_edit_surface.editText?.text?.toString()?.toDouble(),
+                        mNumberOfRoom = this.mRootView.fragment_edit_number_of_room.editText?.text?.toString()?.toInt(),
+                        mDescription = this.mRootView.fragment_edit_description.editText?.text?.toString(),
+                        mIsEnable = this.mRootView.fragment_edit_enable.isChecked,
+                        mEffectiveDate = SimpleDateFormat("dd/MM/yyyy").parse(this.mRootView.fragment_edit_effective_date.editText?.text?.toString()),
+                        mSaleDate = null,
+                        mEstateAgentId = 1L,
+                        mAddress = Address(
+                            mStreet = this.fragment_edit_address.editText?.text?.toString(),
+                            mCity = this.fragment_edit_city.editText?.text?.toString(),
+                            mPostCode = this.fragment_edit_post_code.editText?.text?.toString()?.toInt(),
+                            mCountry = this.fragment_edit_country.editText?.text?.toString(),
+                            mLatitude = this.mGoogleMap?.projection?.visibleRegion?.latLngBounds?.center?.latitude,
+                            mLongitude = this.mGoogleMap?.projection?.visibleRegion?.latLngBounds?.center?.longitude
+                        )
+                    )
 
-            this.mViewModel.updateRealEstate(
-                realEstate,
-                this.mPhotosOfCurrentRealEstate,
-                this.mAllPhotosFromCreator,
-                this.mViewModel.getJustNewSelectedPOIs()
-            )
+                    this.mViewModel.updateRealEstate(
+                        realEstate,
+                        this.mPhotosOfCurrentRealEstate,
+                        this.mAllPhotosFromCreator,
+                        this.mViewModel.getJustNewSelectedPOIs()
+                    )
+                }
+                .setNegativeButton(R.string.no) { _, _ -> /* Do nothing */ }
+                .create()
+                .show()
         }
     }
 }

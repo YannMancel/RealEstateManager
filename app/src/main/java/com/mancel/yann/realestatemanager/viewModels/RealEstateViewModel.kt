@@ -199,6 +199,10 @@ class RealEstateViewModel(
         newPhotos: List<Photo>? = null,
         pointsOfInterest: List<PointOfInterest>? = null
     ) = viewModelScope.launch(Dispatchers.IO) {
+//        Timber.w("realEstate $realEstate")
+//        Timber.w("oldPhotos $oldPhotos")
+//        Timber.w("newPhotos $newPhotos")
+
         // UPDATE: Real Estate
         try {
             // Fetch the number of updated row
@@ -327,6 +331,7 @@ class RealEstateViewModel(
             val photosToInsert = newPhotos.filter { it.mId == 0L }
 
             if (!photosToInsert.isNullOrEmpty()) {
+//                Timber.d("photosToInsert $photosToInsert")
                 this@RealEstateViewModel.insertPhotosWithRealEstateId(
                     photosToInsert,
                     realEstateId
@@ -337,6 +342,7 @@ class RealEstateViewModel(
             val photosToUpdate = newPhotos.filter { it.mId != 0L }
 
             if (!photosToUpdate.isNullOrEmpty()) {
+//                Timber.d("photosToUpdate $photosToUpdate")
                 photosToUpdate.forEach {
                     // UPDATE: Photos
                     val deferred: Deferred<Int> = async(start = CoroutineStart.LAZY) {
@@ -364,6 +370,7 @@ class RealEstateViewModel(
                 }
 
                 if (!photosToDelete.isNullOrEmpty()) {
+//                    Timber.d("photosToDelete $photosToDelete")
                     photosToDelete.forEach {
                         // DELETE: Photos
                         val deferred: Deferred<Int> = async(start = CoroutineStart.LAZY) {

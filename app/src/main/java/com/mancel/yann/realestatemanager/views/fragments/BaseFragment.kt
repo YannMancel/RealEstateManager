@@ -27,6 +27,10 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  */
 abstract class BaseFragment : Fragment() {
 
+    // ENUMS ---------------------------------------------------------------------------------------
+
+    enum class Media {PHOTO, VIDEO}
+
     // FIELDS --------------------------------------------------------------------------------------
 
     protected lateinit var mRootView: View
@@ -35,9 +39,10 @@ abstract class BaseFragment : Fragment() {
     protected val mViewModel: RealEstateViewModel by viewModel()
 
     companion object {
-        const val REQUEST_CODE_PERMISSION_READ_EXTERNAL_STORAGE = 1000
-        const val REQUEST_CODE_PERMISSION_ACCESS_FINE_LOCATION = 2000
-        const val REQUEST_CODE_CHECK_SETTINGS_TO_LOCATION = 3000
+        const val REQUEST_CODE_PERMISSION_READ_EXTERNAL_STORAGE_PHOTO = 1000
+        const val REQUEST_CODE_PERMISSION_READ_EXTERNAL_STORAGE_VIDEO = 2000
+        const val REQUEST_CODE_PERMISSION_ACCESS_FINE_LOCATION = 3000
+        const val REQUEST_CODE_CHECK_SETTINGS_TO_LOCATION = 4000
     }
 
     // METHODS -------------------------------------------------------------------------------------
@@ -90,15 +95,19 @@ abstract class BaseFragment : Fragment() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         when (requestCode) {
-            // Access to the external storage or the current location of device
-            REQUEST_CODE_PERMISSION_READ_EXTERNAL_STORAGE,
+            // Access to the external storage for fetch a photo
+            REQUEST_CODE_PERMISSION_READ_EXTERNAL_STORAGE_PHOTO -> {
+                this.handlePermissionsResult(grantResults, Media.PHOTO)
+            }
+
+            // Access to the external storage for fetch a video
+            REQUEST_CODE_PERMISSION_READ_EXTERNAL_STORAGE_VIDEO -> {
+                this.handlePermissionsResult(grantResults, Media.VIDEO)
+            }
+
+            // Access to the current location of device
             REQUEST_CODE_PERMISSION_ACCESS_FINE_LOCATION -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    this.actionAfterPermission()
-                }
-                else {
-                    this.mCallback?.showMessage(this.getString(R.string.permission_denied))
-                }
+                this.handlePermissionsResult(grantResults)
             }
 
             else -> { /* Ignore all other requests */}
@@ -117,9 +126,12 @@ abstract class BaseFragment : Fragment() {
     // -- Permission --
 
     /**
-     * Checks the permission: READ_EXTERNAL_STORAGE
+     * Checks the permission: READ_EXTERNAL_STORAGE to fetch photo
+     * @param media a [Media]
      */
-    protected fun checkReadExternalStoragePermission(): Boolean {
+    protected fun checkReadExternalStoragePermission(
+        media: Media
+    ): Boolean {
         val permissionResult = ContextCompat.checkSelfPermission(
             this.requireContext(),
             Manifest.permission.READ_EXTERNAL_STORAGE
@@ -131,7 +143,10 @@ abstract class BaseFragment : Fragment() {
             else -> {
                 this.requestPermissions(
                     arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                    REQUEST_CODE_PERMISSION_READ_EXTERNAL_STORAGE
+                    when (media) {
+                        Media.PHOTO -> REQUEST_CODE_PERMISSION_READ_EXTERNAL_STORAGE_PHOTO
+                        Media.VIDEO -> REQUEST_CODE_PERMISSION_READ_EXTERNAL_STORAGE_VIDEO
+                    }
                 )
 
                 false
@@ -164,8 +179,23 @@ abstract class BaseFragment : Fragment() {
 
     /**
      * Method to override to perform action after the granted permission
+     * @param media a [Media]
      */
-    protected open fun actionAfterPermission() {/* Do nothing here */}
+    protected open fun actionAfterPermission(media: Media? = null) {/* Do nothing here */}
+
+    /**
+     * Handles the permissions result
+     * @param grantResults  a [IntArray]
+     * @param media         a [Media]
+     */
+    private fun handlePermissionsResult(grantResults: IntArray, media: Media? = null) {
+        if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            this.actionAfterPermission(media)
+        }
+        else {
+            this.mCallback?.showMessage(this.getString(R.string.permission_denied))
+        }
+    }
 
     // -- Exceptions --
 

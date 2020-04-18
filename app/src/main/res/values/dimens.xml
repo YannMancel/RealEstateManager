@@ -4,7 +4,7 @@
 
     <!-- Elevation -->
     <dimen name="elevation_toolbar">4dp</dimen>
-    <dimen name="elevation_card">1dp</dimen>
+    <dimen name="elevation_card">4dp</dimen>
 
     <!-- NavigationView Header height -->
     <dimen name="navigation_header_height">220dp</dimen>
@@ -20,6 +20,9 @@
     <dimen name="image_view_item_photo_width">@dimen/card_item_photo_width</dimen>
     <dimen name="image_view_item_photo_height">@dimen/card_item_photo_height</dimen>
     <dimen name="filter_photo_height">60dp</dimen>
+
+    <!-- VideoView Size -->
+    <dimen name="video_height">200dp</dimen>
 
     <!-- Margin -->
     <dimen name="margin_tiny">4dp</dimen>

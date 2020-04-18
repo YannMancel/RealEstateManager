@@ -20,11 +20,13 @@
     <string name="title_marker">Real Estate</string>
     <string name="creation_photo_already_present">This photo is already present in database</string>
     <string name="creation_photo_cancel">Photo canceled</string>
+    <string name="creation_video_cancel">Video canceled</string>
     <string name="creator_search_cancel">Search canceled</string>
     <string name="no_pois">No point of interest has been selected</string>
     <string name="no_pois_search">No point of interest searched</string>
     <string name="no_distance">No distance to search point of interest</string>
     <string name="no_address">No address</string>
+    <string name="message_creator_user_choice">Are you sure to create this real estate?</string>
 
     <!-- DetailsFragment.kt -->
     <string name="details_characteristics">Surface: %1$.2f m2\nNumber of rooms: %2$d</string>
@@ -38,6 +40,7 @@
     <string name="edit_no_type">No type</string>
     <string name="edit_no_price">No price</string>
     <string name="edit_impossible">Edit impossible</string>
+    <string name="message_edit_user_choice">Are you sure to update this real estate?</string>
 
     <!-- SettingsDialogFragment.kt -->
     <string name="title_settings_dialog_fragment">Settings</string>

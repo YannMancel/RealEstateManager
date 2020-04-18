@@ -8,6 +8,7 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import android.widget.MediaController
 import androidx.annotation.LayoutRes
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -25,6 +26,7 @@ import com.google.android.libraries.places.api.model.TypeFilter
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.AutocompleteActivity
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputLayout
 import com.mancel.yann.realestatemanager.R
 import com.mancel.yann.realestatemanager.liveDatas.PhotoCreatorLiveData
@@ -63,7 +65,8 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
 
     companion object {
         const val REQUEST_CODE_PHOTO = 100
-        const val REQUEST_CODE_AUTOCOMPLETE = 200
+        const val REQUEST_CODE_VIDEO = 200
+        const val REQUEST_CODE_AUTOCOMPLETE = 300
     }
 
     // METHODS -------------------------------------------------------------------------------------
@@ -87,7 +90,13 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
         this.configurePOIsSearch()
     }
 
-    override fun actionAfterPermission() = this.actionToAddPhoto()
+    override fun actionAfterPermission(media: Media?) {
+        when (media) {
+            Media.PHOTO -> this.actionToAddPhoto()
+            Media.VIDEO -> this.actionToAddVideo()
+            null -> { /* Do nothing */ }
+        }
+    }
 
     // -- Fragment --
 
@@ -97,6 +106,9 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
         when (requestCode) {
             // Photo
             REQUEST_CODE_PHOTO -> this.handlePhoto(resultCode, data)
+
+            // Video
+            REQUEST_CODE_VIDEO -> this.handleVideo(resultCode, data)
 
             // Search
             REQUEST_CODE_AUTOCOMPLETE -> this.handleAddress(resultCode, data)
@@ -336,6 +348,12 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
             this.actionToAddPhoto()
         }
 
+        // Button: Add video
+        this.mRootView.fragment_creator_video_container.visibility = View.GONE
+        this.mRootView.fragment_creator_add_video.setOnClickListener {
+            this.actionToAddVideo()
+        }
+
         // Button: Add points of interest
         this.mRootView.fragment_creator_search_poi.setOnClickListener {
             this.actionToAddPOIs()
@@ -567,7 +585,7 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
      * Action to add a [Photo]
      */
     private fun actionToAddPhoto() {
-        if (this.checkReadExternalStoragePermission()) {
+        if (this.checkReadExternalStoragePermission(Media.PHOTO)) {
             // Goal: Retrieves a photo from external storage
             val intent = Intent(Intent.ACTION_PICK,
                                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
@@ -630,6 +648,51 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
         else {
             this.mCallback?.showMessage(
                 this.getString(R.string.creation_photo_cancel)
+            )
+        }
+    }
+
+    // -- Video --
+
+    /**
+     * Action to add a video
+     */
+    private fun actionToAddVideo() {
+        if (this.checkReadExternalStoragePermission(Media.VIDEO)) {
+            // Goal: Retrieves a photo from external storage
+            val intent = Intent(Intent.ACTION_PICK,
+                MediaStore.Video.Media.EXTERNAL_CONTENT_URI)
+
+            this.startActivityForResult(intent, REQUEST_CODE_VIDEO)
+        }
+    }
+
+    /**
+     * Handles the video
+     * @param resultCode    an [Int] that contains the result code
+     * @param data          an [Intent] that contains the data
+     */
+    private fun handleVideo(resultCode: Int, data: Intent?) {
+        if (resultCode == RESULT_OK) {
+            data?.data?.let { uri ->
+                // Container must be visible
+                this.mRootView.fragment_creator_video_container.visibility = View.VISIBLE
+
+                val controller = MediaController(this.requireContext()).apply {
+                    setAnchorView(this@CreatorFragment.mRootView.fragment_creator_video)
+                }
+
+                with(this.mRootView.fragment_creator_video) {
+                    setVideoURI(uri)
+                    setMediaController(controller)
+                }
+
+                this.mRootView.fragment_creator_video.start()
+            }
+        }
+        else {
+            this.mCallback?.showMessage(
+                this.getString(R.string.creation_video_cancel)
             )
         }
     }
@@ -754,33 +817,42 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
                 return
             }
 
-            // todo - 06/04/2020 - Next feature: Add user's authentication instead of 1L
-            val realEstate = RealEstate(
-                mType = this.fragment_creator_type.editText?.text?.toString(),
-                mPrice = this.fragment_creator_price.editText?.text?.toString()?.toDouble(),
-                mSurface = this.mRootView.fragment_creator_surface.editText?.text?.toString()?.toDouble(),
-                mNumberOfRoom = this.mRootView.fragment_creator_number_of_room.editText?.text?.toString()?.toInt(),
-                mDescription = this.mRootView.fragment_creator_description.editText?.text?.toString(),
-                mIsEnable = this.mRootView.fragment_creator_enable.isChecked,
-                mEffectiveDate = SimpleDateFormat("dd/MM/yyyy").parse(this.mRootView.fragment_creator_effective_date.editText?.text?.toString()),
-                mSaleDate = null,
-                mEstateAgentId = 1L,
-                mAddress = Address(
-                    mStreet = this.fragment_creator_address.editText?.text?.toString(),
-                    mCity = this.fragment_creator_city.editText?.text?.toString(),
-                    mPostCode = this.fragment_creator_post_code.editText?.text?.toString()?.toInt(),
-                    mCountry = this.fragment_creator_country.editText?.text?.toString(),
-                    mLatitude = this.mGoogleMap?.projection?.visibleRegion?.latLngBounds?.center?.latitude,
-                    mLongitude = this.mGoogleMap?.projection?.visibleRegion?.latLngBounds?.center?.longitude
-                )
-            )
+            // Show AlertDialog to validate the User's choice
+            MaterialAlertDialogBuilder(this.requireContext())
+                .setTitle(R.string.navigation_creator_name)
+                .setMessage(R.string.message_creator_user_choice)
+                .setPositiveButton(R.string.yes) { _, _ ->
+                    // todo - 06/04/2020 - Next feature: Add user's authentication instead of 1L
+                    val realEstate = RealEstate(
+                        mType = this.fragment_creator_type.editText?.text?.toString(),
+                        mPrice = this.fragment_creator_price.editText?.text?.toString()?.toDouble(),
+                        mSurface = this.mRootView.fragment_creator_surface.editText?.text?.toString()?.toDouble(),
+                        mNumberOfRoom = this.mRootView.fragment_creator_number_of_room.editText?.text?.toString()?.toInt(),
+                        mDescription = this.mRootView.fragment_creator_description.editText?.text?.toString(),
+                        mIsEnable = this.mRootView.fragment_creator_enable.isChecked,
+                        mEffectiveDate = SimpleDateFormat("dd/MM/yyyy").parse(this.mRootView.fragment_creator_effective_date.editText?.text?.toString()),
+                        mSaleDate = null,
+                        mEstateAgentId = 1L,
+                        mAddress = Address(
+                            mStreet = this.fragment_creator_address.editText?.text?.toString(),
+                            mCity = this.fragment_creator_city.editText?.text?.toString(),
+                            mPostCode = this.fragment_creator_post_code.editText?.text?.toString()?.toInt(),
+                            mCountry = this.fragment_creator_country.editText?.text?.toString(),
+                            mLatitude = this.mGoogleMap?.projection?.visibleRegion?.latLngBounds?.center?.latitude,
+                            mLongitude = this.mGoogleMap?.projection?.visibleRegion?.latLngBounds?.center?.longitude
+                        )
+                    )
 
-            this.mViewModel.insertRealEstate(
-                this.requireContext(),
-                realEstate,
-                this.mAllPhotosFromCreator,
-                this.mViewModel.getSelectedPOIs()
-            )
+                    this.mViewModel.insertRealEstate(
+                        this.requireContext(),
+                        realEstate,
+                        this.mAllPhotosFromCreator,
+                        this.mViewModel.getSelectedPOIs()
+                    )
+                }
+                .setNegativeButton(R.string.no) { _, _ -> /* Do nothing */ }
+                .create()
+                .show()
         }
     }
 }

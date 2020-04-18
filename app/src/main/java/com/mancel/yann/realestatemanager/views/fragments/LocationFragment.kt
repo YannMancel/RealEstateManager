@@ -61,7 +61,13 @@ class LocationFragment : BaseFragment(),
         this.configureLocationLiveData()
     }
 
-    override fun actionAfterPermission() = this.mViewModel.startLocationUpdate()
+    override fun actionAfterPermission(media: Media?) {
+        when (media) {
+            Media.PHOTO -> { /* Do nothing */ }
+            Media.VIDEO -> { /* Do nothing */ }
+            null -> this.mViewModel.startLocationUpdate()
+        }
+    }
 
     // -- Fragment --
 
