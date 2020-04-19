@@ -150,6 +150,7 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
                                         photoId = (v.tag as Photo).mId,
                                         urlPhoto = (v.tag as Photo).mUrlPicture,
                                         description = (v.tag as Photo).mDescription,
+                                        realEstateId = (v.tag as Photo).mRealEstateId!!,
                                         mode = PhotoDialogFragment.PhotoDialogMode.UPDATE
                                    )
                                    .show(

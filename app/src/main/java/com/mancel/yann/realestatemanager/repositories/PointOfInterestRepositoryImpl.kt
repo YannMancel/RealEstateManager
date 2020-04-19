@@ -27,12 +27,6 @@ class PointOfInterestRepositoryImpl(
         this@PointOfInterestRepositoryImpl.mPointOfInterestDAO.insertPointOfInterest(pointOfInterest)
     }
 
-    override suspend fun insertPointsOfInterest(
-        vararg pointsOfInterest: PointOfInterest
-    ): List<Long> = withContext(Dispatchers.IO) {
-        this@PointOfInterestRepositoryImpl.mPointOfInterestDAO.insertPointsOfInterest(*pointsOfInterest)
-    }
-
     // -- Read --
 
     override fun getAllPointsOfInterest(): LiveData<List<PointOfInterest>> =

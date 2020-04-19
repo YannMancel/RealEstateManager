@@ -25,10 +25,4 @@ class RealEstatePointOfInterestCrossRefRepositoryImpl(
     ): Long = withContext(Dispatchers.IO) {
         this@RealEstatePointOfInterestCrossRefRepositoryImpl.mCrossRefDAO.insertCrossRef(crossRef)
     }
-
-    override suspend fun insertSeveralCrossRef(
-        vararg severalCrossRef: RealEstatePointOfInterestCrossRef
-    ): List<Long> = withContext(Dispatchers.IO) {
-        this@RealEstatePointOfInterestCrossRefRepositoryImpl.mCrossRefDAO.insertSeveralCrossRef(*severalCrossRef)
-    }
 }

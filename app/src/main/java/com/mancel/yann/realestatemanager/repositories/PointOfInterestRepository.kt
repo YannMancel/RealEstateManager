@@ -16,8 +16,6 @@ interface PointOfInterestRepository {
 
     suspend fun insertPointOfInterest(pointOfInterest: PointOfInterest): Long
 
-    suspend fun insertPointsOfInterest(vararg pointsOfInterest: PointOfInterest): List<Long>
-
     // -- Read --
 
     fun getAllPointsOfInterest(): LiveData<List<PointOfInterest>>

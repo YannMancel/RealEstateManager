@@ -21,12 +21,6 @@ class PhotoRepositoryImpl(
 
     // -- Create --
 
-    override suspend fun insertPhoto(
-        photo: Photo
-    ): Long = withContext(Dispatchers.IO) {
-        this@PhotoRepositoryImpl.mPhotoDAO.insertPhoto(photo)
-    }
-
     override suspend fun insertPhotos(
         vararg photos: Photo
     ): List<Long> = withContext(Dispatchers.IO) {
@@ -34,10 +28,6 @@ class PhotoRepositoryImpl(
     }
 
     // -- Read --
-
-    override fun getPhotoByRealEstateId(realEstateId: Long): LiveData<List<Photo>> {
-        return this.mPhotoDAO.getPhotoByRealEstateId(realEstateId)
-    }
 
     override fun getAllPhotos(): LiveData<List<Photo>> = this.mPhotoDAO.getAllPhotos()
 

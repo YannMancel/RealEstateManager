@@ -14,13 +14,9 @@ interface PhotoRepository {
 
     // -- Create --
 
-    suspend fun insertPhoto(photo: Photo): Long
-
     suspend fun insertPhotos(vararg photos: Photo): List<Long>
 
     // -- Read --
-
-    fun getPhotoByRealEstateId(realEstateId: Long): LiveData<List<Photo>>
 
     fun getAllPhotos(): LiveData<List<Photo>>
 

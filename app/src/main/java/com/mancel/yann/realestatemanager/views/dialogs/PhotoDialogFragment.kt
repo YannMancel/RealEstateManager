@@ -38,6 +38,9 @@ class PhotoDialogFragment : DialogFragment() {
     private val mDescription: String? by lazy {
         this.requireArguments().getString(BUNDLE_KEY_DESCRIPTION)
     }
+    private val mRealEstateId: Long by lazy {
+        this.requireArguments().getLong(BUNDLE_KEY_ID_REAL_ESTATE, 0L)
+    }
 
     private lateinit var mRootView: View
     private var mCallback: WeakReference<DialogListener?>? = null
@@ -49,6 +52,7 @@ class PhotoDialogFragment : DialogFragment() {
         const val BUNDLE_KEY_ID_PHOTO = "BUNDLE_KEY_ID_PHOTO"
         const val BUNDLE_KEY_URL_PHOTO = "BUNDLE_KEY_URL_PHOTO"
         const val BUNDLE_KEY_DESCRIPTION = "BUNDLE_KEY_DESCRIPTION"
+        const val BUNDLE_KEY_ID_REAL_ESTATE = "BUNDLE_KEY_ID_REAL_ESTATE"
 
         /**
          * Gets a new instance of [PhotoDialogFragment]
@@ -56,6 +60,7 @@ class PhotoDialogFragment : DialogFragment() {
          * @param photoId       a [Long] that contains the photo Id value
          * @param urlPhoto      a [String] that corresponds to the path of photo from external storage
          * @param description   a [String] that contains the description of the photo
+         * @param realEstateId  a [Long] that contains the real estate Id value
          * @param mode          a [PhotoDialogMode]
          */
         fun newInstance(
@@ -63,6 +68,7 @@ class PhotoDialogFragment : DialogFragment() {
             photoId: Long = 0L,
             urlPhoto: String? = null,
             description: String? = null,
+            realEstateId: Long = 0L,
             mode: PhotoDialogMode = PhotoDialogMode.ADD
         ): PhotoDialogFragment {
             val dialog = PhotoDialogFragment().apply {
@@ -75,6 +81,7 @@ class PhotoDialogFragment : DialogFragment() {
                 putLong(BUNDLE_KEY_ID_PHOTO, photoId)
                 putString(BUNDLE_KEY_URL_PHOTO, urlPhoto)
                 putString(BUNDLE_KEY_DESCRIPTION, description)
+                putLong(BUNDLE_KEY_ID_REAL_ESTATE, realEstateId)
             }
 
             return dialog
@@ -195,7 +202,8 @@ class PhotoDialogFragment : DialogFragment() {
         val photo = Photo(
             mId = this.mPhotoId,
             mUrlPicture = this.mUrlPhoto,
-            mDescription = this.mRootView.dialog_selected_photo_description.editText!!.text.toString()
+            mDescription = this.mRootView.dialog_selected_photo_description.editText!!.text.toString(),
+            mRealEstateId = this.mRealEstateId
         )
 
         // Callback

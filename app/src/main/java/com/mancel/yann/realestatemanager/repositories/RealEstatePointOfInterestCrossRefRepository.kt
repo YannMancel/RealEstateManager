@@ -14,6 +14,4 @@ interface RealEstatePointOfInterestCrossRefRepository {
     // -- Create --
 
     suspend fun insertCrossRef(crossRef: RealEstatePointOfInterestCrossRef): Long
-
-    suspend fun insertSeveralCrossRef(vararg severalCrossRef: RealEstatePointOfInterestCrossRef): List<Long>
 }
