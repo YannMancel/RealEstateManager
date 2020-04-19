@@ -35,6 +35,7 @@
     <string name="details_no_street">[Street: No data]</string>
     <string name="details_no_city">[City: No data]</string>
     <string name="details_no_country">[Country: No data]</string>
+    <string name="details_impossible">Detail impossible: To choice a real estate</string>
 
     <!-- EditFragment.kt -->
     <string name="edit_no_type">No type</string>

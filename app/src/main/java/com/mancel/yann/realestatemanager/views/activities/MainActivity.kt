@@ -176,24 +176,9 @@ class MainActivity : BaseActivity(), FragmentListener {
      * Configures the fragment navigation
      */
     private fun configureFragmentNavigation() {
-        // AppBarConfiguration (According to the device type)
-        val appBarConfiguration = when (this.mMode) {
-            Mode.PHONE_MODE -> {
-                AppBarConfiguration(
-                    this.mNavController.graph,
-                    this.activity_main_drawer_layout
-                )
-            }
-
-            Mode.TABLET_MODE -> {
-                // Passing each menu ID as a set of Ids because each
-                // menu should be considered as top level destinations.
-                AppBarConfiguration(
-                    setOf(R.id.navigation_detailsFragment),
-                    this.activity_main_drawer_layout
-                )
-            }
-        }
+        // AppBarConfiguration
+        val appBarConfiguration = AppBarConfiguration(this.mNavController.graph,
+                                                      this.activity_main_drawer_layout)
 
         // Toolbar
         this.activity_main_Toolbar.setupWithNavController(this.mNavController,

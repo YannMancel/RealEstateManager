@@ -3,6 +3,7 @@ package com.mancel.yann.realestatemanager.views.fragments
 import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -47,6 +48,9 @@ class DetailsFragment : BaseFragment(), AdapterListener, OnMapReadyCallback {
     override fun getFragmentLayout(): Int = R.layout.fragment_details
 
     override fun configureDesign() {
+        // Argument
+        this.eventWhenArgumentEqualsDefaultValue()
+
         // UI
         this.configurePhotoRecyclerView()
         this.configurePOIsRecyclerView()
@@ -84,6 +88,20 @@ class DetailsFragment : BaseFragment(), AdapterListener, OnMapReadyCallback {
 
         // TOOLBAR
         this.mGoogleMap?.uiSettings?.isMapToolbarEnabled = false
+    }
+
+    // -- Argument --
+
+    /**
+     * Event when argument equals default value (0L)
+     */
+    private fun eventWhenArgumentEqualsDefaultValue() {
+        if (this.mItemId == 0L) {
+            this.mCallback?.showMessage(this.getString(R.string.details_impossible))
+
+            // Finish this fragment
+            this.findNavController().popBackStack()
+        }
     }
 
     // -- RecyclerView --

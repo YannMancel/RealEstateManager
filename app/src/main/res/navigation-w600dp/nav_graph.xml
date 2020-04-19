@@ -8,6 +8,13 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/navigation_creatorFragment">
 
+    <!-- fragment: ListFragment -->
+    <fragment
+        android:id="@+id/navigation_listFragment"
+        android:name="com.mancel.yann.realestatemanager.views.fragments.ListFragment"
+        android:label="@string/navigation_list_name"
+        tools:layout="@layout/fragment_list"/>
+
     <!-- fragment: DetailsFragment -->
     <fragment
         android:id="@+id/navigation_detailsFragment"
