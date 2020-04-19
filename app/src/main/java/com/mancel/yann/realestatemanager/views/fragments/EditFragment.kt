@@ -522,12 +522,6 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
             .observe(
                 this.viewLifecycleOwner,
                 Observer {
-                    if (it.isEmpty()) {
-                        this.mCallback?.showMessage(
-                            this.getString(R.string.no_pois_search)
-                        )
-                    }
-
                     // Sorts the list on its name from A to Z
                     Collections.sort(it, PointOfInterest.AZTitleComparator())
 

@@ -2,6 +2,7 @@ package com.mancel.yann.realestatemanager.liveDatas
 
 import androidx.lifecycle.LiveData
 import com.mancel.yann.realestatemanager.models.Photo
+import timber.log.Timber
 
 /**
  * Created by Yann MANCEL on 23/03/2020.
@@ -40,7 +41,12 @@ class PhotoCreatorLiveData: LiveData<List<Photo>>() {
             }
 
             if (index == -1) {
+                // New photo
                 this.mPhotos.add(photoFromDB)
+            }
+            else {
+                // Update photo
+                this.mPhotos[index] = photoFromDB
             }
         }
 

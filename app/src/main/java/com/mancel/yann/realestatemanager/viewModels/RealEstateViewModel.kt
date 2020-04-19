@@ -333,37 +333,6 @@ class RealEstateViewModel(
         realEstateId: Long
     ) = withContext(Dispatchers.IO) {
         newPhotos?.let { newPhotos ->
-            // INSERT: Photos
-            val photosToInsert = newPhotos.filter { it.mId == 0L }
-
-            if (!photosToInsert.isNullOrEmpty()) {
-                this@RealEstateViewModel.insertPhotosWithRealEstateId(
-                    photosToInsert,
-                    realEstateId
-                )
-            }
-
-            // UPDATE: Photos
-            val photosToUpdate = newPhotos.filter { it.mId != 0L }
-
-            if (!photosToUpdate.isNullOrEmpty()) {
-                photosToUpdate.forEach {
-                    // UPDATE: Photos
-                    val deferred: Deferred<Int> = async(start = CoroutineStart.LAZY) {
-                        try {
-                            this@RealEstateViewModel.mPhotoRepository.updatePhoto(it)
-                        }
-                        catch (e: SQLiteConstraintException) {
-                            // UNIQUE constraint failed
-                            Timber.e("updatePhotos: ${e.message}")
-                            0
-                        }
-                    }
-
-                    // Lazily started async
-                    deferred.start()
-                }
-            }
 
             // DELETE: Photos
             oldPhotos?.let { oldPhotos ->
@@ -391,6 +360,38 @@ class RealEstateViewModel(
                         deferred.start()
                     }
                 }
+            }
+
+            // UPDATE: Photos
+            val photosToUpdate = newPhotos.filter { it.mId != 0L }
+
+            if (!photosToUpdate.isNullOrEmpty()) {
+                photosToUpdate.forEach {
+                    // UPDATE: Photos
+                    val deferred: Deferred<Int> = async(start = CoroutineStart.LAZY) {
+                        try {
+                            this@RealEstateViewModel.mPhotoRepository.updatePhoto(it)
+                        }
+                        catch (e: SQLiteConstraintException) {
+                            // UNIQUE constraint failed
+                            Timber.e("updatePhotos: ${e.message}")
+                            0
+                        }
+                    }
+
+                    // Lazily started async
+                    deferred.start()
+                }
+            }
+
+            // INSERT: Photos
+            val photosToInsert = newPhotos.filter { it.mId == 0L }
+
+            if (!photosToInsert.isNullOrEmpty()) {
+                this@RealEstateViewModel.insertPhotosWithRealEstateId(
+                    photosToInsert,
+                    realEstateId
+                )
             }
         }
     }
