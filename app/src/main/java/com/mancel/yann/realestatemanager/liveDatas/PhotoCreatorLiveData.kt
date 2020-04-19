@@ -53,10 +53,12 @@ class PhotoCreatorLiveData: LiveData<List<Photo>>() {
      * @param photo a [Photo]
      */
     fun addPhoto(photo: Photo) {
+        // Search presence in photos from database
         val newPhoto = this.mAlreadyPresentPhotos.find {
             it.mUrlPicture == photo.mUrlPicture
         } ?: photo
 
+        // Particular case: Photo from database -> removed then added again
         if (newPhoto.mId != 0L) {
             newPhoto.mDescription = photo.mDescription
         }

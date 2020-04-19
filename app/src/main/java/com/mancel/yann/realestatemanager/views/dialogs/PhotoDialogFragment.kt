@@ -29,8 +29,15 @@ class PhotoDialogFragment : DialogFragment() {
 
     // FIELDS --------------------------------------------------------------------------------------
 
-    private val mUrlPhoto: String? by lazy { this.requireArguments().getString(BUNDLE_KEY_URL_PHOTO) }
-    private val mDescription: String? by lazy { this.requireArguments().getString(BUNDLE_KEY_DESCRIPTION) }
+    private val mPhotoId: Long by lazy {
+        this.requireArguments().getLong(BUNDLE_KEY_ID_PHOTO, 0L)
+    }
+    private val mUrlPhoto: String? by lazy {
+        this.requireArguments().getString(BUNDLE_KEY_URL_PHOTO)
+    }
+    private val mDescription: String? by lazy {
+        this.requireArguments().getString(BUNDLE_KEY_DESCRIPTION)
+    }
 
     private lateinit var mRootView: View
     private var mCallback: WeakReference<DialogListener?>? = null
@@ -39,18 +46,21 @@ class PhotoDialogFragment : DialogFragment() {
 
     companion object {
 
+        const val BUNDLE_KEY_ID_PHOTO = "BUNDLE_KEY_ID_PHOTO"
         const val BUNDLE_KEY_URL_PHOTO = "BUNDLE_KEY_URL_PHOTO"
         const val BUNDLE_KEY_DESCRIPTION = "BUNDLE_KEY_DESCRIPTION"
 
         /**
          * Gets a new instance of [PhotoDialogFragment]
          * @param callback      a [DialogListener]
+         * @param photoId       a [Long] that contains the photo Id value
          * @param urlPhoto      a [String] that corresponds to the path of photo from external storage
          * @param description   a [String] that contains the description of the photo
          * @param mode          a [PhotoDialogMode]
          */
         fun newInstance(
             callback: DialogListener,
+            photoId: Long = 0L,
             urlPhoto: String? = null,
             description: String? = null,
             mode: PhotoDialogMode = PhotoDialogMode.ADD
@@ -62,6 +72,7 @@ class PhotoDialogFragment : DialogFragment() {
 
             // Bundle into Argument of Fragment
             dialog.arguments = Bundle().apply {
+                putLong(BUNDLE_KEY_ID_PHOTO, photoId)
                 putString(BUNDLE_KEY_URL_PHOTO, urlPhoto)
                 putString(BUNDLE_KEY_DESCRIPTION, description)
             }
@@ -182,6 +193,7 @@ class PhotoDialogFragment : DialogFragment() {
 
         // Photo
         val photo = Photo(
+            mId = this.mPhotoId,
             mUrlPicture = this.mUrlPhoto,
             mDescription = this.mRootView.dialog_selected_photo_description.editText!!.text.toString()
         )

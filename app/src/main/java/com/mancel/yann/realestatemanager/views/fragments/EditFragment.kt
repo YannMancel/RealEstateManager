@@ -147,6 +147,7 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
             R.id.item_photo_edit_media -> {
                 PhotoDialogFragment.newInstance(
                                         callback = this@EditFragment,
+                                        photoId = (v.tag as Photo).mId,
                                         urlPhoto = (v.tag as Photo).mUrlPicture,
                                         description = (v.tag as Photo).mDescription,
                                         mode = PhotoDialogFragment.PhotoDialogMode.UPDATE
@@ -777,8 +778,6 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
 
                 if ((!isAlreadyPresentIntoDatabase && !isAlreadyPresentIntoCreator && !isAlreadyPresentIntoCurrentPhotos) ||
                     (isAlreadyPresentIntoDatabase && !isAlreadyPresentIntoCreator && isAlreadyPresentIntoCurrentPhotos) ) {
-
-                    // todo: 15/02/2020 - If case n°2 (Database=True, Creator=False, Current=True), fetch photo with id !=0L
 
                     PhotoDialogFragment.newInstance(
                                             callback = this@EditFragment,
