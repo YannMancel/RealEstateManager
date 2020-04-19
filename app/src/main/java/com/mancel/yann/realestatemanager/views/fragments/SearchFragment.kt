@@ -11,6 +11,7 @@ import com.mancel.yann.realestatemanager.models.RealEstateWithPhotos
 import com.mancel.yann.realestatemanager.views.adapters.AdapterListener
 import com.mancel.yann.realestatemanager.views.adapters.RealEstateAdapter
 import kotlinx.android.synthetic.main.fragment_search.view.*
+import timber.log.Timber
 
 /**
  * Created by Yann MANCEL on 18/04/2020.
@@ -36,6 +37,7 @@ class SearchFragment : BaseFragment(), AdapterListener {
     override fun configureDesign() {
         // UI
         this.configureRecyclerView()
+        this.configureListenerOfEachComponent()
 
         // LiveData
         this.configureRealEstateLiveData()
@@ -91,6 +93,18 @@ class SearchFragment : BaseFragment(), AdapterListener {
         }
     }
 
+    // -- Listener of components --
+
+    /**
+     * Configures the listener of Each component
+     */
+    private fun configureListenerOfEachComponent() {
+        // FAB
+        this.mRootView.fragment_search_fab.setOnClickListener {
+            this.actionToSearchRealEstates()
+        }
+    }
+
     // -- LiveData --
 
     /**
@@ -104,8 +118,25 @@ class SearchFragment : BaseFragment(), AdapterListener {
                 this.viewLifecycleOwner,
                 Observer {
                     this.mAllDataFromDatabase = it
-                    this.mAdapter.updateData(it)
+                    this.configureUI(it)
                 }
             )
+    }
+
+    // -- Search Real Estate --
+
+    private fun actionToSearchRealEstates() {
+        Timber.d("SEARCH")
+    }
+
+    // -- UI --
+
+    /**
+     * Configures UI
+     * @param realEstatesWithPhotos a [List] of [RealEstateWithPhotos]
+     */
+    private fun configureUI(realEstatesWithPhotos: List<RealEstateWithPhotos>) {
+        Timber.d("UI")
+        this.mAdapter.updateData(realEstatesWithPhotos)
     }
 }

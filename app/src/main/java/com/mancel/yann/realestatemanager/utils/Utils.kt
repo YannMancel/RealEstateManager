@@ -1,6 +1,9 @@
 package com.mancel.yann.realestatemanager.utils
 
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.net.wifi.WifiManager
 import java.text.SimpleDateFormat
 import java.util.*
@@ -56,6 +59,7 @@ import kotlin.math.roundToInt
      * @return a [Boolean] that returns true is there is a network connection
      */
     fun isInternetAvailable(context: Context): Boolean {
-        val wifi = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        val wifi = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+
         return wifi.isWifiEnabled
     }

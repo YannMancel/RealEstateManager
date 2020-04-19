@@ -1,6 +1,7 @@
 package com.mancel.yann.realestatemanager.views.activities
 
 import android.content.Intent
+import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -41,6 +42,10 @@ class MainActivity : BaseActivity(), FragmentListener {
     }
 
     private var mItemId: Long = 0L
+
+    companion object {
+        const val BUNDLE_ITEM_ID = "BUNDLE_ITEM_ID"
+    }
 
     // METHODS -------------------------------------------------------------------------------------
 
@@ -103,6 +108,24 @@ class MainActivity : BaseActivity(), FragmentListener {
             .childFragmentManager
             .fragments[0]
             .onActivityResult(requestCode, resultCode, data)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        // Save item id for EditFragment
+        outState.putLong(BUNDLE_ITEM_ID, this.mItemId)
+
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        // Always call the superclass so it can restore the view hierarchy
+        super.onRestoreInstanceState(savedInstanceState)
+
+        // Restores item id for EditFragment
+        savedInstanceState?.let {
+            this.mItemId = it.getLong(BUNDLE_ITEM_ID, 0L)
+        }
     }
 
     // -- FragmentListener interface --
@@ -223,7 +246,8 @@ class MainActivity : BaseActivity(), FragmentListener {
                 searchItem.isVisible = false
             }
 
-            R.id.navigation_locationFragment -> {
+            R.id.navigation_locationFragment,
+            R.id.navigation_searchFragment -> {
                 addItem.isVisible = false
                 editItem.isVisible = false
                 searchItem.isVisible = false
@@ -258,7 +282,8 @@ class MainActivity : BaseActivity(), FragmentListener {
                 searchItem.isVisible = true
             }
 
-            R.id.navigation_locationFragment -> {
+            R.id.navigation_locationFragment,
+            R.id.navigation_searchFragment -> {
                 editItem.isVisible = false
                 searchItem.isVisible = false
             }
