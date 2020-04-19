@@ -7,19 +7,21 @@
     xmlns:tools="http://schemas.android.com/tools"
 
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/design_default_color_error"
+    android:layout_height="wrap_content"
     tools:context=".views.dialogs.SettingsDialogFragment">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/details_button"
-        android:layout_width="wrap_content"
+    <!-- SwitchMaterial: On/Off -->
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/dialog_fragment_settings_switch"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="SETTINGS DIALOG"
-        android:textSize="30sp"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        android:padding="@dimen/padding_normal"
+        android:text="@string/notification_channel_name"
+        tools:checked="true"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

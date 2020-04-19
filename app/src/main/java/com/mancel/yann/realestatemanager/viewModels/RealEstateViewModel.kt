@@ -10,6 +10,8 @@ import com.mancel.yann.realestatemanager.liveDatas.PhotoCreatorLiveData
 import com.mancel.yann.realestatemanager.models.*
 import com.mancel.yann.realestatemanager.notifications.RealEstateNotification
 import com.mancel.yann.realestatemanager.repositories.*
+import com.mancel.yann.realestatemanager.utils.SaveTools
+import com.mancel.yann.realestatemanager.views.dialogs.SettingsDialogFragment
 import kotlinx.coroutines.*
 import timber.log.Timber
 
@@ -158,14 +160,22 @@ class RealEstateViewModel(
             // Fetch the new rowId for the inserted item
             realEstateId = this@RealEstateViewModel.mRealEstateRepository.insertRealEstate(realEstate)
 
-            // NOTIFICATION
-            RealEstateNotification.sendVisualNotification(
+            // From SharedPreferences
+            val isEnableNotification = SaveTools.fetchBooleanFromSharedPreferences(
                 context,
-                context.getString(
-                    R.string.notification_message,
-                    realEstate.mType, realEstate.mPrice
-                )
+                SettingsDialogFragment.BUNDLE_SWITCH_NOTIFICATION
             )
+
+            // NOTIFICATION
+            if (isEnableNotification) {
+                RealEstateNotification.sendVisualNotification(
+                    context,
+                    context.getString(
+                        R.string.notification_message,
+                        realEstate.mType, realEstate.mPrice
+                    )
+                )
+            }
         }
         catch (e: SQLiteConstraintException) {
             // UNIQUE constraint failed
