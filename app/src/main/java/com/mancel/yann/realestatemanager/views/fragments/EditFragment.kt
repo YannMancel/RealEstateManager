@@ -636,7 +636,7 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
                     effectiveDate.clear()
 
                     val date = realEstate.mEffectiveDate?.run {
-                        val dateFormat = SimpleDateFormat("dd/MM/yyyy")
+                        val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
                         dateFormat.format(this)
                     } ?: "00/00/0000"
 
@@ -934,7 +934,7 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
                         mNumberOfRoom = this.mRootView.fragment_edit_number_of_room.editText?.text?.toString()?.toInt(),
                         mDescription = this.mRootView.fragment_edit_description.editText?.text?.toString(),
                         mIsEnable = this.mRootView.fragment_edit_enable.isChecked,
-                        mEffectiveDate = SimpleDateFormat("dd/MM/yyyy").parse(this.mRootView.fragment_edit_effective_date.editText?.text?.toString()),
+                        mEffectiveDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).parse(this.mRootView.fragment_edit_effective_date.editText?.text?.toString()),
                         mSaleDate = null,
                         mEstateAgentId = 1L,
                         mAddress = Address(

@@ -20,8 +20,8 @@ android {
         // Enable use of 64K or more method references
         multiDexEnabled true
 
-        // API Keys
-        resValue "string", "google_maps_key", (project.findProperty("GOOGLE_MAPS_API_KEY") ?: "")
+        // API Keys in GRADLE_USER_HOME directory
+        resValue "string", "google_maps_key", (project.findProperty("GOOGLE_MAPS_API_KEY___REAL_ESTATE_MANAGER") ?: "")
     }
     buildTypes {
         release {

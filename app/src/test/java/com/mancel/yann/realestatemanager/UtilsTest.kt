@@ -1,14 +1,13 @@
 package com.mancel.yann.realestatemanager
 
-import com.mancel.yann.realestatemanager.utils.convertDollarToEuro
-import com.mancel.yann.realestatemanager.utils.convertEuroToDollar
-import com.mancel.yann.realestatemanager.utils.getTodayDateDDMMYYYY
-import com.mancel.yann.realestatemanager.utils.getTodayDateYYYYMMDD
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
+import com.mancel.yann.realestatemanager.utils.*
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
-import org.junit.Assert.assertEquals
+import org.junit.Assert.*
 import org.junit.Test
-import java.text.SimpleDateFormat
 import java.util.*
 
 /**
@@ -93,24 +92,40 @@ class UtilsTest {
     // -- Mockito --
 
     @Test
-    fun getTodayDateYYYYMMDD_mockito_should_be_success() {
-        // BEFORE: Mock of SimpleDateFormat
-        mock<SimpleDateFormat> {
-            on { format(Date()) } doReturn "2020/03/04"
+    fun isInternetAvailable_shouldBeSuccess() {
+        // BEFORE: Mocks
+        val mockNetworkInfo = mock<NetworkInfo> {
+            on { isConnected } doReturn true
         }
 
-        // TEST: Good format
-        assertEquals("2020/03/04", getTodayDateYYYYMMDD())
+        val mockConnectivityManager = mock<ConnectivityManager> {
+            on { activeNetworkInfo } doReturn mockNetworkInfo
+        }
+
+        val mockContext = mock<Context> {
+            on { applicationContext } doReturn this.mock
+            on { getSystemService(Context.CONNECTIVITY_SERVICE) } doReturn mockConnectivityManager
+        }
+
+        assertTrue(isInternetAvailable(mockContext))
     }
 
     @Test
-    fun getTodayDateDDMMYYYY_mockito_should_be_success() {
-        // BEFORE: Mock of SimpleDateFormat
-        mock<SimpleDateFormat> {
-            on { format(Date()) } doReturn "04/03/2020"
+    fun isInternetAvailable_shouldBeFail() {
+        // BEFORE: Mocks
+        val mockNetworkInfo = mock<NetworkInfo> {
+            on { isConnected } doReturn false
         }
 
-        // TEST: Good format
-        assertEquals("04/03/2020", getTodayDateDDMMYYYY())
+        val mockConnectivityManager = mock<ConnectivityManager> {
+            on { activeNetworkInfo } doReturn mockNetworkInfo
+        }
+
+        val mockContext = mock<Context> {
+            on { applicationContext } doReturn this.mock
+            on { getSystemService(Context.CONNECTIVITY_SERVICE) } doReturn mockConnectivityManager
+        }
+
+        assertFalse(isInternetAvailable(mockContext))
     }
 }

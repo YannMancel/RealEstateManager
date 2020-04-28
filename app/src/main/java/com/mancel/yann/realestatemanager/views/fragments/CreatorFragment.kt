@@ -829,7 +829,7 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
                         mNumberOfRoom = this.mRootView.fragment_creator_number_of_room.editText?.text?.toString()?.toInt(),
                         mDescription = this.mRootView.fragment_creator_description.editText?.text?.toString(),
                         mIsEnable = this.mRootView.fragment_creator_enable.isChecked,
-                        mEffectiveDate = SimpleDateFormat("dd/MM/yyyy").parse(this.mRootView.fragment_creator_effective_date.editText?.text?.toString()),
+                        mEffectiveDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).parse(this.mRootView.fragment_creator_effective_date.editText?.text?.toString()),
                         mSaleDate = null,
                         mEstateAgentId = 1L,
                         mAddress = Address(

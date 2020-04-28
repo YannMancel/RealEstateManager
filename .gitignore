@@ -22,9 +22,3 @@
 # Replacement of .externalNativeBuild directories introduced
 # with Android Studio 3.5.
 .cxx
-
-# API Keys
-/gradle.properties
-
-# Firebase file
-# /app/google-services.json
