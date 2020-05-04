@@ -30,25 +30,42 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/guideline_horizontal"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintEnd_toEndOf="parent"
+            android:scrollbars="vertical">
 
             <!-- ConstraintLayout -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <!-- TextView: Title price min -->
-                <TextView
-                    android:id="@+id/title_min_price"
-                    android:layout_width="0dp"
+                <!-- MaterialCheckBox: Check price min -->
+                <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/fragment_search_checkbox_min_price"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_normal"
-                    android:layout_marginStart="@dimen/margin_normal"
-                    android:layout_marginEnd="@dimen/margin_normal"
-                    android:text="@string/select_price_min"
+                    android:layout_margin="@dimen/margin_normal"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
+                    android:checked="true"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp"
+                    android:background="@android:color/white"
+                    android:text="@string/select_price_min"
+                    style="@style/Widget.MaterialComponents.CompoundButton.CheckBox"/>
+
+                <!-- TextView: Price min -->
+                <TextView
+                    android:id="@+id/fragment_search_min_price"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_normal"
+                    android:layout_marginEnd="@dimen/margin_normal"
+                    app:layout_constraintTop_toTopOf="@id/fragment_search_checkbox_min_price"
+                    app:layout_constraintBottom_toBottomOf="@id/fragment_search_checkbox_min_price"
+                    app:layout_constraintStart_toEndOf="@id/fragment_search_checkbox_min_price"
                     app:layout_constraintEnd_toEndOf="parent"
+                    tools:text="0.0 \$"
+                    android:textAlignment="textEnd"
                     style="@style/TextViewStyle1"/>
 
                 <!-- SeekBar: Price min -->
@@ -59,24 +76,38 @@
                     android:layout_marginTop="@dimen/margin_little"
                     android:layout_marginStart="@dimen/margin_normal"
                     android:layout_marginEnd="@dimen/margin_normal"
-                    app:layout_constraintTop_toBottomOf="@+id/title_min_price"
+                    app:layout_constraintTop_toBottomOf="@+id/fragment_search_checkbox_min_price"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:max="10000000"
-                    android:progress="1"/>
+                    app:layout_constraintEnd_toEndOf="parent"/>
 
-                <!-- TextView: Title price max -->
+                <!-- MaterialCheckBox: Check price max -->
+                <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/fragment_search_checkbox_max_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_normal"
+                    app:layout_constraintTop_toBottomOf="@id/fragment_search_seekBar_price_min"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:checked="true"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp"
+                    android:background="@android:color/white"
+                    android:text="@string/select_price_max"
+                    style="@style/Widget.MaterialComponents.CompoundButton.CheckBox"/>
+
+                <!-- TextView: Price max -->
                 <TextView
-                    android:id="@+id/title_max_price"
+                    android:id="@+id/fragment_search_max_price"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_normal"
                     android:layout_marginStart="@dimen/margin_normal"
                     android:layout_marginEnd="@dimen/margin_normal"
-                    app:layout_constraintTop_toBottomOf="@+id/fragment_search_seekBar_price_min"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/fragment_search_checkbox_max_price"
+                    app:layout_constraintBottom_toBottomOf="@id/fragment_search_checkbox_max_price"
+                    app:layout_constraintStart_toEndOf="@id/fragment_search_checkbox_max_price"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:text="@string/select_price_max"
+                    tools:text="100 000 000.0 \$"
+                    android:textAlignment="textEnd"
                     style="@style/TextViewStyle1"/>
 
                 <!-- SeekBar: Price max -->
@@ -87,24 +118,38 @@
                     android:layout_marginTop="@dimen/margin_little"
                     android:layout_marginStart="@dimen/margin_normal"
                     android:layout_marginEnd="@dimen/margin_normal"
-                    app:layout_constraintTop_toBottomOf="@+id/title_max_price"
+                    app:layout_constraintTop_toBottomOf="@+id/fragment_search_checkbox_max_price"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:max="10000000"
-                    android:progress="1"/>
+                    app:layout_constraintEnd_toEndOf="parent"/>
 
-                <!-- TextView: Title surface min -->
+                <!-- MaterialCheckBox: Check surface min -->
+                <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/fragment_search_checkbox_min_surface"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_normal"
+                    app:layout_constraintTop_toBottomOf="@id/fragment_search_seekBar_price_max"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:checked="true"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp"
+                    android:background="@android:color/white"
+                    android:text="@string/select_min_surface"
+                    style="@style/Widget.MaterialComponents.CompoundButton.CheckBox"/>
+
+                <!-- TextView: Surface min -->
                 <TextView
-                    android:id="@+id/title_min_surface"
+                    android:id="@+id/fragment_search_min_surface"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_normal"
                     android:layout_marginStart="@dimen/margin_normal"
                     android:layout_marginEnd="@dimen/margin_normal"
-                    app:layout_constraintTop_toBottomOf="@+id/fragment_search_seekBar_price_max"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/fragment_search_checkbox_min_surface"
+                    app:layout_constraintBottom_toBottomOf="@id/fragment_search_checkbox_min_surface"
+                    app:layout_constraintStart_toEndOf="@id/fragment_search_checkbox_min_surface"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:text="@string/select_min_surface"
+                    tools:text="0.0 m2"
+                    android:textAlignment="textEnd"
                     style="@style/TextViewStyle1"/>
 
                 <!-- SeekBar: Surface min -->
@@ -115,24 +160,38 @@
                     android:layout_marginTop="@dimen/margin_little"
                     android:layout_marginStart="@dimen/margin_normal"
                     android:layout_marginEnd="@dimen/margin_normal"
-                    app:layout_constraintTop_toBottomOf="@+id/title_min_surface"
+                    app:layout_constraintTop_toBottomOf="@+id/fragment_search_checkbox_min_surface"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:max="10000000"
-                    android:progress="1"/>
+                    app:layout_constraintEnd_toEndOf="parent"/>
 
-                <!-- TextView: Title surface max -->
+                <!-- MaterialCheckBox: Check surface max -->
+                <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/fragment_search_checkbox_max_surface"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_normal"
+                    app:layout_constraintTop_toBottomOf="@id/fragment_search_seekBar_min_surface"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:checked="true"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp"
+                    android:background="@android:color/white"
+                    android:text="@string/select_max_surface"
+                    style="@style/Widget.MaterialComponents.CompoundButton.CheckBox"/>
+
+                <!-- TextView: Surface max -->
                 <TextView
-                    android:id="@+id/title_max_surface"
+                    android:id="@+id/fragment_search_max_surface"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_normal"
                     android:layout_marginStart="@dimen/margin_normal"
                     android:layout_marginEnd="@dimen/margin_normal"
-                    app:layout_constraintTop_toBottomOf="@+id/fragment_search_seekBar_min_surface"
+                    app:layout_constraintTop_toTopOf="@id/fragment_search_checkbox_max_surface"
+                    app:layout_constraintBottom_toBottomOf="@id/fragment_search_checkbox_max_surface"
+                    app:layout_constraintStart_toEndOf="@id/fragment_search_checkbox_max_surface"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    android:text="@string/select_max_surface"
+                    tools:text="1 000.0 m2"
+                    android:textAlignment="textEnd"
                     style="@style/TextViewStyle1"/>
 
                 <!-- SeekBar: Surface max -->
@@ -144,12 +203,95 @@
                     android:layout_marginBottom="@dimen/margin_normal"
                     android:layout_marginStart="@dimen/margin_normal"
                     android:layout_marginEnd="@dimen/margin_normal"
-                    app:layout_constraintTop_toBottomOf="@+id/title_max_surface"
+                    app:layout_constraintTop_toBottomOf="@+id/fragment_search_checkbox_max_surface"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <!-- MaterialCheckBox: Check room min -->
+                <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/fragment_search_checkbox_min_room"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_normal"
+                    app:layout_constraintTop_toBottomOf="@id/fragment_search_seekBar_max_surface"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:checked="true"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp"
+                    android:background="@android:color/white"
+                    android:text="@string/select_min_room"
+                    style="@style/Widget.MaterialComponents.CompoundButton.CheckBox"/>
+
+                <!-- TextView: Room min -->
+                <TextView
+                    android:id="@+id/fragment_search_min_room"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_normal"
+                    android:layout_marginEnd="@dimen/margin_normal"
+                    app:layout_constraintTop_toTopOf="@id/fragment_search_checkbox_min_room"
+                    app:layout_constraintBottom_toBottomOf="@id/fragment_search_checkbox_min_room"
+                    app:layout_constraintStart_toEndOf="@id/fragment_search_checkbox_min_room"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    tools:text="0"
+                    android:textAlignment="textEnd"
+                    style="@style/TextViewStyle1"/>
+
+                <!-- SeekBar: Room min -->
+                <SeekBar
+                    android:id="@+id/fragment_search_seekBar_min_room"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_little"
+                    android:layout_marginStart="@dimen/margin_normal"
+                    android:layout_marginEnd="@dimen/margin_normal"
+                    app:layout_constraintTop_toBottomOf="@+id/fragment_search_checkbox_min_room"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <!-- MaterialCheckBox: Check room max -->
+                <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/fragment_search_checkbox_max_room"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_normal"
+                    app:layout_constraintTop_toBottomOf="@id/fragment_search_seekBar_min_room"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:checked="true"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp"
+                    android:background="@android:color/white"
+                    android:text="@string/select_max_room"
+                    style="@style/Widget.MaterialComponents.CompoundButton.CheckBox"/>
+
+                <!-- TextView: Room max -->
+                <TextView
+                    android:id="@+id/fragment_search_max_room"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_normal"
+                    android:layout_marginEnd="@dimen/margin_normal"
+                    app:layout_constraintTop_toTopOf="@id/fragment_search_checkbox_max_room"
+                    app:layout_constraintBottom_toBottomOf="@id/fragment_search_checkbox_max_room"
+                    app:layout_constraintStart_toEndOf="@id/fragment_search_checkbox_max_room"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    tools:text="100"
+                    android:textAlignment="textEnd"
+                    style="@style/TextViewStyle1"/>
+
+                <!-- SeekBar: Room max -->
+                <SeekBar
+                    android:id="@+id/fragment_search_seekBar_max_room"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_little"
+                    android:layout_marginBottom="@dimen/margin_normal"
+                    android:layout_marginStart="@dimen/margin_normal"
+                    android:layout_marginEnd="@dimen/margin_normal"
+                    app:layout_constraintTop_toBottomOf="@+id/fragment_search_checkbox_max_room"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:max="10000000"
-                    android:progress="1"/>
+                    app:layout_constraintEnd_toEndOf="parent"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -171,6 +313,7 @@
             android:id="@+id/fragment_search_RecyclerView"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginTop="@dimen/margin_little"
             app:layout_constraintTop_toTopOf="@+id/divider"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"

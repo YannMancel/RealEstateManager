@@ -2,6 +2,7 @@ package com.mancel.yann.realestatemanager.viewModels
 
 import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -42,7 +43,7 @@ class RealEstateViewModel(
     private var mRealEstatesWithPhotos: LiveData<List<RealEstateWithPhotos>>? = null
     private var mRealEstateWithPhotos: LiveData<RealEstateWithPhotos>? = null
     private var mRealEstateWithPointsOfInterest: LiveData<RealEstateWithPointsOfInterest>? = null
-    private var mRealEstatesWithPhotosByMultiSearch: LiveData<List<RealEstateWithPhotos>>? = null
+    private var mMultiSearch: LiveData<List<RealEstateWithPhotos>>? = null
 
     private var mPhotos: LiveData<List<Photo>>? = null
     private var mPhotoCreator: PhotoCreatorLiveData? = null
@@ -156,8 +157,8 @@ class RealEstateViewModel(
         minNumberRoom: Int = 0,
         maxNumberRoom: Int = Int.MAX_VALUE
     ): LiveData<List<RealEstateWithPhotos>> {
-        if (this.mRealEstatesWithPhotosByMultiSearch == null) {
-            this.mRealEstatesWithPhotosByMultiSearch = this.mRealEstateRepository.getRealEstatesWithPhotosByMultiSearch(
+        if (this.mMultiSearch == null) {
+            this.mMultiSearch = this.mRealEstateRepository.getRealEstatesWithPhotosByMultiSearch(
                 minPrice,
                 maxPrice,
                 minSurface,
@@ -166,7 +167,22 @@ class RealEstateViewModel(
                 maxNumberRoom
             )
         }
-        return this.mRealEstatesWithPhotosByMultiSearch!!
+        return this.mMultiSearch!!
+    }
+
+    /**
+     * Removes all observers of this [LiveData]
+     * @param owner a [LifecycleOwner]
+     */
+    fun removeObserversOfMultiSearch(owner: LifecycleOwner) {
+        this.mMultiSearch?.removeObservers(owner)
+    }
+
+    /**
+     * Reset of this [LiveData]
+     */
+    fun resetMultiSearch() {
+        this.mMultiSearch = null
     }
 
     /**
