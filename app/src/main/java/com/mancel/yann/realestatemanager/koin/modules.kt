@@ -25,7 +25,7 @@ val appModule = module {
     single { get<AppDatabase>().realEstatePointOfInterestCrossRefDAO() }
 
     // Repository
-    single<PlaceRepository> { PlaceRepositoryImpl() }
+    single<PlaceRepository> { GoogleMapsRepository() }
     single<UserRepository> { UserRepositoryImpl(get()) }
     single<RealEstateRepository> { RealEstateRepositoryImpl(get()) }
     single<PhotoRepository> { PhotoRepositoryImpl(get()) }

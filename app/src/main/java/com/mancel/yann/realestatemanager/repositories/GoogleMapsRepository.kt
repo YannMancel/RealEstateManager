@@ -3,7 +3,7 @@ package com.mancel.yann.realestatemanager.repositories
 import com.mancel.yann.realestatemanager.api.GoogleMapsService
 import com.mancel.yann.realestatemanager.models.PointOfInterest
 import com.mancel.yann.realestatemanager.utils.MapperTools
-import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit
  * Name of the project: RealEstateManager
  * Name of the package: com.mancel.yann.realestatemanager.repositories
  */
-class PlaceRepositoryImpl : PlaceRepository {
+class GoogleMapsRepository : PlaceRepository {
 
     // FIELDS --------------------------------------------------------------------------------------
 
@@ -27,7 +27,7 @@ class PlaceRepositoryImpl : PlaceRepository {
         radius: Double,
         types: String,
         key: String
-    ): Observable<List<PointOfInterest>> {
+    ): Single<List<PointOfInterest>> {
         return this.mGoogleMapsService
                    .getNearbySearch(location, radius, types, key)
                    .map { MapperTools.nearbySearchToPointsOfInterest(it) }

@@ -1,7 +1,7 @@
 package com.mancel.yann.realestatemanager.api
 
 import com.mancel.yann.realestatemanager.models.NearbySearch
-import io.reactivex.Observable
+import io.reactivex.Single
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -49,7 +49,7 @@ interface GoogleMapsService {
      * @param radius   a [Double] that defines the distance (in meters) within which to return place results
      * @param types    a [String] that restricts the results to places matching the specified type
      * @param key      a [String] that contains your application's API key
-     * @return an [Observable] of [NearbySearch]
+     * @return a [Single] of [NearbySearch]
      */
     @GET("place/nearbysearch/json?")
     fun getNearbySearch(
@@ -57,5 +57,5 @@ interface GoogleMapsService {
         @Query("radius") radius: Double,
         @Query("types") types: String,
         @Query("key") key: String
-    ): Observable<NearbySearch>
+    ): Single<NearbySearch>
 }

@@ -2,7 +2,9 @@ package com.mancel.yann.realestatemanager.viewModels
 
 import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.mancel.yann.realestatemanager.R
 import com.mancel.yann.realestatemanager.liveDatas.LocationLiveData
 import com.mancel.yann.realestatemanager.liveDatas.POIsSearchLiveData
@@ -452,8 +454,8 @@ class RealEstateViewModel(
         radius: Double,
         types: String
     ) {
-        // Observable
-        val observable = this.mPlaceRepository.getStreamToFetchPointsOfInterest(
+        // Single
+        val single = this.mPlaceRepository.getStreamToFetchPointsOfInterest(
             location = "$latitude,$longitude",
             radius = radius,
             types = types,
@@ -461,7 +463,7 @@ class RealEstateViewModel(
         )
 
         // Updates LiveData
-        this.mPOIsSearch?.getPOIsSearchWithObservable(observable)
+        this.mPOIsSearch?.getPOIsSearchWithSingle(single)
     }
 
     /**

@@ -2,9 +2,9 @@ package com.mancel.yann.realestatemanager.liveDatas
 
 import androidx.lifecycle.LiveData
 import com.mancel.yann.realestatemanager.models.PointOfInterest
-import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.disposables.Disposable
-import io.reactivex.observers.DisposableObserver
+import io.reactivex.observers.DisposableSingleObserver
 import timber.log.Timber
 
 /**
@@ -40,14 +40,14 @@ class POIsSearchLiveData : LiveData<List<PointOfInterest>>() {
     // -- Points of interest --
 
     /**
-     * Gets the POIs with an [Observable]
-     * @param observable an [Observable] of [List] of [PointOfInterest]
+     * Gets the POIs with an [Single]
+     * @param single a [Single] of [List] of [PointOfInterest]
      */
-    fun getPOIsSearchWithObservable(observable: Observable<List<PointOfInterest>>) {
+    fun getPOIsSearchWithSingle(single: Single<List<PointOfInterest>>) {
         // Creates stream
-        this.mDisposable = observable.subscribeWith(object : DisposableObserver<List<PointOfInterest>>() {
+        this.mDisposable = single.subscribeWith(object : DisposableSingleObserver<List<PointOfInterest>>() {
 
-            override fun onNext(result: List<PointOfInterest>) {
+            override fun onSuccess(result: List<PointOfInterest>) {
                 with(this@POIsSearchLiveData.mPOIs) {
                     clear()
                     addAll(result)
@@ -79,8 +79,6 @@ class POIsSearchLiveData : LiveData<List<PointOfInterest>>() {
             override fun onError(e: Throwable) {
                 Timber.e("onError: ${e.message}")
             }
-
-            override fun onComplete() { /* Do nothing */ }
         })
     }
 
