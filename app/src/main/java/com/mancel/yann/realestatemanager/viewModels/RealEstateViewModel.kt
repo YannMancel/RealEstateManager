@@ -42,6 +42,7 @@ class RealEstateViewModel(
     private var mRealEstatesWithPhotos: LiveData<List<RealEstateWithPhotos>>? = null
     private var mRealEstateWithPhotos: LiveData<RealEstateWithPhotos>? = null
     private var mRealEstateWithPointsOfInterest: LiveData<RealEstateWithPointsOfInterest>? = null
+    private var mRealEstatesWithPhotosByMultiSearch: LiveData<List<RealEstateWithPhotos>>? = null
 
     private var mPhotos: LiveData<List<Photo>>? = null
     private var mPhotoCreator: PhotoCreatorLiveData? = null
@@ -140,6 +141,32 @@ class RealEstateViewModel(
                 this.mRealEstateRepository.getRealEstateWithPointsOfInterestById(realEstateId)
         }
         return this.mRealEstateWithPointsOfInterest!!
+    }
+
+    /**
+     * Gets all [RealEstateWithPhotos] by multi search
+     * @param realEstateId a [Long] that contains the real estate Id
+     * @return a [LiveData] of [RealEstateWithPhotos]
+     */
+    fun getRealEstatesWithPhotosByMultiSearch(
+        minPrice: Double = 0.0,
+        maxPrice: Double = Double.MAX_VALUE,
+        minSurface: Double = 0.0,
+        maxSurface: Double = Double.MAX_VALUE,
+        minNumberRoom: Int = 0,
+        maxNumberRoom: Int = Int.MAX_VALUE
+    ): LiveData<List<RealEstateWithPhotos>> {
+        if (this.mRealEstatesWithPhotosByMultiSearch == null) {
+            this.mRealEstatesWithPhotosByMultiSearch = this.mRealEstateRepository.getRealEstatesWithPhotosByMultiSearch(
+                minPrice,
+                maxPrice,
+                minSurface,
+                maxSurface,
+                minNumberRoom,
+                maxNumberRoom
+            )
+        }
+        return this.mRealEstatesWithPhotosByMultiSearch!!
     }
 
     /**

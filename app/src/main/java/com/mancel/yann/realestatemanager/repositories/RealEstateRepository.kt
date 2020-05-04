@@ -28,6 +28,15 @@ interface RealEstateRepository {
         realEstateId: Long
     ): LiveData<RealEstateWithPointsOfInterest>
 
+    fun getRealEstatesWithPhotosByMultiSearch(
+        minPrice: Double = 0.0,
+        maxPrice: Double = Double.MAX_VALUE,
+        minSurface: Double = 0.0,
+        maxSurface: Double = Double.MAX_VALUE,
+        minNumberRoom: Int = 0,
+        maxNumberRoom: Int = Int.MAX_VALUE
+    ): LiveData<List<RealEstateWithPhotos>>
+
     // -- Update --
 
     suspend fun updateRealEstate(realEstate: RealEstate): Int

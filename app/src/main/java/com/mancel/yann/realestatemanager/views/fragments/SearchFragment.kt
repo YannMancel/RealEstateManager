@@ -111,9 +111,8 @@ class SearchFragment : BaseFragment(), AdapterListener {
      * Configures the LiveData thanks to a simple format
      */
     private fun configureRealEstateLiveData() {
-        // todo - 18/04/2020 - Next feature: Fetch all real estates of all users
         this.mViewModel
-            .getRealEstatesWithPhotosByUserId(userId = 1L)
+            .getRealEstatesWithPhotosByMultiSearch()
             .observe(
                 this.viewLifecycleOwner,
                 Observer {

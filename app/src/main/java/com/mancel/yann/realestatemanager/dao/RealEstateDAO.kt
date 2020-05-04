@@ -149,6 +149,37 @@ interface RealEstateDAO {
         realEstateId: Long
     ): LiveData<RealEstateWithPointsOfInterest>
 
+    /**
+     * Usage:
+     * dao.getRealEstatesWithPhotosByMultiSearch(
+     *      minPrice,
+     *      maxPrice,
+     *      minSurface,
+     *      maxSurface,
+     *      minNumberRoom,
+     *      maxNumberRoom)
+     *    .observe(this, Observer { RealEstateWithPhotos -> ... })
+     */
+    @Transaction
+    @Query("""
+        SELECT * 
+        FROM real_estate 
+        WHERE 
+            price_dollar BETWEEN :minPrice AND :maxPrice
+            AND 
+            surface_m2 BETWEEN :minSurface AND :maxSurface
+            AND 
+            number_of_room BETWEEN :minNumberRoom AND :maxNumberRoom
+        """)
+    fun getRealEstatesWithPhotosByMultiSearch(
+        minPrice: Double = 0.0,
+        maxPrice: Double = Double.MAX_VALUE,
+        minSurface: Double = 0.0,
+        maxSurface: Double = Double.MAX_VALUE,
+        minNumberRoom: Int = 0,
+        maxNumberRoom: Int = Int.MAX_VALUE
+    ): LiveData<List<RealEstateWithPhotos>>
+
     // -- Update --
 
     /**

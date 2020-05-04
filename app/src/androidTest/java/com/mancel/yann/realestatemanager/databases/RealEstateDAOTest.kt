@@ -33,8 +33,8 @@ class RealEstateDAOTest {
 
     // The fields that correspond to an unique index or an unique indices couple must not be null.
     private val mAddress = Address(mLatitude = 0.0, mLongitude = 0.0)
-    private val mRealEstate1 = RealEstate(mType = "Flat", mSurface = 0.0, mNumberOfRoom = 2, mEstateAgentId = 1L, mAddress = this.mAddress)
-    private val mRealEstate2 = RealEstate(mType = "House", mSurface = 0.0, mNumberOfRoom = 2, mEstateAgentId = 1L, mAddress = this.mAddress)
+    private val mRealEstate1 = RealEstate(mType = "Flat", mPrice = 120_000.0, mSurface = 0.0, mNumberOfRoom = 2, mEstateAgentId = 1L, mAddress = this.mAddress)
+    private val mRealEstate2 = RealEstate(mType = "House", mPrice = 300_000.0, mSurface = 100.0, mNumberOfRoom = 10, mEstateAgentId = 1L, mAddress = this.mAddress)
 
     // RULES (Synchronized Tests) ------------------------------------------------------------------
 
@@ -305,6 +305,30 @@ class RealEstateDAOTest {
         assertEquals(2, realEstateWithPointsOfInterest.mPointsOfInterest?.size)
         assertEquals("school", realEstateWithPointsOfInterest.mPointsOfInterest?.get(0)?.mName)
         assertEquals("business", realEstateWithPointsOfInterest.mPointsOfInterest?.get(1)?.mName)
+    }
+
+    @Test
+    @Throws(InterruptedException::class)
+    fun getRealEstatesWithPhotosByMultiSearch_shouldBeSuccess() = runBlocking {
+        // BEFORE: Add real estates
+        mRealEstateDAO.insertRealEstates(mRealEstate1, mRealEstate2)
+
+        // THEN: Add photos
+        mDatabase.photoDAO().insertPhoto(Photo(mUrlPicture = "URL1", mRealEstateId = 1L))
+        mDatabase.photoDAO().insertPhoto(Photo(mUrlPicture = "URL2", mRealEstateId = 2L))
+        mDatabase.photoDAO().insertPhoto(Photo(mUrlPicture = "URL3", mRealEstateId = 2L))
+
+        // THEN: Retrieve real estates with their photos
+        val realEstatesWithPhotos = LiveDataTestUtil.getValue(mRealEstateDAO.getRealEstatesWithPhotosByMultiSearch(
+            minPrice= 0.0,
+            maxPrice= 150_000.0
+        ))
+
+        // TEST: Just mRealEstate1 with their photos
+        assertEquals(1, realEstatesWithPhotos.size)
+        assertEquals(mRealEstate1.mType, realEstatesWithPhotos[0].mRealEstate?.mType)
+        assertEquals(1, realEstatesWithPhotos[0].mPhotos?.size)
+        assertEquals("URL1", realEstatesWithPhotos[0].mPhotos?.get(0)?.mUrlPicture)
     }
 
     // -- Update --

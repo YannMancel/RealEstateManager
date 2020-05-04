@@ -47,6 +47,24 @@ class RealEstateRepositoryImpl(
         return this.mRealEstateDAO.getRealEstateWithPointsOfInterestById(realEstateId)
     }
 
+    override fun getRealEstatesWithPhotosByMultiSearch(
+        minPrice: Double,
+        maxPrice: Double,
+        minSurface: Double,
+        maxSurface: Double,
+        minNumberRoom: Int,
+        maxNumberRoom: Int
+    ): LiveData<List<RealEstateWithPhotos>> {
+        return this.mRealEstateDAO.getRealEstatesWithPhotosByMultiSearch(
+            minPrice,
+            maxPrice,
+            minSurface,
+            maxSurface,
+            minNumberRoom,
+            maxNumberRoom
+        )
+    }
+
     // -- Update --
 
     override suspend fun updateRealEstate(
