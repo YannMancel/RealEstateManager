@@ -1,6 +1,7 @@
 package com.mancel.yann.realestatemanager.views.fragments
 
 import android.location.Location
+import android.os.Bundle
 import androidx.annotation.LayoutRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
@@ -51,7 +52,7 @@ class LocationFragment : BaseFragment(),
     @LayoutRes
     override fun getFragmentLayout(): Int = R.layout.fragment_location
 
-    override fun configureDesign() {
+    override fun configureDesign(savedInstanceState: Bundle?) {
         // UI
         this.configureSupportMapFragment()
         this.configureListenerOfFAB()

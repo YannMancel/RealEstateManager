@@ -1,5 +1,6 @@
 package com.mancel.yann.realestatemanager.views.fragments
 
+import android.os.Bundle
 import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.lifecycle.Observer
@@ -30,7 +31,7 @@ class ListFragment : BaseFragment(), AdapterListener {
     @LayoutRes
     override fun getFragmentLayout(): Int = R.layout.fragment_list
 
-    override fun configureDesign() {
+    override fun configureDesign(savedInstanceState: Bundle?) {
         // UI
         this.configureRecyclerView()
 

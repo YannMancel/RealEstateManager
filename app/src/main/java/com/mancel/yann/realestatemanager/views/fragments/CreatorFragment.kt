@@ -2,6 +2,7 @@ package com.mancel.yann.realestatemanager.views.fragments
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
+import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
@@ -75,7 +76,7 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
     @LayoutRes
     override fun getFragmentLayout(): Int = R.layout.fragment_creator
 
-    override fun configureDesign() {
+    override fun configureDesign(savedInstanceState: Bundle?) {
         // UI
         this.configureFieldsOfData()
         this.configureListenerOfEachButton()

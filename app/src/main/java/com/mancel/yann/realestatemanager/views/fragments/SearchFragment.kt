@@ -1,5 +1,6 @@
 package com.mancel.yann.realestatemanager.views.fragments
 
+import android.os.Bundle
 import android.view.View
 import android.widget.SeekBar
 import android.widget.TextView
@@ -30,7 +31,7 @@ class SearchFragment : BaseFragment(), AdapterListener {
 
     companion object {
         private const val MIN_PRICE = 1
-        private const val MAX_PRICE = 10_000_000
+        private const val MAX_PRICE = 100_000_000
         private const val MIN_SURFACE = 1
         private const val MAX_SURFACE = 10_000
         private const val MIN_ROOM = 1
@@ -44,10 +45,13 @@ class SearchFragment : BaseFragment(), AdapterListener {
     @LayoutRes
     override fun getFragmentLayout(): Int = R.layout.fragment_search
 
-    override fun configureDesign() {
+    override fun configureDesign(savedInstanceState: Bundle?) {
         // UI
         this.configureRecyclerView()
         this.configureListenerOfEachComponent()
+
+        // LiveData
+        this.configureMultiSearchLiveData(savedInstanceState)
     }
 
     // -- AdapterListener interface --
@@ -208,7 +212,23 @@ class SearchFragment : BaseFragment(), AdapterListener {
         }
     }
 
-    // --
+    // -- LiveData --
+
+    /**
+     * Configures the liveData according to the [Bundle]
+     * @param savedInstanceState a [Bundle] to check the configuration changes of Fragment
+     */
+    private fun configureMultiSearchLiveData(savedInstanceState: Bundle?) {
+        savedInstanceState?.let {
+            this.mViewModel
+                .getMultiSearchEvenIfNull()?.observe(
+                    this.viewLifecycleOwner,
+                    Observer { this.configureUI(it) }
+                )
+        }
+    }
+
+    // -- CheckBox --
 
     /**
      * Configures a [MaterialCheckBox]
@@ -267,6 +287,9 @@ class SearchFragment : BaseFragment(), AdapterListener {
 
     // -- Search Real Estate --
 
+    /**
+     * Action to search the real estates after click of FAB
+     */
     private fun actionToSearchRealEstates() {
         // Error: Price
         if (this.mRootView.fragment_search_seekBar_price_max.progress < this.mRootView.fragment_search_seekBar_price_min.progress

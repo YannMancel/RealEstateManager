@@ -2,6 +2,7 @@ package com.mancel.yann.realestatemanager.views.fragments
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
+import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
@@ -77,7 +78,7 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
     @LayoutRes
     override fun getFragmentLayout(): Int = R.layout.fragment_edit
 
-    override fun configureDesign() {
+    override fun configureDesign(savedInstanceState: Bundle?) {
         // Argument
         this.eventWhenArgumentEqualsDefaultValue()
 

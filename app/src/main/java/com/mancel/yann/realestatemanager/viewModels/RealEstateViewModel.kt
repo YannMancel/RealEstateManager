@@ -186,6 +186,11 @@ class RealEstateViewModel(
     }
 
     /**
+     * Gets this [LiveData] even if it is null
+     */
+    fun getMultiSearchEvenIfNull(): LiveData<List<RealEstateWithPhotos>>? = this.mMultiSearch
+
+    /**
      * Inserts the new [RealEstate] in argument
      * @param context           a [Context]
      * @param realEstate        a [RealEstate]
