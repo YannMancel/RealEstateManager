@@ -1,6 +1,7 @@
 package com.mancel.yann.realestatemanager.utils
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.core.content.edit
 
 /**
@@ -17,6 +18,14 @@ object SaveTools {
     // METHODS -------------------------------------------------------------------------------------
 
     /**
+     * Gets the [SharedPreferences]
+     * @param context a [Context]
+     * @return the [SharedPreferences]
+     */
+    private fun getSharedPreferences(context: Context): SharedPreferences =
+        context.getSharedPreferences(SAVE_FILE_NAME, Context.MODE_PRIVATE)
+
+    /**
      * Saves a [Boolean] thanks to SharedPreferences
      * @param context   a [Context]
      * @param key       a [String] that contains the key
@@ -26,12 +35,7 @@ object SaveTools {
         context: Context,
         key: String,
         value: Boolean
-    ) {
-        context.getSharedPreferences(SAVE_FILE_NAME, Context.MODE_PRIVATE)
-               .edit {
-                   putBoolean(key, value)
-               }
-    }
+    ) = getSharedPreferences(context).edit { putBoolean(key, value) }
 
     /**
      * Fetches a [Boolean] from SharedPreferences
@@ -42,8 +46,5 @@ object SaveTools {
     fun fetchBooleanFromSharedPreferences(
         context: Context,
         key: String
-    ): Boolean {
-        return context.getSharedPreferences(SAVE_FILE_NAME, Context.MODE_PRIVATE)
-                      .getBoolean(key, true)
-    }
+    ): Boolean = getSharedPreferences(context).getBoolean(key, true)
 }

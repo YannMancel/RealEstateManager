@@ -18,6 +18,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.libraries.places.api.Places
@@ -39,7 +40,6 @@ import com.mancel.yann.realestatemanager.views.adapters.POIsAdapter
 import com.mancel.yann.realestatemanager.views.adapters.PhotoAdapter
 import com.mancel.yann.realestatemanager.views.dialogs.DialogListener
 import com.mancel.yann.realestatemanager.views.dialogs.PhotoDialogFragment
-import kotlinx.android.synthetic.main.fragment_creator.*
 import kotlinx.android.synthetic.main.fragment_creator.view.*
 import timber.log.Timber
 import java.text.SimpleDateFormat
@@ -67,6 +67,20 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
         const val REQUEST_CODE_PHOTO = 100
         const val REQUEST_CODE_VIDEO = 200
         const val REQUEST_CODE_AUTOCOMPLETE = 300
+
+        const val BUNDLE_TYPE = "BUNDLE_TYPE"
+        const val BUNDLE_PRICE = "BUNDLE_PRICE"
+        const val BUNDLE_SURFACE = "BUNDLE_SURFACE"
+        const val BUNDLE_ROOM = "BUNDLE_ROOM"
+        const val BUNDLE_DESCRIPTION = "BUNDLE_DESCRIPTION"
+        const val BUNDLE_STREET = "BUNDLE_STREET"
+        const val BUNDLE_CITY = "BUNDLE_CITY"
+        const val BUNDLE_POST_CODE = "BUNDLE_POST_CODE"
+        const val BUNDLE_COUNTRY = "BUNDLE_COUNTRY"
+        const val BUNDLE_LATITUDE = "BUNDLE_LATITUDE"
+        const val BUNDLE_LONGITUDE = "BUNDLE_LONGITUDE"
+        const val BUNDLE_ENABLE = "BUNDLE_ENABLE"
+        const val BUNDLE_EFFECTIVE_DATE = "BUNDLE_EFFECTIVE_DATE"
     }
 
     // METHODS -------------------------------------------------------------------------------------
@@ -114,6 +128,102 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
             REQUEST_CODE_AUTOCOMPLETE -> this.handleAddress(resultCode, data)
 
             else -> { /* Ignore all other requests */ }
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        // Save data
+        outState.putString(BUNDLE_TYPE, this.mRootView.fragment_creator_type.editText?.text?.toString())
+        outState.putString(BUNDLE_PRICE, this.mRootView.fragment_creator_price.editText?.text?.toString())
+        outState.putString(BUNDLE_SURFACE, this.mRootView.fragment_creator_surface.editText?.text?.toString())
+        outState.putString(BUNDLE_ROOM, this.mRootView.fragment_creator_number_of_room.editText?.text?.toString())
+        outState.putString(BUNDLE_DESCRIPTION, this.mRootView.fragment_creator_description.editText?.text?.toString())
+        outState.putString(BUNDLE_STREET, this.mRootView.fragment_creator_address.editText?.text?.toString())
+        outState.putString(BUNDLE_CITY, this.mRootView.fragment_creator_city.editText?.text?.toString())
+        outState.putString(BUNDLE_POST_CODE, this.mRootView.fragment_creator_post_code.editText?.text?.toString())
+        outState.putString(BUNDLE_COUNTRY, this.mRootView.fragment_creator_country.editText?.text?.toString())
+        outState.putDouble(BUNDLE_LATITUDE, this.mGoogleMap?.projection?.visibleRegion?.latLngBounds?.center?.latitude ?: 0.0)
+        outState.putDouble(BUNDLE_LONGITUDE, this.mGoogleMap?.projection?.visibleRegion?.latLngBounds?.center?.longitude ?: 0.0)
+        outState.putBoolean(BUNDLE_ENABLE, this.mRootView.fragment_creator_enable.isChecked)
+        outState.putString(BUNDLE_EFFECTIVE_DATE, this.mRootView.fragment_creator_effective_date.editText?.text?.toString())
+
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        // Restores data
+        savedInstanceState?.let { bundle ->
+            // TYPE
+            this.mRootView.fragment_creator_type.editText?.text?.let {
+                it.clear()
+                it.append(bundle.getString(BUNDLE_TYPE, ""))
+            }
+            // PRICE
+            this.mRootView.fragment_creator_price.editText?.text?.let {
+                it.clear()
+                it.append(bundle.getString(BUNDLE_PRICE, ""))
+            }
+            // SURFACE
+            this.mRootView.fragment_creator_surface.editText?.text?.let {
+                it.clear()
+                it.append(bundle.getString(BUNDLE_SURFACE, ""))
+            }
+            // ROOM
+            this.mRootView.fragment_creator_number_of_room.editText?.text?.let {
+                it.clear()
+                it.append(bundle.getString(BUNDLE_ROOM, ""))
+            }
+            // DESCRIPTION
+            this.mRootView.fragment_creator_description.editText?.text?.let {
+                it.clear()
+                it.append(bundle.getString(BUNDLE_DESCRIPTION, ""))
+            }
+            // STREET
+            this.mRootView.fragment_creator_address.editText?.text?.let {
+                it.clear()
+                it.append(bundle.getString(BUNDLE_STREET, ""))
+            }
+            // CITY
+            this.mRootView.fragment_creator_city.editText?.text?.let {
+                it.clear()
+                it.append(bundle.getString(BUNDLE_CITY, ""))
+            }
+            // POST CODE
+            this.mRootView.fragment_creator_post_code.editText?.text?.let {
+                it.clear()
+                it.append(bundle.getString(BUNDLE_POST_CODE, ""))
+            }
+            // COUNTRY
+            this.mRootView.fragment_creator_country.editText?.text?.let {
+                it.clear()
+                it.append(bundle.getString(BUNDLE_COUNTRY, ""))
+            }
+            // LATITUDE & LONGITUDE
+            val latitude = bundle.getDouble(BUNDLE_LATITUDE, 0.0)
+            val longitude = bundle.getDouble(BUNDLE_LONGITUDE, 0.0)
+            this.showPointOfInterest(LatLng(latitude, longitude))
+            // ENABLE
+            this.mRootView.fragment_creator_enable.isChecked =
+                bundle.getBoolean(BUNDLE_ENABLE, true)
+            // EFFECTIVE DATE
+            this.mRootView.fragment_creator_effective_date.editText?.text?.let {
+                it.clear()
+                it.append(bundle.getString(BUNDLE_EFFECTIVE_DATE, ""))
+            }
+
+            // Display fields and child fragment
+            if (!this.mRootView.fragment_creator_city.editText?.text.isNullOrEmpty()) {
+                this.mRootView.fragment_creator_address.visibility = View.VISIBLE
+                this.mRootView.fragment_creator_city.visibility = View.VISIBLE
+                this.mRootView.fragment_creator_post_code.visibility = View.VISIBLE
+                this.mRootView.fragment_creator_country.visibility = View.VISIBLE
+
+                // Hides the fragment
+                this.childFragmentManager.fragments[0].view?.visibility = View.VISIBLE
+            }
         }
     }
 
@@ -452,6 +562,9 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
 
         childFragment?.getMapAsync(this@CreatorFragment)
 
+        // To keep the instance after configuration change (rotation)
+        childFragment?.retainInstance = true
+
         // Hides the fragment
         this.childFragmentManager.fragments[0].view?.visibility = View.GONE
     }
@@ -523,11 +636,21 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
      * @param latLng a [LatLng] that contains the location
      */
     private fun showPointOfInterest(latLng: LatLng) {
+        /* After configuration change (rotation), this.mGoogleMap is null
+           because onMapReady method is called after configureUI method
+           To keep the marker, add this line into configureSupportMapFragment method
+                childFragment?.retainInstance = true
+        */
         this.mGoogleMap?.let {
             it.clear()
             it.addMarker(
                 MarkerOptions().position(latLng)
                                .title(this.getString(R.string.title_marker))
+                               .icon(
+                                   BitmapDescriptorFactory.defaultMarker(
+                                       BitmapDescriptorFactory.HUE_BLUE
+                                   )
+                               )
             )
 
             it.moveCamera(CameraUpdateFactory.newLatLng(latLng))
@@ -824,8 +947,8 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
                 .setPositiveButton(R.string.yes) { _, _ ->
                     // todo - 06/04/2020 - Next feature: Add user's authentication instead of 1L
                     val realEstate = RealEstate(
-                        mType = this.fragment_creator_type.editText?.text?.toString(),
-                        mPrice = this.fragment_creator_price.editText?.text?.toString()?.toDouble(),
+                        mType = this.mRootView.fragment_creator_type.editText?.text?.toString(),
+                        mPrice = this.mRootView.fragment_creator_price.editText?.text?.toString()?.toDouble(),
                         mSurface = this.mRootView.fragment_creator_surface.editText?.text?.toString()?.toDouble(),
                         mNumberOfRoom = this.mRootView.fragment_creator_number_of_room.editText?.text?.toString()?.toInt(),
                         mDescription = this.mRootView.fragment_creator_description.editText?.text?.toString(),
@@ -834,10 +957,10 @@ class CreatorFragment : BaseFragment(), AdapterListener, DialogListener, OnMapRe
                         mSaleDate = null,
                         mEstateAgentId = 1L,
                         mAddress = Address(
-                            mStreet = this.fragment_creator_address.editText?.text?.toString(),
-                            mCity = this.fragment_creator_city.editText?.text?.toString(),
-                            mPostCode = this.fragment_creator_post_code.editText?.text?.toString()?.toInt(),
-                            mCountry = this.fragment_creator_country.editText?.text?.toString(),
+                            mStreet = this.mRootView.fragment_creator_address.editText?.text?.toString(),
+                            mCity = this.mRootView.fragment_creator_city.editText?.text?.toString(),
+                            mPostCode = this.mRootView.fragment_creator_post_code.editText?.text?.toString()?.toInt(),
+                            mCountry = this.mRootView.fragment_creator_country.editText?.text?.toString(),
                             mLatitude = this.mGoogleMap?.projection?.visibleRegion?.latLngBounds?.center?.latitude,
                             mLongitude = this.mGoogleMap?.projection?.visibleRegion?.latLngBounds?.center?.longitude
                         )

@@ -11,6 +11,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.mancel.yann.realestatemanager.R
@@ -187,6 +188,9 @@ class DetailsFragment : BaseFragment(), AdapterListener, OnMapReadyCallback {
         }
 
         childFragment?.getMapAsync(this@DetailsFragment)
+
+        // To keep the instance after configuration change (rotation)
+        childFragment?.retainInstance = true
     }
 
     // -- LiveData --
@@ -278,11 +282,21 @@ class DetailsFragment : BaseFragment(), AdapterListener, OnMapReadyCallback {
      * @param latLng a [LatLng] that contains the location
      */
     private fun showPointOfInterest(latLng: LatLng) {
+        /* After configuration change (rotation), this.mGoogleMap is null
+           because onMapReady method is called after configureUI method
+           To keep the marker, add this line into configureSupportMapFragment method
+                childFragment?.retainInstance = true
+        */
         this.mGoogleMap?.let {
             it.clear()
             it.addMarker(
                 MarkerOptions().position(latLng)
                                .title(this.getString(R.string.title_marker))
+                               .icon(
+                                   BitmapDescriptorFactory.defaultMarker(
+                                       BitmapDescriptorFactory.HUE_BLUE
+                                   )
+                               )
             )
 
             it.moveCamera(CameraUpdateFactory.newLatLng(latLng))

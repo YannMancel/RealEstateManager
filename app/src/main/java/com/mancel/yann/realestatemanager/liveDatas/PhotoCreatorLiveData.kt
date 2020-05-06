@@ -2,7 +2,6 @@ package com.mancel.yann.realestatemanager.liveDatas
 
 import androidx.lifecycle.LiveData
 import com.mancel.yann.realestatemanager.models.Photo
-import timber.log.Timber
 
 /**
  * Created by Yann MANCEL on 23/03/2020.

@@ -88,7 +88,9 @@ class RealEstateAdapter(
         realEstate.mRealEstate?.mAddress?.mCity?.let { holder.itemView.item_real_estate_city.text = it }
 
         // Price
-        realEstate.mRealEstate?.mPrice?.let { holder.itemView.item_real_estate_price.text = it.toString() }
+        realEstate.mRealEstate?.mPrice?.let {
+            val price = "$it \$"
+            holder.itemView.item_real_estate_price.text = price }
 
         // Background color
         realEstate.mRealEstate?.mIsSelected?.let { isSelected ->

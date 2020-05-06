@@ -18,6 +18,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.libraries.places.api.Places
@@ -36,7 +37,6 @@ import com.mancel.yann.realestatemanager.views.adapters.POIsAdapter
 import com.mancel.yann.realestatemanager.views.adapters.PhotoAdapter
 import com.mancel.yann.realestatemanager.views.dialogs.DialogListener
 import com.mancel.yann.realestatemanager.views.dialogs.PhotoDialogFragment
-import kotlinx.android.synthetic.main.fragment_edit.*
 import kotlinx.android.synthetic.main.fragment_edit.view.*
 import timber.log.Timber
 import java.text.SimpleDateFormat
@@ -449,6 +449,9 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
         }
 
         childFragment?.getMapAsync(this@EditFragment)
+
+        // To keep the instance after configuration change (rotation)
+        childFragment?.retainInstance = true
     }
 
     // -- LiveData --
@@ -654,11 +657,21 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
      * @param latLng a [LatLng] that contains the location
      */
     private fun showPointOfInterest(latLng: LatLng) {
+        /* After configuration change (rotation), this.mGoogleMap is null
+           because onMapReady method is called after configureUI method
+           To keep the marker, add this line into configureSupportMapFragment method
+                childFragment?.retainInstance = true
+        */
         this.mGoogleMap?.let {
             it.clear()
             it.addMarker(
                 MarkerOptions().position(latLng)
                                .title(this.getString(R.string.title_marker))
+                               .icon(
+                                   BitmapDescriptorFactory.defaultMarker(
+                                       BitmapDescriptorFactory.HUE_BLUE
+                                   )
+                               )
             )
 
             it.moveCamera(CameraUpdateFactory.newLatLng(latLng))
@@ -929,8 +942,8 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
                     // todo - 06/04/2020 - Next feature: Add user's authentication instead of 1L
                     val realEstate = RealEstate(
                         mId = this.mItemId,
-                        mType = this.fragment_edit_type.editText?.text?.toString(),
-                        mPrice = this.fragment_edit_price.editText?.text?.toString()?.toDouble(),
+                        mType = this.mRootView.fragment_edit_type.editText?.text?.toString(),
+                        mPrice = this.mRootView.fragment_edit_price.editText?.text?.toString()?.toDouble(),
                         mSurface = this.mRootView.fragment_edit_surface.editText?.text?.toString()?.toDouble(),
                         mNumberOfRoom = this.mRootView.fragment_edit_number_of_room.editText?.text?.toString()?.toInt(),
                         mDescription = this.mRootView.fragment_edit_description.editText?.text?.toString(),
@@ -939,10 +952,10 @@ class EditFragment : BaseFragment(), AdapterListener, DialogListener, OnMapReady
                         mSaleDate = null,
                         mEstateAgentId = 1L,
                         mAddress = Address(
-                            mStreet = this.fragment_edit_address.editText?.text?.toString(),
-                            mCity = this.fragment_edit_city.editText?.text?.toString(),
-                            mPostCode = this.fragment_edit_post_code.editText?.text?.toString()?.toInt(),
-                            mCountry = this.fragment_edit_country.editText?.text?.toString(),
+                            mStreet = this.mRootView.fragment_edit_address.editText?.text?.toString(),
+                            mCity = this.mRootView.fragment_edit_city.editText?.text?.toString(),
+                            mPostCode = this.mRootView.fragment_edit_post_code.editText?.text?.toString()?.toInt(),
+                            mCountry = this.mRootView.fragment_edit_country.editText?.text?.toString(),
                             mLatitude = this.mGoogleMap?.projection?.visibleRegion?.latLngBounds?.center?.latitude,
                             mLongitude = this.mGoogleMap?.projection?.visibleRegion?.latLngBounds?.center?.longitude
                         )

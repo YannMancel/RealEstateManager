@@ -146,7 +146,12 @@ class RealEstateViewModel(
 
     /**
      * Gets all [RealEstateWithPhotos] by multi search
-     * @param realEstateId a [Long] that contains the real estate Id
+     * @param minPrice      a [Double] that contains the min price
+     * @param maxPrice      a [Double] that contains the max price
+     * @param minSurface    a [Double] that contains the min surface
+     * @param maxSurface    a [Double] that contains the max surface
+     * @param minNumberRoom a [Double] that contains the min room
+     * @param maxNumberRoom a [Double] that contains the max room
      * @return a [LiveData] of [RealEstateWithPhotos]
      */
     fun getRealEstatesWithPhotosByMultiSearch(
