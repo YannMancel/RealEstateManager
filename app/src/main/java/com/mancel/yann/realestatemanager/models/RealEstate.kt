@@ -22,7 +22,8 @@ import java.util.*
                                   onUpdate = ForeignKey.CASCADE)],
         indices = [Index(value = ["type", "surface_m2", "number_of_room",
                                   "loc_latitude", "loc_longitude"],
-                         unique = true)])
+                         unique = true),
+                   Index(value = ["estate_agent_id"])])
 data class RealEstate(
 
     @PrimaryKey(autoGenerate = true)
