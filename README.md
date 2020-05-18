@@ -2,6 +2,22 @@
 
 **Goal**: Create an application allowing agents to access the files of different properties from their mobile equipment. Its name is **Real Estate Manager**.
 
+
+## Phone display
+<img src="./screenshots/phone_1.png" width="30%" height="30%">
+<img src="./screenshots/phone_2.png" width="30%" height="30%">
+<img src="./screenshots/phone_3.png" width="30%" height="30%">
+<img src="./screenshots/phone_4.png" width="30%" height="30%">
+
+
+## Tablet display
+<img src="./screenshots/tablet_1.png" width="50%" height="50%">
+
+
+## Physical data model
+<img src="./database/PDM.png" width="50%" height="50%">
+
+
 ## Requirements
 * Computer (Windows, Mac or Linux)
 * Android Studio
